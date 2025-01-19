@@ -2,20 +2,19 @@
   import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
   import { animationClass, roundedClass, generateToken, backdropClasses } from "$lib/function"
-  import { Close } from "$lib"
+  import { Close, Button } from "$lib"
 	import type { Snippet } from "svelte"
 
   interface Props{
-    trigger?: Snippet,
+    label?: string | Snippet,
     children?: Snippet,
     header?: Snippet,
     footer?: Snippet,
     id?: string,
-    label?: string,
     animate?: ANIMATE_SPEED,
     animation?: 'slide-down' | 'slide-up' | 'fade' | 'zoom-in' | 'zoom-out',
     backdrop?: boolean|string,
-    closeBtn?: boolean,
+    closeButton?: boolean,
     closeOnEsc?: boolean,
     modalFooterClasses?: string,
     modalHeaderClasses?: string,
@@ -23,22 +22,22 @@
     modalOuterClasses?: string,
     position?: 'top' | 'center' | 'bottom',
     rounded?: ROUNDED,
+    buttonClasses?: string,
     size?: 'sm' | 'md' | 'lg' | 'full',
     staticBackdrop?: boolean,
-    modalStatus?: boolean
+    open?: boolean
   }
 
   let {
+    label = "",
     children,
-    trigger,
     header,
     footer,
     id = generateToken() + "Modal",
-    label = "",
     animate = "fast",
     animation = "fade",
     backdrop = true,
-    closeBtn = true,
+    closeButton = true,
     closeOnEsc = true,
     modalFooterClasses = "",
     modalHeaderClasses = "",
@@ -46,21 +45,28 @@
     modalOuterClasses = "",
     position = "center",
     rounded = "md",
+    buttonClasses = "",
     size = "md",
     staticBackdrop = false,
-    modalStatus = false,
+    open = false,
   } : Props = $props()
 
-  let toggle = ( closeBtn = true ) => {
-    modalStatus = !(document.getElementById(id)?.classList.contains('open') && (closeBtn || (!closeBtn && !staticBackdrop)))
+  let toggle = ( closeButton = true ) => {
+    open = !(document.getElementById(id)?.classList.contains('open') && (closeButton || (!closeButton && !staticBackdrop)))
   }
 
 	let handleKeyboard = (e: KeyboardEvent) => {
-		if (modalStatus && (closeOnEsc && e.code === "Escape")) {
+		if (open && (closeOnEsc && e.code === "Escape")) {
       e.preventDefault()
-      modalStatus = false
+      open = false
     }
 	}
+
+  let handleKeyboardEnter = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+      toggle();
+    }
+  }
 
   let sizes = {
     sm : "modal-sm w-full sm:w-96",
@@ -69,76 +75,72 @@
     full : "modal-full w-full min-h-screen",
   }
 
-  let positionClass = {
-    top : "modal-top mb-auto",
-    center : "modal-center my-auto",
-    bottom : "modal-bottom mt-auto",
-  }
-
-  let modalCls = $derived(() => `theui-modal z-50 flex fixed inset-0 visible opacity-100 ${animationClass(animate)}`);
+  let positionClass = {top : "modal-top mb-auto", center : "modal-center my-auto", bottom : "modal-bottom mt-auto"}
+  let modalCls = $derived(() => `theui-modal z-50 flex fixed inset-0 visible opacity-100 ${animationClass(animate)}`)
   let modalBodyCls = $derived(() => `modal-content flex flex-col p-8 relative mx-auto bg-white dark:bg-secondary ${sizes[size]} ${positionClass[position]} ${animationClass(animate)} ${((animate && animation) ? animation : "")}`)
 </script>
 
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
-{#if trigger || label}
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_interactive_supports_focus -->
-  <span
-    id="{id}Btn"
-    role="button"
-    onclick={()=>toggle()}
+{#if typeof label == "string"}
+  <Button id={`${id}-modal-button`}
+  aria-controls={id}
+  aria-expanded={open}
+  aria-haspopup="dialog"
+  aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
+  aria-describedby={`${id}-modal-body`}
+  onclick={()=>toggle()} {label}
+  class={buttonClasses} />
+{:else}
+  <span id={`${id}-modal-button`}
+    aria-controls={id}
+    aria-expanded={open}
     aria-haspopup="dialog"
-		aria-label=label
-		aria-controls=id
-		aria-expanded={modalStatus}
-  >
-    {#if label}
-      {@html label}
-    {:else if typeof trigger === "function"}
-      {@render trigger()}
-    {/if}
+    aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
+    aria-describedby={`${id}-modal-body`}
+    onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
+    {@render label?.()}
   </span>
 {/if}
 
 {#if children}
-<div {id} class={twMerge(modalCls(), modalOuterClasses)} class:open={modalStatus} class:animate={animate} role="dialog" aria-modal="true" aria-hidden={!modalStatus}>
-  {#if backdrop}
-    <div class={backdropClasses(backdrop)} onclick={()=>toggle(false)} aria-hidden="true"></div>
-  {/if}
-
-  <div class={twMerge(modalBodyCls(), (size !== "full" ? roundedClass(rounded) : ""), modalBodyClasses)} aria-labelledby={header ? `${id}Heading` : `${id}Btn`}>
-
-    {#if header}
-      <div id="{id}Heading" class={twMerge("modal-header flex justify-between w-full gap-8 items-start border-b border-black/10 dark:border-tertiary pb-4 mb-8", modalHeaderClasses)}>
-        {@render header?.()}
-        {#if closeBtn!==false}
-          <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity" onclick={()=>toggle()}/>
-        {/if}
-      </div>
-    {:else if closeBtn!==false}
-      <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-2 right-2" onclick={()=>toggle()}/>
+  <div {id} class={twMerge(modalCls(), modalOuterClasses)} class:open={open} class:animate={animate}>
+    {#if backdrop}
+      <div class={backdropClasses(backdrop)} onclick={()=>toggle(false)} aria-hidden="true"></div>
     {/if}
 
-    <div class="w-full">
-      {@render children()}
+    <div class={twMerge(modalBodyCls(), (size !== "full" ? roundedClass(rounded) : ""), modalBodyClasses)} role="dialog" aria-modal="true" aria-hidden={!open}>
+
+      {#if header}
+        <div id="{id}-heading" class={twMerge("modal-header flex justify-between w-full gap-8 items-start border-b border-black/10 dark:border-tertiary pb-4 mb-8", modalHeaderClasses)}>
+          {@render header?.()}
+          {#if closeButton!==false}
+            <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity" onclick={()=>toggle()}/>
+          {/if}
+        </div>
+      {:else if closeButton!==false}
+        <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-2 right-2" onclick={()=>toggle()}/>
+      {/if}
+
+      <div class="{id}-modal-body w-full">
+        {@render children()}
+      </div>
+
+      {#if footer}
+        <div class={twMerge("modal-footer border-t border-black/10 dark:border-tertiary pt-4 mt-8", modalFooterClasses)}>
+          {@render footer?.()}
+        </div>
+      {/if}
+
     </div>
-
-    {#if footer}
-      <div class={twMerge("modal-footer border-t border-black/10 dark:border-tertiary pt-4 mt-8", modalFooterClasses)}>
-        {@render footer?.()}
-      </div>
-    {/if}
-
   </div>
-</div>
 {/if}
 
 <style lang="postcss">
   .theui-modal:not(.open){
     @apply invisible opacity-0;
   }
-  .theui-modal:not(.modal-full){
+  .theui-modal .modal-content:not(.modal-full){
     @apply p-8;
   }
   .theui-modal.theui-animate .backdrop{

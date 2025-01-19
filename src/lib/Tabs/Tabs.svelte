@@ -3,7 +3,6 @@
 	import type { ANIMATE_SPEED, TAB_CONFIG } from "$lib/types"
 	import { twMerge } from "tailwind-merge"
 	import { generateToken } from "$lib/function"
-  import { ST_TABS } from "$lib/state.svelte"
 
   interface Props {
     tabList : Snippet,
@@ -44,14 +43,18 @@
     }
   }
 
-	let config: TAB_CONFIG = {
+  const ST_TABS: TAB_CONFIG["TABS"] =  $state({ tabs: [], panels: [], selectedTab: null, selectedPanel: null })
+
+  let config: TAB_CONFIG = {
     activeTabClasses : twMerge(classes["active"][variant], activeTabClasses),
 		tabClasses : twMerge(classes["inactive"][variant], tabClasses),
 		tabPanelClasses,
 		animate,
 		borderClasses,
 		variant,
+    TABS: ST_TABS
 	}
+  
 
   onMount(() => {
     if(ST_TABS.selectedTab == null){

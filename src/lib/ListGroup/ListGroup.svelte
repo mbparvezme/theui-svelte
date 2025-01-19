@@ -10,8 +10,7 @@
 		rounded?: ROUNDED,
 		variant?: 'bordered' | 'flat',
     itemClasses?: string,
-    type?: 'div'|'ul',
-    childrenType?: 'div'|'li'|'a',
+    size?: 'sm' | 'md' | 'lg' | 'xl',
     [key: string]: unknown
 	}
 
@@ -21,18 +20,17 @@
     rounded = "md",
     variant = "bordered",
     itemClasses = "",
-    type = "ul",
-    childrenType = "li",
+    size = "md",
     ...props
   } : Props = $props()
 
-  let groupClasses = `overflow-hidden divide-y divide-gray-200 ${variant == "bordered" ? "border border-gray-200" : ""}${roundedClass(variant=="flat"?"none":rounded)}`
+  let groupClasses = `overflow-hidden divide-y divide-gray-300 ${variant == "bordered" ? "border border-gray-300" : ""}${roundedClass(variant=="flat"?"none":rounded)}`
 
-  setContext("LISTGROUP", {animate, childrenType, variant, itemClasses})
+  setContext("LISTGROUP", {animate, variant, itemClasses, size})
 </script>
 
 {#if children}
-<svelte:element this={type} class="list-group {twMerge(groupClasses, props?.class as string)}">
+<ul class="list-group {twMerge(groupClasses, props?.class as string)}">
   {@render children()}
-</svelte:element>
+</ul>
 {/if}

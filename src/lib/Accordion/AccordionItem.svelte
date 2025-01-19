@@ -14,11 +14,11 @@
     rounded?: ROUNDED,
     size?: "compact" | "default" | "large",
     containerClasses?: string,
-    containerActiveClasses?: string,
     contentClasses?: string,
-    contentActiveClasses?: string,
     titleClasses?: string,
-    titleActiveClasses?: string,
+    openContainerClasses?: string,
+    openContentClasses?: string,
+    openTitleClasses?: string,
     [key: string] : unknown // open, flush
 	}
 
@@ -33,11 +33,11 @@
     rounded = "md",
     size = CTX?.size ?? "default",
     containerClasses = "",
-    containerActiveClasses = "",
     contentClasses = "",
-    contentActiveClasses = "",
     titleClasses = "",
-    titleActiveClasses = "",
+    openContainerClasses = "",
+    openContentClasses = "",
+    openTitleClasses = "",
     ...props
   } : Props = $props()
 
@@ -93,7 +93,7 @@
       cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded, "top", "first")} ${roundedClass(rounded, "bottom", "last")}` : `border ${roundedClass(rounded)}`}`;
     }
     cls += " border-gray-300 dark:border-gray-700 overflow-hidden ";
-    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, containerActiveClasses) : twMerge(cls, containerClasses);
+    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openContainerClasses) : twMerge(cls, containerClasses);
   }
 
   let getTitleClasses = () => {
@@ -103,12 +103,12 @@
     }else{
       cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary-300 dark:bg-brand-primary-700" : " ";
     }
-    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, titleActiveClasses) : twMerge(cls, titleClasses);
+    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openTitleClasses) : twMerge(cls, titleClasses);
   }
 
   let getContentClasses = () => {
     let cls = "accordion-content " + (!props?.flush ? roundedClass(rounded, "bottom") : "") + " h-full ";
-    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, contentActiveClasses) : twMerge(cls, contentClasses);
+    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openContentClasses) : twMerge(cls, contentClasses);
   }
 </script>
 

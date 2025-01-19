@@ -55,21 +55,23 @@ export default {
     plugin(({ addBase }) => {
       addBase({
         ':root': {
-          '--ui-bg-primary': '250 250 250',
-          '--ui-bg-secondary': '238 238 238',
-          '--ui-bg-alt': '10 10 20',
-          '--ui-text-default': '33 33 33',
-          '--ui-text-alt': '189 189 189',
-          '--ui-text-muted': '117 117 117',
+          '--ui-bg-primary': '245 245 250',
+          '--ui-bg-secondary': '224 224 230',
+          '--ui-bg-alt': '22 22 29',
+          '--ui-text-default': '22 22 29',
+          '--ui-text-alt': '245 245 250',
+          '--ui-text-muted': '99 99 105',
+
           '--max-width': '1280px',
         },
+
         ':root.dark': {
-          '--ui-bg-primary': '10 10 20',
-          '--ui-bg-secondary': '30 30 40',
-          '--ui-bg-alt': '250 250 250',
-          '--ui-text-default': '245 245 245',
-          '--ui-text-alt': '245 245 245',
-          '--ui-text-muted': '175 175 175',
+          '--ui-bg-primary': '22 22 29',
+          '--ui-bg-secondary': '30 30 38',
+          '--ui-bg-alt': '245 245 250',
+          '--ui-text-default': '245 245 250',
+          '--ui-text-alt': '22 22 29',
+          '--ui-text-muted': '161, 161, 170',
         },
         'body': {
           '@apply bg-primary text-default': {},

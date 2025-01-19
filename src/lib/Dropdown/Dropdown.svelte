@@ -9,54 +9,64 @@
 
   interface Props {
     children?: Snippet,
-    activeLinkClasses?: string,
-    linkClasses?: string,
-    dividerClasses?: string,
-    headerClasses?: string,
     align?: 'start' | 'end'
     animate?: ANIMATE_SPEED,
     animation?: DROPDOWN_ANIMATION_TYPE,
     backdrop?: boolean | string,
     closeOnBlur?: boolean,
+    activeItemClasses?: string,
+    itemClasses?: string,
+    dividerClasses?: string,
+    headerClasses?: string,
     containerClasses?: string,
     dropdownClasses?: string,
+		buttonClasses?: string,
     id?: string,
     dropdownEvent?: 'hover' | 'click',
     label : string|Snippet,
     rounded?: ROUNDED
-    size?: 'sm' | 'md' | 'lg' | 'full' | 'auto' | 'custom',
+    width?: 'sm' | 'md' | 'lg' | 'full' | 'auto' | string,
 		[key: string]: unknown
   }
 
   let{
     children,
-    activeLinkClasses = "",
-    linkClasses = "",
-    dividerClasses = "",
-    headerClasses = "",
     align = "end",
     animate = "fast",
     animation = "slide-up",
     backdrop = false,
     closeOnBlur = true,
+    activeItemClasses = "",
+    itemClasses = "",
+    dividerClasses = "",
+    headerClasses = "",
     containerClasses = "",
     dropdownClasses = "",
+		buttonClasses = "",
     id = generateToken(),
     dropdownEvent = 'click',
     label,
     rounded = "md",
-    size = "auto",
+    width = "auto",
 		...props
   } : Props = $props()
 
-  const sizeClasses = {
-    sm: "dropdown-sm",
-    md: "dropdown-md",
-    lg: "dropdown-lg",
-    full: "dropdown-full",
-    auto: "dropdown-auto",
-    custom: "dropdown-custom"
-  }
+  const sizeClasses = () => {
+		const validWidths = ['sm', 'md', 'lg', 'full', 'auto'];
+		if (!validWidths.includes(width)) {
+			return typeof width === "string" ? width : "";
+		}
+
+		let validWidthSizes: Record<Exclude<Props["width"], string|undefined>, string>  = { 
+			sm: "dropdown-sm w-48",
+			md: "dropdown-md w-64",
+			lg: "dropdown-lg w-80",
+			full: "dropdown-full w-full start-0 end-0",
+			auto: "dropdown-auto"
+		}
+
+		return validWidthSizes[width as Exclude<Props["width"], string|undefined>]
+	}
 
 	let isOpen: boolean = $state(false)
 
@@ -91,20 +101,20 @@
 		}
 	})
 
-	const getContainerClasses = () => twMerge(`theui-dropdown relative inline-block ${align === "end" ? "dropdown-end" : ""} ${sizeClasses[size] || "dropdown-custom"} ${animationClass(animate)}`, containerClasses)
+	const getContainerClasses = () => twMerge(`theui-dropdown relative inline-block ${animationClass(animate)}`, containerClasses)
 
   const getDropdownClasses = () => {
-    return twMerge(`${animation} dropdown-content absolute list-none z-[11] bg-white dark:bg-secondary text-base shadow-lg py-1 text-nowrap ${animationClass(animate)}${roundedClass(rounded)}`, dropdownClasses)
+    return twMerge(`${animation} dropdown-content absolute list-none z-[11] bg-white dark:bg-secondary text-base shadow-lg py-1 text-nowrap ${sizeClasses()} ${align === "end" ? "start-auto end-0" : ""}${animationClass(animate)}${roundedClass(rounded)}`, dropdownClasses)
   }
 
 	let config: {
-		activeClasses: string,
-		linkClasses: string,
+		activeItemClasses: string,
+		itemClasses: string,
 		dividerClass: string,
 		headerClass: string
   } = {
-    linkClasses: twMerge("flex w-full items-center gap-4 py-3 px-4 bg-transparent hover:bg-gray-500/10 text-default", linkClasses),
-    activeClasses: twMerge("flex items-center gap-4 py-3 px-4 bg-gray-500/10", activeLinkClasses),
+    itemClasses: twMerge("flex text-wrap w-full items-center gap-4 py-3 px-4 bg-transparent hover:bg-gray-500/10 text-default", itemClasses),
+    activeItemClasses: twMerge("flex items-center gap-4 py-3 px-4 bg-gray-500/10", activeItemClasses),
     dividerClass: twMerge("border-b pb-2 mb-2 border-tertiary", dividerClasses),
     headerClass: twMerge("flex items-center gap-4 p-4 font-bold text-sm opacity-50 uppercase", headerClasses)
   }
@@ -116,7 +126,7 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div {id} {...props} class={getContainerClasses()} class:open={isOpen} onmouseenter={(e: MouseEvent)=>handleMouse(e)} onmouseleave={(e: MouseEvent)=>handleMouse(e)} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboard(e)}>
   {#if typeof label == "string"}
-    <Button id={`${id}-trigger`} {label} ariaLabel={label + " dropdown"} aria-controls={`${id}-dropdown`} aria-expanded={isOpen} aria-haspopup="menu" />
+    <Button id={`${id}-trigger`} {label} ariaLabel={label + " dropdown"} aria-controls={`${id}-dropdown`} aria-expanded={isOpen} aria-haspopup="menu" class={buttonClasses} />
   {:else}
     <span id={`${id}-trigger`} class="relative dropdown-btn select-none" role="button" aria-controls={`${id}-dropdown`} aria-expanded={isOpen} aria-haspopup="menu">
       {@render label?.()}
@@ -148,7 +158,7 @@
 	}
 
 	/* Dropdown sizes */
-	.dropdown-sm .dropdown-content{
+	/* .dropdown-sm .dropdown-content{
 		@apply w-48;
 	}
 	.dropdown-md .dropdown-content{
@@ -165,7 +175,7 @@
 	}
 	.dropdown-end .dropdown-content{
 		@apply start-auto end-0;
-	}
+	} */
 
 	/* Dropdown animations */
 	.theui-dropdown .dropdown-content.slide-down{

@@ -112,6 +112,7 @@ export type TAB_CONFIG = {
   tabPanelClasses?: string;
   borderClasses ?: boolean | string;
   variant: 'tabs' | 'pills';
+  TABS: { tabs: string[], panels: string[], selectedTab: string | null, selectedPanel: string | null }
 };
 
 export type TABS_CONTEXT = {

@@ -7,7 +7,6 @@ export const ST_ACTIVE_ACCORDIONS: { value: string[]} = $state({ value: [""]})
 export const ST_MOBILE_NAV: { value: string[]} = $state({ value: [] })
 export const ST_NOTIFICATIONS: { value: NOTIFICATION_DATA_TYPE[]} = $state({ value: [] })
 
-export const ST_TABS: {tabs: string[], panels: string[], selectedTab: string | null, selectedPanel: string | null} =  $state({ tabs: [], panels: [], selectedTab: null, selectedPanel: null })
 export const selectedTab: { value: string | null } = $state({ value: null })
 export const selectedPanel: { value: string | null } = $state({ value: null })
 
