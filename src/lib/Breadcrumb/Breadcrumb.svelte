@@ -8,7 +8,7 @@
     linkClasses ?: string,
     rounded ?: ROUNDED,
     separator ?: string,
-    [key: string]: unknown // dismissible, icon
+    [key: string]: unknown
 	}
 
   let {
@@ -36,7 +36,7 @@
 {#snippet breadcrumbLink(item: BREADCRUMB_DATA, i: number)}
   <li class="breadcrumb-item {getLinkCls(item.url)}" class:before:px-2={i!=0} class:active={!item.url}>
     {#if !item.url}
-      {item.text}
+      <span aria-current="page">{item.text}</span>
     {:else}
       <a href={item.url}>{item.text}</a>
     {/if}

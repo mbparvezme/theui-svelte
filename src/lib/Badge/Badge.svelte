@@ -28,7 +28,6 @@
   }
 </script>
 
-<span class="theui-badge {twMerge(processClasses(), (props?.class ?? "") as string)}">
+<span class="theui-badge {twMerge(processClasses(), (props?.class ?? "") as string)}" aria-label={ariaTitle??"Badge"} role="status">
   {@html text??""}
-  <span class="sr-only">{ariaTitle??"Badge"}</span>
 </span>

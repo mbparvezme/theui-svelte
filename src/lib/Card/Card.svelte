@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from "svelte"
 	import type { ROUNDED, ROUNDED_SIDES, SHADOW } from "$lib/types"
-	import { backdropClasses, roundedClass, shadowClass } from "$lib/function"
+	import { backdropClasses, roundedClass, shadowClass, generateToken } from "$lib/function"
 	import { twMerge } from "tailwind-merge"
 
   interface Props {
@@ -30,12 +30,14 @@
     ...props
   }: Props = $props()
 
+  let id: string = generateToken()
+
   let cardContainerClasses = `${!props?.horizontal?"flex-col":"justify-between"}${roundedClass(rounded)}${shadowClass(shadow)}`;
   let cardContentClasses = `flex flex-col gap-4 p-4 ${imageOverlay ? `absolute inset-0 text-white z-[0]` : ""}`
   let imgClasses = (side: ROUNDED_SIDES) => `block w-full ${props?.horizontal && !imageOverlay ?"max-w-[30%]":""}${roundedClass(rounded, imageOverlay ? "all" : side)}`
 </script>
 
-<div class="card relative {twMerge("flex bg-primary", props?.class as string)} {cardContainerClasses}">
+<div {id} class="card relative {twMerge("flex bg-primary", props?.class as string)} {cardContainerClasses}" aria-labelledby={title && typeof title === "string" ? {id}+"-title" : {id}+"-content"}>
 
   {#if topImage}
     {#if typeof topImage === "function"}
@@ -46,11 +48,13 @@
   {/if}
 
   {#if children}
-  <div class="card-content {twMerge(cardContentClasses, contentClasses)}">
-    <div class={backdropClasses( typeof imageOverlay === "boolean" ? "absolute" : imageOverlay + " absolute")}></div>
+  <div id="{id}-content" class="card-content {twMerge(cardContentClasses, contentClasses)}">
+    {#if imageOverlay}
+      <div class={backdropClasses( typeof imageOverlay === "boolean" ? "absolute" : imageOverlay + " absolute")}></div>
+    {/if}
     {#if title}
       {#if typeof title === "string"}
-          <h4 class={twMerge("text-xl font-semibold", titleClasses)}>{@html title}</h4>
+          <h4 id="{id}-title" class={twMerge("text-xl font-semibold", titleClasses)}>{@html title}</h4>
           {:else}
           {@render title?.()}
         {/if}

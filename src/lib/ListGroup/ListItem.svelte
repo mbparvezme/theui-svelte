@@ -36,13 +36,13 @@
 
 {#if children}
   {#if href}
-    <li>
+    <li role="listitem">
       <a {href} class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}">
         {@render children()}
       </a>
     </li>
   {:else}
-    <li class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}">
+    <li class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}" role="listitem">
       {@render children()}
     </li>
   {/if}

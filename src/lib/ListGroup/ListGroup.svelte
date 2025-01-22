@@ -30,7 +30,7 @@
 </script>
 
 {#if children}
-<ul class="list-group {twMerge(groupClasses, props?.class as string)}">
+<ul class="list-group {twMerge(groupClasses, props?.class as string)}" role="list">
   {@render children()}
 </ul>
 {/if}

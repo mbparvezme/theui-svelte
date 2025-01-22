@@ -114,7 +114,7 @@
 
 <!-- Main component -->
 <div class={getContainerClasses()}>
-  <div id='{id}Heading' class='accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)}>
+  <div id='{id}Heading' class='accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
     {@render accordionHeading()}
   </div>
   <div {id} class='accordion-body{animationClass(animationSpeed)}' class:accordion-close={!ST_ACTIVE_ACCORDIONS.value.includes(id)} class:open={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-labelledby='{id}Heading' aria-hidden={!ST_ACTIVE_ACCORDIONS.value.includes(id)}>

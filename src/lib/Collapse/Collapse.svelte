@@ -42,8 +42,8 @@
 
 {#if title}
 <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-<span  class="theui-collapse-title select-none" class:collapse-active-title={isOpen} role="button" tabindex="-1"
-  onclick={()=>toggleCollapse(id)} aria-controls={id} aria-expanded={isOpen} aria-label={ariaLabel} id="{id}Collapse">
+<span  class="theui-collapse-title select-none" class:collapse-active-title={isOpen} role="button" tabindex="0"
+  onclick={()=>toggleCollapse(id)} aria-controls={id} aria-expanded={isOpen} aria-label={ariaLabel} aria-describedby={id} id="{id}Collapse">
   {@render title()}
 </span>
 {/if}

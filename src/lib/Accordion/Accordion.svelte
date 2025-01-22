@@ -8,6 +8,6 @@
   setContext("ACCORDION", {group: true, id, size, standalone})
 </script>
 
-<div {id} class="theui-accordion-group flex flex-col">
+<div {id} class="theui-accordion-group flex flex-col" role="group">
   {@render children()}
 </div>

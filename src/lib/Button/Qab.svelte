@@ -143,5 +143,5 @@
     {@render children()}
   </div>
   {/if}
-  <FabButton class={twMerge(fabClasses, props?.classes as string)} {href} />
+  <QabButton class={twMerge(fabClasses, props?.classes as string)} {href} />
 </div>

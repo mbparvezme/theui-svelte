@@ -87,13 +87,13 @@
 {/if}
 
 {#if children}
-  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animate)} {positionCls()}" role="dialog" class:animate={animate}>
+  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animate)} {positionCls()}" role="complementary" class:animate={animate}>
 
     {#if backdrop && !props?.fullscreen}
       <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle(id)}></div>
     {/if}
 
-    <div id="{id}-drawer" class={getClass} aria-labelledby="{id}Btn" aria-hidden={!active}>
+    <div id="{id}-drawer" class={getClass} aria-labelledby={`drawer-trigger-${id}`} aria-hidden={!active}>
       <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-4 end-4 p-1" onclick={()=>toggle(id)}/>
       {@render children()}
     </div>
