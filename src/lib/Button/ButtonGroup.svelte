@@ -57,7 +57,7 @@
 </script>
 
 {#if children}
-<div class={getClasses} class:flex-col={stacked} class:theui-btn-stacked={stacked} role="group" aria-label={ariaLabel}>
+<div aria-label={ariaLabel} {...props} class={getClasses} class:flex-col={stacked} class:theui-btn-stacked={stacked} role="group">
   {@render children()}
 </div>
 {/if}

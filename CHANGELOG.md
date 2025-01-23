@@ -9,6 +9,9 @@
 > Only important changes are listed here.
 
 - **Version 2.0.0rc10**
+  - Some unnecessary props removed.
+
+- **Version 2.0.0rc10**
   - Card, Drawer, ListGroup,Tab, Dropdown and Modal issues fix.
   - Image overlay added to Card.
   - "closeOnEsc" prop removed from Drawer.

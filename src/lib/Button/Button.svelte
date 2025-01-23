@@ -8,14 +8,12 @@
   const CTX: any = getContext('BUTTON_GROUP')
   interface Props {
     children?: Snippet,
-    label?: string,
-    beforeLabel?: Snippet|undefined,
-    afterLabel?: Snippet|undefined,
+    beforeLabel?: Snippet,
+    afterLabel?: Snippet,
     animate?: ANIMATE_SPEED,
-    ariaLabel?: string|undefined,
+    ariaLabel?: string,
     externalLinkIcon?: boolean,
-    href?: string|undefined,
-    isActive ?: boolean, // Not tested
+    href?: string,
     outline ?: boolean,
     rounded ?: ROUNDED,
     shadow ?: SHADOW,
@@ -30,22 +28,21 @@
 
   let {
     children,
-    label,
     beforeLabel,
     afterLabel,
-    ariaLabel = typeof label == "string" ? label : "Button",
-    animate = CTX?.animate ?? "normal",
+    ariaLabel = "Button",
+    animate = CTX?.animate || "normal",
     externalLinkIcon = true,
     href = undefined,
     isActive = false,
-    outline = CTX?.outline ?? false,
-    rounded = CTX?.rounded ?? "md",
+    outline = CTX?.outline || false,
+    rounded = CTX?.rounded || "md",
     shadow = "md",
-    size = CTX?.size ?? "md",
-    square = CTX?.square ?? false,
-    theme = CTX?.theme ?? "default",
-    color = CTX?.color ?? "brand",
-    gradientColors = CTX?.gradientColors ?? "brand",
+    size = CTX?.size || "md",
+    square = CTX?.square || false,
+    theme = CTX?.theme || "default",
+    color = CTX?.color || "brand",
+    gradientColors = CTX?.gradientColors || "brand",
     type = "button",
     ...props
   } : Props = $props()
@@ -111,7 +108,7 @@
   }
 
   let getButtonClass = () => {
-    let baseClasses = `${(href ? "theui-link" : "theui-button")} inline-flex gap-2 focus-within:ring-4 focus-within:outline-none ${sizeClasses[square ? "square" : "default"][size]} ${animationClass(animate)} ${utilityClasses()}`
+    let baseClasses = `${(href ? "theui-link" : "theui-button")} inline-flex gap-2 focus:ring-4 focus:outline-none ${sizeClasses[square ? "square" : "default"][size]} ${animationClass(animate)} ${utilityClasses()}`
 
     if(outline){
       return `${baseClasses} ${themes["outline"][color]}`
@@ -131,7 +128,7 @@
   this={href ? "a" : "button"}
   {href}
   {...props}
-  class={twMerge(getButtonClass(), CTX?.buttonClasses, (props.class ?? "") as string)}
+  class={twMerge(getButtonClass(), CTX?.buttonClasses, (props.class || "") as string)}
   type={href ? undefined : type}
   role={href ? "link" : "button"}
   aria-disabled={props?.disabled==true}
@@ -142,11 +139,7 @@
     <span>{@render beforeLabel?.()}</span>
   {/if}
 
-  {#if label}
-		{@html label}
-	{:else if children}
-		{@render children?.()}
-	{/if}
+	{@render children?.()}
 
   {#if afterLabel}
     <span>{@render afterLabel?.()}</span>

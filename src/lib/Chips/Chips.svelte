@@ -7,12 +7,11 @@
 
   interface Props {
     children?: Snippet,
-    content?: string,
     close?: boolean,
     fill?: boolean,
-    imgUrl?: string | undefined,
-    imgClasses?: string,
-    imgAlt?: string,
+    imageUrl?: string | undefined,
+    imageClasses?: string,
+    altText?: string,
     rounded?: ROUNDED,
     size?: 'sm' | 'md' | 'lg',
     [key: string]: unknown // dismissible, icon
@@ -23,9 +22,9 @@
     content,
     close  = true,
     fill   = true,
-    imgUrl = undefined,
-    imgClasses = "",
-    imgAlt = "",
+    imageUrl = undefined,
+    imageClasses = "",
+    altText = "",
     rounded  = "full",
     size   = "md",
     ...props
@@ -41,19 +40,15 @@
 
   let chipsImgClass = twMerge([
     "max-w-none", size === "sm" ? "w-9 h-9" : size === "lg" ? "w-14 h-14" : "w-11 h-11", roundedClass(rounded)
-  ].join(" "), imgClasses);
+  ].join(" "), imageClasses);
 
   const hideChips = () => nodeRef.parentNode?.removeChild(nodeRef)
 </script>
 
-<span class={"theui-chips " + twMerge(chipsClasses, (props?.class ?? "") as string)} class:ps-4={!imgUrl} class:py-2={!imgUrl} bind:this={nodeRef}>
-  {#if imgUrl}<img class={chipsImgClass} alt={imgAlt} src={imgUrl}>{/if}
+<span class={"theui-chips " + twMerge(chipsClasses, (props?.class ?? "") as string)} class:ps-4={!imageUrl} class:py-2={!imageUrl} bind:this={nodeRef}>
+  {#if imageUrl}<img class={chipsImgClass} alt={altText} src={imageUrl}>{/if}
 
-	{#if content}
-		{@html content}
-	{:else if children}
-		{@render children()}
-	{/if}
+  {@render children?.()}
 
   {#if close}
     <Close ariaLabel="Hide chips" size={1} onclick={hideChips} />

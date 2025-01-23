@@ -20,7 +20,6 @@
 
   let {
     children,
-    trigger,
     id = generateToken(),
     label = "",
     animate = "fast",

@@ -1,17 +1,18 @@
 <script lang="ts">
+  import type { Snippet } from "svelte";
   import type { ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
   import { roundedClass } from "$lib/function"
 
   interface Props {
-    text ?: string | undefined,
+    children ?: Snippet,
     ariaTitle ?: string | undefined,
     rounded ?: ROUNDED,
     [key: string]: unknown // dismissible, icon
 	}
 
   let {
-    text,
+    children,
     ariaTitle,
     rounded = "full",
     ...props
@@ -29,5 +30,5 @@
 </script>
 
 <span class="theui-badge {twMerge(processClasses(), (props?.class ?? "") as string)}" aria-label={ariaTitle??"Badge"} role="status">
-  {@html text??""}
+  {@render children?.()}
 </span>

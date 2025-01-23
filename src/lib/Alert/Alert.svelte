@@ -7,7 +7,6 @@
 
 	interface Props {
 		children ?: Snippet,
-		content?: string,
 		rounded ?: ROUNDED,
 		type ?: 'error' | 'info' | 'success' | 'warning',
 		theme ? : 'default'|'light',
@@ -18,7 +17,6 @@
 
 	let {
 		children = undefined,
-		content = undefined,
 		rounded = "md",
 		type = "error",
 		theme = "default",

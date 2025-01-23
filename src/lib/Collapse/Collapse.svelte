@@ -48,13 +48,9 @@
 </span>
 {/if}
 
-{#if content || children}
+{#if children}
 <div {id} class="theui-collapse-body overflow-hidden {classes}" class:invisible={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
-  {#if content}
-    {@html content}
-  {:else if children}
-    {@render children()}
-  {/if}
+  {@render children?.()}
 </div>
 {/if}
 

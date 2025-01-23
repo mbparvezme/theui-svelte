@@ -9,8 +9,6 @@
     startItem ?: Snippet,
     endItem ?: Snippet,
     children ?: Snippet,
-    text ?: string,
-
     href ?: string | undefined,
     preload ?: PRELOAD,
     type ?: 'link' | 'divider' | 'header' | 'button'

@@ -8,17 +8,15 @@
   interface Props {
     children?: Snippet,
     title?: string|Snippet,
-    content?: string,
     id?: string,
     animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
     size?: "compact" | "default" | "large",
     containerClasses?: string,
-    contentClasses?: string,
-    titleClasses?: string,
     openContainerClasses?: string,
-    openContentClasses?: string,
+    titleClasses?: string,
     openTitleClasses?: string,
+    contentClasses?: string,
     [key: string] : unknown // open, flush
 	}
 
@@ -27,7 +25,6 @@
   let {
     children,
     title,
-    content,
     id = generateToken(),
     animationSpeed = "fast",
     rounded = "md",
@@ -85,10 +82,36 @@
     }
   })
 
+  let titleClass = {
+    default: {
+      compact: "p-3",
+      default: "p-4",
+      large: "p-5"
+    },
+    flush: {
+      compact: "py-3 px-2",
+      default: "py-4 px-3",
+      large: "py-5 px-3"
+    }
+  }
+
+  let contentClass = {
+    default: {
+      compact: "p-3",
+      default: "p-4",
+      large: "p-5"
+    },
+    flush: {
+      compact: "py-3",
+      default: "py-4",
+      large: "py-5"
+    }
+  }
+
   let getContainerClasses = () => {
-    let cls = `theui-accordion ${props?.flush ? "accordion-flush " : "accordion-default "} space-${size} ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? " accordion-active " : " "}`;
+    let cls = `theui-accordion ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
     if(props?.flush){
-      cls += `${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""} border-b `;
+      cls += "border-b ";
     }else{
       cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded, "top", "first")} ${roundedClass(rounded, "bottom", "last")}` : `border ${roundedClass(rounded)}`}`;
     }
@@ -97,32 +120,31 @@
   }
 
   let getTitleClasses = () => {
-    let cls = `accordion-title flex items-center w-full${animationClass(animationSpeed)} `;
+    let cls = `theui-accordion-title flex items-center w-full ${titleClass[props?.flush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
     if(props?.flush){
       cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary-500 " : "border-b border-gray-300 dark:border-gray-700 ";
     }else{
       cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary-300 dark:bg-brand-primary-700" : " ";
     }
-    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openTitleClasses) : twMerge(cls, titleClasses);
+    return twMerge(cls, ST_ACTIVE_ACCORDIONS.value.includes(id) ? openTitleClasses : titleClasses);
   }
 
   let getContentClasses = () => {
-    let cls = "accordion-content " + (!props?.flush ? roundedClass(rounded, "bottom") : "") + " h-full ";
-    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openContentClasses) : twMerge(cls, contentClasses);
+    return twMerge(`theui-accordion-content ${contentClass[props?.flush ? "flush" : "default"][size]} ${(!props?.flush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
   }
 </script>
 
-<!-- Main component -->
 <div class={getContainerClasses()}>
-  <div id='{id}Heading' class='accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
+  <div id='{id}-heading' class='accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
     {@render accordionHeading()}
   </div>
-  <div {id} class='accordion-body{animationClass(animationSpeed)}' class:accordion-close={!ST_ACTIVE_ACCORDIONS.value.includes(id)} class:open={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-labelledby='{id}Heading' aria-hidden={!ST_ACTIVE_ACCORDIONS.value.includes(id)}>
-    {@render accordionContent()}
+  <div {id} class="accordion-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!ST_ACTIVE_ACCORDIONS.value.includes(id)} class:open={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-labelledby='{id}-heading' aria-hidden={!ST_ACTIVE_ACCORDIONS.value.includes(id)}>
+    <div class={getContentClasses()}>
+      {@render children?.()}
+    </div>
   </div>
 </div>
 
-<!-- Component Snippet -->
 {#snippet accordionHeading()}
   <button class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active')} class:accordion-active={ST_ACTIVE_ACCORDIONS.value.includes(id)} onclick={()=>toggle()}>
     {#if typeof title === "string"}
@@ -135,48 +157,3 @@
     </svg>
   </button>
 {/snippet}
-
-{#snippet accordionContent()}
-  <div class={getContentClasses()}>
-  {#if content}
-		{@html content}
-	{:else}
-		{#if children}
-			{@render children?.()}
-		{/if}
-	{/if}
-  </div>
-{/snippet}
-
-<style lang='postcss'>
-  .theui-accordion.space-compact:not(.accordion-flush) .accordion-title button, .theui-accordion.space-compact .accordion-content{
-    @apply p-3;
-  }
-  .theui-accordion.space-compact.accordion-flush .accordion-title button{
-    @apply py-3 px-2;
-  }
-  .theui-accordion.space-default:not(.accordion-flush) .accordion-title button, .theui-accordion.space-default .accordion-content{
-    @apply p-4;
-  }
-  .theui-accordion.space-default.accordion-flush .accordion-title button{
-    @apply py-4 px-3;
-  }
-  .theui-accordion.space-large:not(.accordion-flush) .accordion-title button, .theui-accordion.space-large .accordion-content{
-    @apply p-5;
-  }
-  .theui-accordion.space-large.accordion-flush .accordion-title button{
-    @apply py-5 px-3;
-  }
-  .theui-accordion.space-default.accordion-flush .accordion-content{
-    @apply py-4;
-  }
-  .theui-accordion.space-large.accordion-flush .accordion-content{
-    @apply py-5;
-  }
-  .accordion-body{
-    @apply overflow-hidden;
-  }
-  .accordion-body.accordion-close {
-    @apply h-0;
-  }
-</style>
