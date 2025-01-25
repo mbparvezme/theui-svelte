@@ -5,14 +5,16 @@
   import { animationClass, generateToken, roundedClass } from "$lib/function"
   import { twMerge } from "tailwind-merge"
   import { QabButton } from "$lib"
+  import Svg from "$lib/Utility/Svg.svelte";
 
   interface Props {
     children?: Snippet,
+    icon?: Snippet,
     animate?: ANIMATE_SPEED,
     align?: 'start' | 'end',
     size?: 'sm' | 'md' | 'lg' | 'xl',
     rounded?: ROUNDED,
-    href?: string|undefined,
+    href?: string,
     triggerEvent?: 'click' | 'hover',
     btnClasses?: string,
     iconClasses?: string,
@@ -22,11 +24,12 @@
 
   let {
     children,
+    icon,
     animate = "normal",
     align = "end",
     size = "md",
-    rounded = size == "xl" || size == "lg" ? "lg" : "full",
-    href = undefined,
+    rounded = "full",
+    href,
     triggerEvent = "click",
     btnClasses = "",
     iconClasses = "",
@@ -140,8 +143,16 @@
 >
   {#if children && visible}
   <div class="theui-fab-items flex absolute {fabSpaces[direction][align][size]} {directionClasses[direction]}" in:fly={animObj[direction][align]}>
-    {@render children()}
+    {@render children?.()}
   </div>
   {/if}
-  <QabButton class={twMerge(fabClasses, props?.classes as string)} {href} />
+  <QabButton class={twMerge(fabClasses, props?.classes as string)} {href}>
+    {#if icon}
+      {@render icon()}
+    {:else}
+      <Svg class="w-[60%] h-[60%]">
+        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+      </Svg>
+    {/if}
+  </QabButton>
 </div>

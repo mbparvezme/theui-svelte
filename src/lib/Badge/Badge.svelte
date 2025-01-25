@@ -6,7 +6,7 @@
 
   interface Props {
     children ?: Snippet,
-    ariaTitle ?: string | undefined,
+    ariaTitle ?: string,
     rounded ?: ROUNDED,
     [key: string]: unknown // dismissible, icon
 	}

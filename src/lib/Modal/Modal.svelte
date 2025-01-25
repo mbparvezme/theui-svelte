@@ -89,8 +89,8 @@
   aria-haspopup="dialog"
   aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
   aria-describedby={`${id}-modal-body`}
-  onclick={()=>toggle()} {label}
-  class={buttonClasses} />
+  onclick={()=>toggle()}
+  class={buttonClasses}>{label}</Button>
 {:else}
   <span id={`${id}-modal-button`}
     aria-controls={id}

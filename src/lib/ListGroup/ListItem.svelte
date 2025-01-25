@@ -17,7 +17,7 @@
 
   let {
     children,
-    href = undefined,
+    href,
     animate = CTX?.animate ?? "normal",
     variant = CTX?.variant ?? "bordered",
     size = CTX?.size ?? "md",
@@ -31,7 +31,7 @@
     "sm" : "py-2 px-3"
   }
 
-  let itemClasses = `${sizeClasses[size]} cursor-pointer hover:bg-gray-100 ${animationClass(animate)}`
+  let itemClasses = `${sizeClasses[size]} cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${animationClass(animate)}`
 </script>
 
 {#if children}

@@ -9,7 +9,7 @@
     stacked  ?: boolean,
     variant  ?: 'bordered' | 'flat',
     animate ?: ANIMATE_SPEED,
-    ariaLabel ?: string|undefined,
+    ariaLabel ?: string,
     buttonClasses ?: string, // Not tested
     outline ?: boolean,
     rounded ?: ROUNDED,
@@ -24,7 +24,7 @@
   let {
     children,
     stacked = false,
-    variant = "bordered",
+    variant = "flat",
     ariaLabel = "Button group",
     animate = "normal",
     buttonClasses = "",

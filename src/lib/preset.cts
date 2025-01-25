@@ -30,6 +30,9 @@ export default {
         "on-brand-primary": twShades('#FFFFFF'),
         "brand-secondary": twShades('#E8E838'),
         "on-brand-secondary": twShades('#2E2105'),
+        primary: twShades("--ui-bg-primary"),
+        secondary: twShades("--ui-bg-secondary"),
+        alt: twShades("--ui-bg-alt"),
         error: twShades("#E53935"),
         info: twShades("#29B6F6"),
         success: twShades("#00C853"),
@@ -55,11 +58,11 @@ export default {
     plugin(({ addBase }) => {
       addBase({
         ':root': {
-          '--ui-bg-primary': '245 245 250',
+          '--ui-bg-primary': '252 252 253',
           '--ui-bg-secondary': '224 224 230',
           '--ui-bg-alt': '22 22 29',
           '--ui-text-default': '22 22 29',
-          '--ui-text-alt': '245 245 250',
+          '--ui-text-alt': '252 252 253',
           '--ui-text-muted': '99 99 105',
 
           '--max-width': '1280px',
@@ -68,8 +71,8 @@ export default {
         ':root.dark': {
           '--ui-bg-primary': '22 22 29',
           '--ui-bg-secondary': '30 30 38',
-          '--ui-bg-alt': '245 245 250',
-          '--ui-text-default': '245 245 250',
+          '--ui-bg-alt': '252 252 253',
+          '--ui-text-default': '252 252 253',
           '--ui-text-alt': '22 22 29',
           '--ui-text-muted': '161, 161, 170',
         },

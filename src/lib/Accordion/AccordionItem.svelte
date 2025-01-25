@@ -20,7 +20,7 @@
     [key: string] : unknown // open, flush
 	}
 
-  const CTX: any = getContext("ACCORDION") ?? {}
+  const CTX: any = getContext("ACCORDION") || {}
 
   let {
     children,
@@ -102,15 +102,17 @@
       large: "p-5"
     },
     flush: {
-      compact: "py-3",
-      default: "py-4",
-      large: "py-5"
+      compact: "p-3",
+      default: "p-4",
+      large: "p-5"
     }
   }
 
+  let isFlush = props?.flush || CTX?.flush
+
   let getContainerClasses = () => {
     let cls = `theui-accordion ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
-    if(props?.flush){
+    if(isFlush){
       cls += "border-b ";
     }else{
       cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded, "top", "first")} ${roundedClass(rounded, "bottom", "last")}` : `border ${roundedClass(rounded)}`}`;
@@ -120,8 +122,8 @@
   }
 
   let getTitleClasses = () => {
-    let cls = `theui-accordion-title flex items-center w-full ${titleClass[props?.flush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
-    if(props?.flush){
+    let cls = `theui-accordion-title flex items-center w-full ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
+    if(isFlush){
       cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary-500 " : "border-b border-gray-300 dark:border-gray-700 ";
     }else{
       cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary-300 dark:bg-brand-primary-700" : " ";
@@ -130,7 +132,7 @@
   }
 
   let getContentClasses = () => {
-    return twMerge(`theui-accordion-content ${contentClass[props?.flush ? "flush" : "default"][size]} ${(!props?.flush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
+    return twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
   }
 </script>
 

@@ -4,7 +4,7 @@
   import {TR} from "$lib"
 
   interface Props{children ?: Snippet, data?: string[]|Record<string, unknown>[], keys?: string[], [key: string] : unknown}
-  let{children, data, keys = undefined, ...props} : Props = $props()
+  let{children, data, keys, ...props} : Props = $props()
 
   let isMultiRows = (d: any) => (Array.isArray(d) && (Object.prototype.toString.call(d[0]) === "[object Object]" || Array.isArray(d[0])))
 </script>

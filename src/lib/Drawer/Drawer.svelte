@@ -78,7 +78,7 @@
 <svelte:body onkeydown={(e)=>handleKeyboardEsc(e)}></svelte:body>
 
 {#if typeof label == "string"}
-  <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} {ariaLabel} {label} onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}/>
+  <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} {ariaLabel} onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}>{label}</Button>
 {:else}
   <span id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} aria-label={ariaLabel} role="button" onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} tabindex="0">
     {@render label?.()}

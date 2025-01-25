@@ -5,9 +5,9 @@
   import { twMerge } from "tailwind-merge"
 
   interface Props {
-    children ?: Snippet|undefined,
-    entryContent ?: Snippet|undefined,
-    exitContent ?: Snippet|undefined,
+    children ?: Snippet,
+    entryContent ?: Snippet,
+    exitContent ?: Snippet,
     trigger ?: 'onEntry' | 'onExit' | 'onEntryExit',
     repeat ?: boolean | 'page',
     backdrop ?: boolean|string,
@@ -18,9 +18,9 @@
   }
 
   let {
-    children = undefined,
-    entryContent = undefined,
-    exitContent = undefined,
+    children,
+    entryContent,
+    exitContent,
     trigger = "onEntry", 
     repeat = true,
     backdrop = true,

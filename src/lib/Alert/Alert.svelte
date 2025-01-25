@@ -16,7 +16,7 @@
 	}
 
 	let {
-		children = undefined,
+		children,
 		rounded = "md",
 		type = "error",
 		theme = "default",

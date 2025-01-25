@@ -9,14 +9,14 @@
     startItem ?: Snippet,
     endItem ?: Snippet,
     children ?: Snippet,
-    href ?: string | undefined,
+    href ?: string,
     preload ?: PRELOAD,
     type ?: 'link' | 'divider' | 'header' | 'button'
     active ?: boolean,
     [key: string]: unknown
   }
 
-  let {startItem, endItem, children, text, href = undefined, preload = "hover", type = "link", active = false, ...props} : Props = $props()
+  let {startItem, endItem, children, text, href, preload = "hover", type = "link", active = false, ...props} : Props = $props()
 
   let itemClass = (t: Props['type']) => {
     const typeClasses: Record<Exclude<Props['type'], undefined>, string> = {

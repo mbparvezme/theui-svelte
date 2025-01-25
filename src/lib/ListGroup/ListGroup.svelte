@@ -24,7 +24,7 @@
     ...props
   } : Props = $props()
 
-  let groupClasses = `overflow-hidden divide-y divide-gray-300 ${variant == "bordered" ? "border border-gray-300" : ""}${roundedClass(variant=="flat"?"none":rounded)}`
+  let groupClasses = `overflow-hidden divide-y divide-gray-300 dark:divide-gray-700 ${variant == "bordered" ? "border border-gray-300 dark:border-gray-700" : ""}${roundedClass(variant=="flat"?"none":rounded)}`
 
   setContext("LISTGROUP", {animate, variant, itemClasses, size})
 </script>
