@@ -12,7 +12,7 @@
     afterLabel?: Snippet,
     animate?: ANIMATE_SPEED,
     ariaLabel?: string,
-    externalLinkIcon?: boolean,
+    newTabIcon?: boolean,
     href?: string,
     outline ?: boolean,
     rounded ?: ROUNDED,
@@ -21,7 +21,7 @@
     square ?: boolean,
     theme ?: 'default' | 'light' | 'gradient'
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    gradientColors ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     type ?: 'button' | 'submit' | 'reset',
     [key: string]: unknown // Any props
   }
@@ -32,7 +32,7 @@
     afterLabel,
     ariaLabel = "Button",
     animate = CTX?.animate || "normal",
-    externalLinkIcon = true,
+    newTabIcon = true,
     href,
     isActive = false,
     outline = CTX?.outline || false,
@@ -42,7 +42,7 @@
     square = CTX?.square || false,
     theme = CTX?.theme || "default",
     color = CTX?.color || "brand",
-    gradientColors = CTX?.gradientColors || "brand",
+    gradientColor = CTX?.gradientColor || "brand",
     type = "button",
     ...props
   } : Props = $props()
@@ -117,7 +117,7 @@
         return `${baseClasses} ${themes["light"][color]}`
       }
       if(theme === "gradient"){
-        return `${baseClasses} ${themes["gradient"][gradientColors]}`
+        return `${baseClasses} ${themes["gradient"][gradientColor]}`
       }
       return `${baseClasses} ${themes["default"][color]}`
     }
@@ -145,7 +145,7 @@
     <span>{@render afterLabel?.()}</span>
   {/if}
 
-  {#if externalLinkIcon && props?.target}
+  {#if newTabIcon && props?.target}
     <span class="self-start rtl:transform rtl:-rotate-90">
       <Svg size={.6}>
         <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z"/>
