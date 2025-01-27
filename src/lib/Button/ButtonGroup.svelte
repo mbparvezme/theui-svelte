@@ -17,7 +17,7 @@
     square ?: boolean,
     theme ?: 'default' | 'light' | 'gradient'
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    gradientColors ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     [key: string]: unknown // any props
   }
 
@@ -29,7 +29,7 @@
     animate = "normal",
     buttonClasses = "",
     color = "brand",
-    gradientColors = "brand",
+    gradientColor = "brand",
     outline = false,
     rounded = "md",
     size = "md",
@@ -44,16 +44,16 @@
     variant,
     animate,
     buttonClasses,
-    color,
-    gradientColors,
     outline,
     rounded,
     size,
     square,
     theme,
+    color,
+    gradientColor,
   });
 
-  let getClasses = twMerge(`theui-btn-group inline-flex${roundedClass(rounded)}`, (props?.class as string ?? ""))
+  let getClasses = twMerge(`theui-btn-group inline-flex${roundedClass(rounded)}`, props?.class as string)
 </script>
 
 {#if children}

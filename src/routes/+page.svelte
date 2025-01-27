@@ -1,56 +1,85 @@
 <script lang="ts">
-  import { Accordion, AccordionItem, Alert, Badge, Container, DarkMode, ListGroup, ListItem,Drawer, Dropdown, DropdownItem, Modal, Qab, QabButton } from "$lib";
+  import { Container, Qab, QabButton, Button } from "$lib";
+  import ButtonGroup from "$lib/Button/ButtonGroup.svelte";
 </script>
 
-<Container>
+<Container class="last:rounded-e-md">
 
-  <Accordion flush>
-    <AccordionItem title="Human Psychology Fact: 1">
-      ...
-    </AccordionItem>
-    <AccordionItem title="Human Psychology Fact: 2">
-      ...
-    </AccordionItem>
-  </Accordion>
-
-  <div class="flex items-center gap-8">
-    <p class="relative p-2 bg-secondary">
-      Notifications <Badge fixed />
-    </p>
-    <p class="relative p-2 bg-secondary">
-      Notifications <Badge fixed>New</Badge>
-    </p>
+  <div class="flex gap-8 w-full">
+    <div>
+      <Button>Button</Button><br>
+      <Button color="error">Button</Button><br>
+      <Button color="info">Button</Button><br>
+      <Button color="success">Button</Button><br>
+      <Button color="warning">Button</Button><br><br>
+    </div>
+  
+    <div>
+      <Button outline>Button</Button><br>
+      <Button outline color="error">Button</Button><br>
+      <Button outline color="info">Button</Button><br>
+      <Button outline color="success">Button</Button><br>
+      <Button outline color="warning">Button</Button><br><br>
+    </div>
+  
+    <div>
+      <Button theme="light">Button</Button><br>
+      <Button theme="light" color="error">Button</Button><br>
+      <Button theme="light" color="info">Button</Button><br>
+      <Button theme="light" color="success">Button</Button><br>
+      <Button theme="light" color="warning">Button</Button><br><br>
+    </div>
+  
+    <div>
+      <Button theme="gradient">Button</Button><br>
+      <Button theme="gradient" gradientColor="error">Button</Button><br>
+      <Button theme="gradient" gradientColor="info">Button</Button><br>
+      <Button theme="gradient" gradientColor="success">Button</Button><br>
+      <Button theme="gradient" gradientColor="warning">Button</Button><br><br>
+    </div>
   </div>
-  <Alert icon>Hello</Alert>
 
-  <Qab>
+  <div class="flex flex-col gap-8">
+    <div>
+      <ButtonGroup>
+        <Button>Button</Button>
+        <Button color="error">Button</Button>
+        <Button color="info">Button</Button>
+        <Button color="success">Button</Button>
+        <Button color="warning">Button</Button>
+      </ButtonGroup>
+    </div>
+  
+    <div>
+      <ButtonGroup outline>
+        <Button>Button</Button>
+        <Button color="error">Button</Button>
+        <Button color="info">Button</Button>
+        <Button color="success">Button</Button>
+        <Button color="warning">Button</Button>
+      </ButtonGroup>
+    </div>
+  
+    <ButtonGroup theme="light">
+      <Button>Button</Button>
+      <Button color="error">Button</Button>
+      <Button color="info">Button</Button>
+      <Button color="success">Button</Button>
+      <Button color="warning">Button</Button>
+    </ButtonGroup>
+  
+    <ButtonGroup theme="gradient">
+      <Button>Button</Button>
+      <Button gradientColor="error">Button</Button>
+      <Button gradientColor="info">Button</Button>
+      <Button gradientColor="success">Button</Button>
+      <Button gradientColor="warning">Button</Button>
+    </ButtonGroup>
+  </div>
+
+  <Qab color="info">
     <QabButton url="/"></QabButton>
     <QabButton url="/"></QabButton>
     <QabButton url="/"></QabButton>
   </Qab>
-  <br>
-  <br>
-  <DarkMode />
-  <br>
-  <br>
-  <ListGroup>
-    <ListItem>First Item</ListItem>
-    <ListItem>Second Item</ListItem>
-    <ListItem>Third Item</ListItem>
-  </ListGroup>
-  <br>
-  <br>
-  <Drawer label="Open Drawer">
-    <div class="p-8">
-      Drawer content
-    </div>
-  </Drawer>
-  <Dropdown label="Dropdown">
-    <DropdownItem url="/">Link 1</DropdownItem>
-    <DropdownItem url="/">Link 2</DropdownItem>
-    <DropdownItem url="/">Link 3</DropdownItem>
-  </Dropdown>
-  <Modal label="Modal Button">
-    Hello Modal!
-  </Modal>
 </Container>

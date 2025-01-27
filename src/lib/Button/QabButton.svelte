@@ -4,6 +4,7 @@
   import { animationClass, generateToken, roundedClass } from "$lib/function"
 	import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
 	import { Svg } from "$lib"
+  import { QABTheme } from "./button";
 
   interface Props {
     children?:Snippet,
@@ -12,10 +13,15 @@
     size?: 'sm' | 'md' | 'lg' | 'xl',
     rounded?: ROUNDED,
     iconClasses?: string,
+
+    theme ?: 'default' | 'light' | 'gradient',
+    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+
     [key: string]: unknown
   }
-  
-  let CTX: any = getContext('FAB') as any
+
+  let CTX: any = getContext('QAB') as any
   let {
     children,
     animate = "normal",
@@ -23,13 +29,18 @@
     size = CTX?.size ?? "md",
     rounded = CTX?.rounded ?? "full",
     iconClasses = "",
+
+    theme = CTX?.theme || "default",
+    color = CTX?.color || "brand",
+    gradientColor = CTX?.gradientColor || "brand",
+
     ...props
   } : Props = $props()
 
-  let id: string = `${generateToken()}-fab-btn`
-
-  let fabItemSize  = {sm: "w-10 h-10", md: "w-12 h-12", lg: "w-14 h-14", xl: "w-16 h-16"}
-  let fabItemClasses = `flex items-center justify-center bg-brand-primary-500 text-on-brand-primary-500 shadow-2xl hover:bg-brand-primary-600 ${fabItemSize[size]}${roundedClass(rounded)}${animationClass(animate)}`
+  const id: string = `${generateToken()}-qab-btn`
+  const qabItemSize  = {sm: "w-10 h-10", md: "w-12 h-12", lg: "w-14 h-14", xl: "w-16 h-16"}
+  const qabTheme = () => QABTheme(theme, theme === "gradient" ? gradientColor : color)
+  let qabItemClasses = twMerge(`flex items-center justify-center shadow-2xl ${qabItemSize[size]} ${qabTheme()} ${roundedClass(rounded)}${animationClass(animate)}`, props?.mainButton ? CTX.mainButtonClasses : "", props?.class as string)
 </script>
 
 <svelte:element
@@ -37,7 +48,7 @@
   {href}
   this={href ? "a" : "button"}
   role={href ? "link" : "button"}
-  class={twMerge(fabItemClasses, props?.class as string)}
+  class={qabItemClasses}
   aria-label={"button"} {...props}>
   {#if children}
     {@render children()}
