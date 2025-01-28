@@ -4,7 +4,7 @@
   import { setContext, type Snippet } from "svelte"
   import { animationClass, generateToken, roundedClass } from "$lib/function"
   import { twMerge } from "tailwind-merge"
-  import { QabButton } from "$lib"
+  import { QabItem } from "$lib"
   import Svg from "$lib/Utility/Svg.svelte";
 
   interface Props {
@@ -150,7 +150,7 @@
     {@render children?.()}
   </div>
   {/if}
-  <QabButton mainButton {href}>
+  <QabItem mainButton {href}>
     {#if icon}
       {@render icon()}
     {:else}
@@ -158,5 +158,5 @@
         <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
       </Svg>
     {/if}
-  </QabButton>
+  </QabItem>
 </div>

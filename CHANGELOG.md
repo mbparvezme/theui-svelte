@@ -8,6 +8,9 @@
 
 > Only important changes are listed here.
 
+- **Version 2.0.0rc17**
+  - QABButton component renamed as QABItem.
+
 - **Version 2.0.0rc10**
   - Some unnecessary props removed.
 

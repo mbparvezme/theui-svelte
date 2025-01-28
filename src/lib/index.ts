@@ -15,7 +15,7 @@ export { default as Drawer } from "./Drawer/Drawer.svelte";
 export { default as Dropdown } from "./Dropdown/Dropdown.svelte";
 export { default as DropdownItem } from "./Dropdown/DropdownItem.svelte";
 export { default as Qab } from "./Button/Qab.svelte";
-export { default as QabButton } from "./Button/QabButton.svelte";
+export { default as QabItem } from "./Button/QabItem.svelte";
 export { default as ListGroup } from "./ListGroup/ListGroup.svelte";
 export { default as ListItem } from "./ListGroup/ListItem.svelte";
 export { default as Modal } from "./Modal/Modal.svelte";
