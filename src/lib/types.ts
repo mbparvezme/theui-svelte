@@ -89,7 +89,6 @@ export type MOBILE_NAV_ON = keyof RESPONSIVE_NAV_ON
 export type NOTIFY_CONFIG = {
   removeAfter?: number;
   removeOnClick?: boolean;
-  animate?: boolean;
   rounded?: ROUNDED;
   theme ?: "default" | "light"
   variant?: "card" | "borderTop" | "borderBottom" | "borderStart";
