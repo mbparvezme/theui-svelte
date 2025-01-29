@@ -13,7 +13,7 @@ export const selectedPanel: { value: string | null } = $state({ value: null })
 export const ST_SLIDER: { slides: HTMLElement[], activeSlide: HTMLElement|null, previousSlide: string, nextSlide: string } = $state({ slides: [], activeSlide: null, previousSlide: "", nextSlide: "" })
 
 export const notify = (msg: string, type: NOTIFICATION_TYPE = "error", config: NOTIFY_CONFIG = {}): string => {
-  const defaultConfig: NOTIFY_CONFIG = { animate: true, removeOnClick: true, removeAfter: 50000, rounded: "md", theme: "default", variant: "card" }
+  const defaultConfig: NOTIFY_CONFIG = { animate: true, removeOnClick: true, removeAfter: 4000, rounded: "md", theme: "default", variant: "card" }
   const C: NOTIFY_CONFIG & { id: string } = { ...defaultConfig, ...config, id: generateToken() };
 
   ST_NOTIFICATIONS.value.push({ msg, type, CONFIG: C });

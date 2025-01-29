@@ -10,6 +10,7 @@
   interface Props {
     children?: Snippet,
     animate?: ANIMATE_SPEED,
+    icon?: Snippet,
     ariaLabel ?: string,
     href?: string,
     rounded?: ROUNDED,
@@ -17,8 +18,6 @@
     theme ?: 'default' | 'light' | 'gradient'
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-
-    icon?: Snippet,
     align?: 'start' | 'end',
     triggerEvent?: 'click' | 'hover',
     iconClasses?: string,
@@ -40,6 +39,7 @@
     theme = "default",
     color = "brand",
     gradientColor = "brand",
+    ariaLabel = "Quick Action Button",
     ...props
   } : Props = $props()
 
@@ -150,7 +150,7 @@
     {@render children?.()}
   </div>
   {/if}
-  <QabItem mainButton {href}>
+  <QabItem mainButton {ariaLabel} {href}>
     {#if icon}
       {@render icon()}
     {:else}

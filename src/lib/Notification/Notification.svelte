@@ -14,7 +14,6 @@
     animate = true,
     ...props
   } : Props = $props()
-
 </script>
 
 {#if ST_NOTIFICATIONS?.value?.length}
