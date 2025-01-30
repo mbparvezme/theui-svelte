@@ -2,7 +2,6 @@
   import { fade, fly } from "svelte/transition"
   import { ST_NOTIFICATIONS, removeNotification } from "$lib/state.svelte"
   import { notificationClasses, type NOTIFICATION_POSITION } from "$lib/function"
-
   interface Props {
     position?: NOTIFICATION_POSITION
     animate?: boolean,

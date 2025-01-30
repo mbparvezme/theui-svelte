@@ -283,7 +283,7 @@ const animationSpeed: { [speed in Exclude<ANIMATE_SPEED, "none">]: string } = {
   faster: "duration-100",
 }
 
-const animationType: any = {
+const animationType: Record<string, string> = {
   color: "transition-colors",
   opacity: "transition-opacity",
   shadow: "transition-shadow",
@@ -323,6 +323,13 @@ export const messageTheme = {
     info: "bg-info-100 text-info-900 dark:bg-info-900 dark:text-info-200",
     success: "bg-success-100 text-success-900 dark:bg-success-900 dark:text-success-200",
     warning: "bg-warning-100 text-warning-900 dark:bg-warning-900 dark:text-warning-200",
+  },
+  gradient: {
+    brand: "bg-gradient-to-r from-brand-primary-300 via-brand-primary-400 to-brand-primary-500 text-on-brand-primary-500",
+    error: "bg-gradient-to-r from-error-400 via-error-500 to-error-600",
+    info: "bg-gradient-to-r from-info-400 via-info-500 to-info-600",
+    success: "bg-gradient-to-r from-success-400 via-success-500 to-success-600",
+    warning: "bg-gradient-to-r from-warning-300 via-warning-400 to-warning-600",
   }
 }
 
@@ -335,6 +342,13 @@ export const messageBorderTheme = {
     warning: "border-warning-500 dark:border-warning-700",
   },
   light: {
+    brand: "border-brand-primary-300 dark:border-brand-primary-700",
+    error: "border-error-300 dark:border-error-700",
+    info: "border-info-300 dark:border-info-800",
+    success: "border-success-300 dark:border-success-800",
+    warning: "border-warning-500 dark:border-warning-800",
+  },
+  gradient: {
     brand: "border-brand-primary-300 dark:border-brand-primary-700",
     error: "border-error-300 dark:border-error-700",
     info: "border-info-300 dark:border-info-800",
@@ -455,7 +469,7 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
     borderStart: `${roundedClass(config?.rounded || "md")} ${messageBorderTheme[theme][type]} border-s-4`,
   }
 
-  return twMerge(baseClass, variantClasses[config?.variant || "card"], props.class as string || "")
+  return twMerge(baseClass, theme !== "gradient" ? variantClasses[config?.variant || "card"] : "", props.class as string || "")
 }
 
 
