@@ -2,7 +2,7 @@
 	import type { ROUNDED } from "$lib/types"
 	import type { Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
-	import { roundedClass, generateToken, messageTheme, messageBorderTheme } from "$lib/function"
+	import { roundedClass, generateToken, messageTheme, messageBarTheme } from "$lib/function"
 	import { Close, Svg } from "$lib"
 
 	interface Props {
@@ -31,9 +31,9 @@
 		let baseClass = `theui-alert flex items-center p-4 mb-4 gap-4 text-sm font-medium dark:font-normal ${messageTheme[theme][type]}`
 		const variantClasses = {
 			card: roundedClass(rounded),
-			borderTop: `${roundedClass(rounded, "bottom")} ${messageBorderTheme[theme][type]} border-t-4`,
-			borderBottom: `${roundedClass(rounded, "top")} ${messageBorderTheme[theme][type]} border-b-4`,
-			borderStart: `${roundedClass(rounded)} ${messageBorderTheme[theme][type]} border-s-4`
+			borderTop: `${roundedClass(rounded, "bottom")} ${messageBarTheme[theme][type]} border-t-4`,
+			borderBottom: `${roundedClass(rounded, "top")} ${messageBarTheme[theme][type]} border-b-4`,
+			borderStart: `${roundedClass(rounded)} ${messageBarTheme[theme][type]} border-s-4`
 		}
 		const variantClass = variantClasses[variant] || ""
 		return twMerge(`${baseClass} ${variantClass}`, props?.class as string);

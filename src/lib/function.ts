@@ -312,7 +312,7 @@ const shadowClasses: { [size in Exclude<SHADOW, "none">]: string } = {
 export const messageTheme = {
   default: {
     brand: "bg-brand-primary-500 text-on-brand-primary-500",
-    error: "bg-error-400 text-error-50 dark:bg-error-600",
+    error: "bg-error-500 text-error-50 dark:bg-error-600",
     info: "bg-info-600 text-info-50 dark:bg-info-700",
     success: "bg-success-600 text-success-50 dark:bg-success-700",
     warning: "bg-warning-300 dark:bg-warning-600 text-warning-900 dark:text-warning-50",
@@ -333,7 +333,7 @@ export const messageTheme = {
   }
 }
 
-export const messageBorderTheme = {
+export const messageBarTheme = {
   default: {
     brand: "border-brand-primary-200 dark:border-brand-primary-800",
     error: "border-error-200 dark:border-error-800",
@@ -464,12 +464,12 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
 
   const variantClasses: Record<string, string> = {
     card: roundedClass(config?.rounded || "md"),
-    borderTop: `${roundedClass(config?.rounded || "md", "bottom")} ${messageBorderTheme[theme][type]} border-t-4`,
-    borderBottom: `${roundedClass(config?.rounded || "md", "top")} ${messageBorderTheme[theme][type]} border-b-4`,
-    borderStart: `${roundedClass(config?.rounded || "md")} ${messageBorderTheme[theme][type]} border-s-4`,
+    barTop: `${roundedClass(config?.rounded || "md", "bottom")} ${messageBarTheme[theme][type]} border-t-4`,
+    barBottom: `${roundedClass(config?.rounded || "md", "top")} ${messageBarTheme[theme][type]} border-b-4`,
+    barStart: `${roundedClass(config?.rounded || "md")} ${messageBarTheme[theme][type]} border-s-4`,
   }
 
-  return twMerge(baseClass, theme !== "gradient" ? variantClasses[config?.variant || "card"] : "", props.class as string || "")
+  return twMerge(baseClass, theme !== "gradient" ? variantClasses[config?.variant || "card"] : "", props.class as string)
 }
 
 

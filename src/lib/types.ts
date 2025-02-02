@@ -91,7 +91,7 @@ export type NOTIFY_CONFIG = {
   removeOnClick?: boolean;
   rounded?: ROUNDED;
   theme ?: "default" | "light" | "gradient"
-  variant?: "card" | "borderTop" | "borderBottom" | "borderStart";
+  variant?: "card" | "barTop" | "barBottom" | "barStart";
 };
 
 export type TABLE_CONFIG = {

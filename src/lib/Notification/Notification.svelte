@@ -2,21 +2,12 @@
   import { fade, fly } from "svelte/transition"
   import { ST_NOTIFICATIONS, removeNotification } from "$lib/state.svelte"
   import { notificationClasses, type NOTIFICATION_POSITION } from "$lib/function"
-  interface Props {
-    position?: NOTIFICATION_POSITION
-    animate?: boolean,
-    [key: string] : unknown // class
-  }
 
-  let {
-    position = "top-end",
-    animate = true,
-    ...props
-  } : Props = $props()
+  let {position = "top-end", animate = true} : {position?: NOTIFICATION_POSITION, animate?: boolean} = $props()
 </script>
 
 {#if ST_NOTIFICATIONS?.value?.length}
-<ul {...props} class="theui-notifications z-[70] {position}">
+<ul class="theui-notifications z-[70] fixed list-none flex flex-col p-4 gap-y-4 {position}">
   {#each ST_NOTIFICATIONS.value as notification}
   <li class="notification">
     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -38,9 +29,6 @@
 {/if}
 
 <style lang="postcss">
-  .theui-notifications{
-    @apply fixed list-none flex flex-col p-4;
-  }
   .theui-notifications.top-start, .theui-notifications.top-center, .theui-notifications.top-end{
     @apply justify-start top-0;
   }
@@ -56,10 +44,10 @@
   .theui-notifications.bottom-start, .theui-notifications.top-start{
     @apply items-start start-0;
   }
-  .theui-notifications.top-start .notification, .theui-notifications.top-center .notification, .theui-notifications.top-end .notification{
+  /*.theui-notifications.top-start .notification, .theui-notifications.top-center .notification, .theui-notifications.top-end .notification{
     @apply mb-4;
   }
   .theui-notifications.bottom-start .notification, .theui-notifications.bottom-center .notification, .theui-notifications.bottom-end .notification{
     @apply mt-4;
-  }
+  }*/
 </style>

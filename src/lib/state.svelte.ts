@@ -13,19 +13,17 @@ export const selectedPanel: { value: string | null } = $state({ value: null })
 export const ST_SLIDER: { slides: HTMLElement[], activeSlide: HTMLElement|null, previousSlide: string, nextSlide: string } = $state({ slides: [], activeSlide: null, previousSlide: "", nextSlide: "" })
 
 export const notify = (msg: string, type: NOTIFICATION_TYPE = "error", config: NOTIFY_CONFIG = {}): string => {
-  const defaultConfig: NOTIFY_CONFIG = { removeOnClick: true, removeAfter: 4000, rounded: "md", theme: "default", variant: "card" }
+  const defaultConfig: NOTIFY_CONFIG = { removeOnClick: true, removeAfter: 4000, rounded: "md", theme: "default", variant: "card" };
   const C: NOTIFY_CONFIG & { id: string } = { ...defaultConfig, ...config, id: generateToken() };
 
   ST_NOTIFICATIONS.value.push({ msg, type, CONFIG: C });
 
   if (C.removeAfter !== 0) {
-    setTimeout(() => {
-      removeNotification(C.id)
-    }, C.removeAfter)
+    setTimeout(() => removeNotification(C.id), C.removeAfter);
   }
-  return C.id
+  return C.id;
 }
 
 export const removeNotification = (id: string) => {
-  ST_NOTIFICATIONS.value = ST_NOTIFICATIONS.value.filter((n: NOTIFICATION_DATA_TYPE) => n.CONFIG.id !== id)
+  ST_NOTIFICATIONS.value = ST_NOTIFICATIONS.value.filter((n: NOTIFICATION_DATA_TYPE) => n.CONFIG.id !== id);
 }
