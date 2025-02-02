@@ -40,22 +40,22 @@
       return "top";
     }
 
-    const triggerRect = trigger.getBoundingClientRect();
-    const popoverRect = popover.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    const triggerRect = trigger.getBoundingClientRect()
+    const popoverRect = popover.getBoundingClientRect()
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
 
     const space = {
       top: triggerRect.top,
       bottom: viewportHeight - triggerRect.bottom,
       left: triggerRect.left,
       right: viewportWidth - triggerRect.right,
-    };
+    }
 
     const tooltipDimensions = {
       width: popoverRect.width + offset,
       height: popoverRect.height + offset,
-    };
+    }
 
     // Check if the preferred position fits
     if (position) {
@@ -180,9 +180,9 @@
 
   onMount(() => {
     trigger = document.getElementById(triggerID) as HTMLElement
-    if(!children){
-      popover = document.querySelector(`[data-popover-id="${triggerID}"]`) as HTMLElement
-    }
+    // if(!children){
+    //   popover = document.querySelector(`[data-popover-id="${triggerID}"]`) as HTMLElement
+    // }
     if (trigger && popover) {
       if(event == "hover"){
         trigger.addEventListener('mouseenter', () => {

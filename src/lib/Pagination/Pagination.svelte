@@ -14,8 +14,8 @@
     animate ?: ANIMATE_SPEED,
     activeButtonClasses ?: string,
     buttonClasses ?: string,
-    onPreviousClick ?: any,
-    onNextClick ?: any,
+    onPreviousClick ?: Function,
+    onNextClick ?: Function,
     [key: string]: unknown
   }
 
