@@ -2,23 +2,27 @@
   import { twMerge } from "tailwind-merge"
   import { roundedClass, generateToken } from "$lib/function"
 	import { onMount } from "svelte"
+    import type { ROUNDED } from "$lib/types";
 
   interface Props {
-    id ?: string,
-    label ?: string|null,
     start ?: number,
     end ?: number,
-    barClasses ?: string,
-    thickness ?: 'px' | 'sm' | 'md' | 'lg' | 'xl',
-    vertical ?: boolean,
-    bubbleClasses ?: string,
+
+    label ?: string,
     labelVariant ?: 'default' | 'bubble'
+    bubbleClasses ?: string,
+    thickness ?: 'px' | 'sm' | 'md' | 'lg' | 'xl',
+    barClasses ?: string,
+
+    vertical ?: boolean,    
+    rounded?: ROUNDED,
+    id ?: string,
     [key: string] : unknown,
   }
 
   let {
     id = generateToken(),
-    label = null,
+    label,
     start = 0,
     end = 0,
     barClasses = "",
@@ -26,6 +30,7 @@
     thickness = "md",
     vertical = false,
     labelVariant = "bubble",
+    rounded = "full",
     ...props
   } : Props = $props()
 
@@ -65,10 +70,10 @@
 
   let trackCls = () => {
     const sizeClass = vertical ? (sizes['vertical'][thickness] ?? sizes['vertical'].md) : (sizes['default'][thickness] ?? sizes['default'].md)
-    return `select-none ${sizeClass} ${(vertical ? "inline-flex h-full min-h-[50vh]" : "flex w-full")} ${roundedClass("full")}`
+    return `select-none ${sizeClass} ${(vertical ? "inline-flex h-full min-h-[50vh]" : "flex w-full")} ${roundedClass(rounded)}`
   }
 
-  let barCls = () => `progress-bar absolute ${twMerge(`flex items-center justify-center bg-brand-primary-500 text-on-brand-primary-500 ${roundedClass("full")}`, barClasses)}`
+  let barCls = () => `progress-bar absolute ${twMerge(`flex items-center justify-center bg-brand-primary-500 text-on-brand-primary-500 ${roundedClass(rounded)}`, barClasses)}`
 
   let labelCls = () => {
     const bubblePositionCls: any = vertical ? bubblePosition['vertical'][thickness] : bubblePosition['default'][thickness]
