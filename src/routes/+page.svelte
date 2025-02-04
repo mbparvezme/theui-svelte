@@ -14,11 +14,11 @@
     <Progress {start} {end} thickness="xl" label="90"/><br><br>
   </div>
   <div class="flex gap-8">
-    <Progress {start} {end} vertical={true} thickness="px" label="90"/><br><br>
-    <Progress {start} {end} vertical={true} thickness="sm" label="90"/><br><br>
-    <Progress {start} {end} vertical={true} thickness="md" label="90"/><br><br>
-    <Progress {start} {end} vertical={true} thickness="lg" label="90"/><br><br>
-    <Progress {start} {end} vertical={true} thickness="xl" label="90"/><br><br>
+    <Progress {start} {end} vertical thickness="px" label="90"/><br><br>
+    <Progress {start} {end} vertical thickness="sm" label="90"/><br><br>
+    <Progress {start} {end} vertical thickness="md" label="90"/><br><br>
+    <Progress {start} {end} vertical thickness="lg" label="90"/><br><br>
+    <Progress {start} {end} vertical thickness="xl" label="90"/><br><br>
   </div>
 </div>
 
