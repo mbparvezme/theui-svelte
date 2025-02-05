@@ -214,7 +214,7 @@ export class Slider {
 
   getButtonClasses(classes: string, type: "prev" | "next") {
     return twMerge(
-      `absolute top-1/2 transform -translate-y-1/2 bg-gray-200/50 p-2 w-10 h-10 rounded-full ${type === "next" ? "right-4" : "left-4"
+      `absolute flex justify-center items-center top-1/2 transform -translate-y-1/2 bg-gray-200 dark:text-black opacity-60 p-2 w-12 h-12 rounded-full transition-opacity duration-300 hover:opacity-100 ${type === "next" ? "right-4" : "left-4"
       }`,
       classes
     );

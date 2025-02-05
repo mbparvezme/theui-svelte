@@ -3,6 +3,7 @@
   import { ST_SLIDER } from "$lib/state.svelte"
 	import { Slider } from "./slider"
 	import { twMerge } from "tailwind-merge"
+  import Svg from "$lib/Utility/Svg.svelte"
 
   interface Props {
     children: Snippet,
@@ -12,13 +13,13 @@
     stopOnHover?: boolean,
     slideDuration?: number,
     transitionDuration?: number,
-    activeSlide?: number,
     controls?: boolean,
     indicator?: boolean,
     timer?: boolean,
+    activeSlide?: number,
+
     indicatorClasses?: string,
     indicatorActiveClasses?: string,
-
     slideContainerClasses?: string,
     slideClasses?: string,
     controlButtonClasses?: string,
@@ -36,13 +37,13 @@
     stopOnHover = true,
     slideDuration = 5000,
     transitionDuration = 750,
+    controls = false,
+    indicator = false,
+    timer = true,
     activeSlide = 1,
+
     indicatorClasses = "",
     indicatorActiveClasses = "",
-
-    controls = false,
-    timer = true,
-    indicator = false,
     slideContainerClasses = "",
     slideClasses = "",
     controlButtonClasses = "",
@@ -94,20 +95,24 @@
     {#if prevButton}
       {@render prevButton()}
     {:else}
-      ←
+      <Svg size={2} class="opacity-50">
+        <path fill-rule="evenodd" d="M9.224 1.553a.5.5 0 0 1 .223.67L6.56 8l2.888 5.776a.5.5 0 1 1-.894.448l-3-6a.5.5 0 0 1 0-.448l3-6a.5.5 0 0 1 .67-.223"/>
+      </Svg>
     {/if}
   </button>
   <button id="{obj.id}-next" class="next-slide-button {obj.getButtonClasses(controlButtonClasses, "next")}" onclick={()=>obj.changeSlide("next")}>
     {#if nextButton}
       {@render nextButton()}
     {:else}
-      →
+      <Svg size={2} class="opacity-50">
+        <path fill-rule="evenodd" d="M6.776 1.553a.5.5 0 0 1 .671.223l3 6a.5.5 0 0 1 0 .448l-3 6a.5.5 0 1 1-.894-.448L9.44 8 6.553 2.224a.5.5 0 0 1 .223-.671"/>
+      </Svg>
     {/if}
   </button>
   {/if}
 
   {#if timer}
-  <div id="{obj.id}-timer" class="slide-timer absolute {twMerge("top-0 start-0 h-1 bg-gray-500 opacity-50", timerClasses)}"></div>
+  <div id="{obj.id}-timer" class="slide-timer absolute {twMerge("top-0 start-0 h-1 bg-gray-500 mix-blend-difference opacity-70", timerClasses)}"></div>
   {/if}
 
   {#if !indicator}

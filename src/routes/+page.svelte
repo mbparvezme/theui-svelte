@@ -1,26 +1,18 @@
 <script lang="ts">
-  import {Progress} from "$lib";
-  let start = $state(0)
-  let end = $state(40)
+  import {Slider, Slide, Container, DarkMode} from "$lib";
 </script>
 
-<br><br>
-<div class="grid grid-cols-2 gap-4">
-  <div>
-    <Progress {start} {end} thickness="px" label="90"/><br><br>
-    <Progress {start} {end} thickness="sm" label="90"/><br><br>
-    <Progress {start} {end} thickness="md" label="90"/><br><br>
-    <Progress {start} {end} thickness="lg" label="90"/><br><br>
-    <Progress {start} {end} thickness="xl" label="90"/><br><br>
-  </div>
-  <div class="flex gap-8">
-    <Progress {start} {end} vertical thickness="px" label="90"/><br><br>
-    <Progress {start} {end} vertical thickness="sm" label="90"/><br><br>
-    <Progress {start} {end} vertical thickness="md" label="90"/><br><br>
-    <Progress {start} {end} vertical thickness="lg" label="90"/><br><br>
-    <Progress {start} {end} vertical thickness="xl" label="90"/><br><br>
-  </div>
-</div>
+<DarkMode />
 
-<input type="range" bind:value={start} />
-<input type="range" bind:value={end} />
+<Container>
+  <Slider>
+    {#snippet children()}
+      <Slide src="1.jpg" alt="" />
+      <Slide src="2.jpg" alt="" />
+      <Slide src="3.jpg" alt="" />
+      <Slide>
+        <h3>Hello</h3>
+      </Slide>
+    {/snippet}
+  </Slider>
+</Container>
