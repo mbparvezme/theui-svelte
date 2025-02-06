@@ -3,27 +3,26 @@
   import { ST_SLIDER } from "$lib/state.svelte"
 	import { Slider } from "./slider"
 	import { twMerge } from "tailwind-merge"
-  import Svg from "$lib/Utility/Svg.svelte"
+  import { Svg } from "$lib"
 
   interface Props {
     children: Snippet,
     prevButton?: Snippet,
     nextButton?: Snippet,
+    controls?: boolean,
+    indicator?: boolean,
     autoPlay?: boolean,
     stopOnHover?: boolean,
     slideDuration?: number,
     transitionDuration?: number,
-    controls?: boolean,
-    indicator?: boolean,
     timer?: boolean,
     activeSlide?: number,
 
-    indicatorClasses?: string,
-    indicatorActiveClasses?: string,
-    slideContainerClasses?: string,
     slideClasses?: string,
     controlButtonClasses?: string,
     indicatorContainerClasses?: string,
+    indicatorClasses?: string,
+    indicatorActiveClasses?: string,
     timerClasses?: string,
 
     [key: string] : unknown
@@ -33,21 +32,20 @@
     children,
     prevButton,
     nextButton,
+    controls = true,
+    indicator = true,
     autoPlay = true,
     stopOnHover = true,
     slideDuration = 5000,
     transitionDuration = 750,
-    controls = false,
-    indicator = false,
     timer = true,
     activeSlide = 1,
 
-    indicatorClasses = "",
-    indicatorActiveClasses = "",
-    slideContainerClasses = "",
     slideClasses = "",
     controlButtonClasses = "",
     indicatorContainerClasses = "",
+    indicatorClasses = "",
+    indicatorActiveClasses = "",
     timerClasses = "",
     ...props
   } : Props = $props()
@@ -85,13 +83,13 @@
 
 {#if children}
 <!-- svelte-ignore a11y_no_static_element_interactions -->
-<div id={obj.id} class="slider relative overflow-hidden w-full" onmouseenter={()=>obj.handleMouseEnter()} onmouseleave={()=>obj.handleMouseLeave()}>
-  <div id={`${obj.id}-items`} class="slides flex {props?.class ?? ""}">
+<div id={obj.id} class="slider relative overflow-hidden w-full" onmouseenter={()=>obj.handleMouseEnter()} onmouseleave={()=>obj.handleMouseLeave()} role="region" aria-label="Image Slider" aria-live="polite">
+  <div id={`${obj.id}-items`} class="slides flex {props?.class}">
     {@render children()}
   </div>
 
   {#if !controls}
-  <button id="{obj.id}-prev" class="prev-slide-button {obj.getButtonClasses(controlButtonClasses, "prev")}" onclick={()=>obj.changeSlide("prev")}>
+  <button id="{obj.id}-prev" class="prev-slide-button {obj.getButtonClasses(controlButtonClasses, "prev")}" onclick={()=>obj.changeSlide("prev")} aria-label="Previous Slide">
     {#if prevButton}
       {@render prevButton()}
     {:else}
@@ -100,7 +98,7 @@
       </Svg>
     {/if}
   </button>
-  <button id="{obj.id}-next" class="next-slide-button {obj.getButtonClasses(controlButtonClasses, "next")}" onclick={()=>obj.changeSlide("next")}>
+  <button id="{obj.id}-next" class="next-slide-button {obj.getButtonClasses(controlButtonClasses, "next")}" onclick={()=>obj.changeSlide("next")} aria-label="Next Slide">
     {#if nextButton}
       {@render nextButton()}
     {:else}

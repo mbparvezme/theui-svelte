@@ -1,4 +1,4 @@
-<script lang="ts">
+  <script lang="ts">
 	import { type Snippet } from "svelte"
   import { twMerge } from "tailwind-merge"
 
@@ -23,14 +23,14 @@
 
 {#if children}
 <svg
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
   width="{size}rem" height="{size}rem"
   {viewBox}
   {focusable}
   {...props}
-  class={twMerge(cls, props?.class as string)}
+  class={twMerge(cls, (props?.class || "") as string)}
   class:stroke-icon={props?.stroke}
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
 >
   {@render children()}
 </svg>
