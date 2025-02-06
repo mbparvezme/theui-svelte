@@ -19,7 +19,7 @@ export class Slider {
   isTransitioning: boolean = false; // To track if a transition is in progress
 
   private indicatorClasses: string =
-    "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000";
+    "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none";
 
   constructor(config: Partial<SliderConfig>) {
     const defaultConfig: SliderConfig = {
@@ -171,7 +171,7 @@ export class Slider {
               this.config.indicatorClasses
             )}`;
             button.type = "button";
-            button.setAttribute("aria-label", "Slide indicator");
+            button.setAttribute("aria-label", `Go to slide ${i + 1}`);
             button.addEventListener("click", () =>
               this.changeSlideByIndicator(i)
             );

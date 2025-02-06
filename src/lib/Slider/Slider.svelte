@@ -88,7 +88,7 @@
     {@render children()}
   </div>
 
-  {#if !controls}
+  {#if controls}
   <button id="{obj.id}-prev" class="prev-slide-button {obj.getButtonClasses(controlButtonClasses, "prev")}" onclick={()=>obj.changeSlide("prev")} aria-label="Previous Slide">
     {#if prevButton}
       {@render prevButton()}
@@ -113,7 +113,7 @@
   <div id="{obj.id}-timer" class="slide-timer absolute {twMerge("top-0 start-0 h-1 bg-gray-500 mix-blend-difference opacity-70", timerClasses)}"></div>
   {/if}
 
-  {#if !indicator}
+  {#if indicator}
     <div id="{obj.id}-indicators" class="slide-indicators absolute z-[1] {obj.getIndicatorContainerClasses(indicatorContainerClasses)}"></div>
   {/if}
 
