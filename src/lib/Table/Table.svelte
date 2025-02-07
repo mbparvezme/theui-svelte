@@ -80,21 +80,15 @@
 <div class="table-container w-full overflow-x-auto">
   <table {id} {...props} class={twMerge(cls, props?.class as string)}>
 
-    {#if head}
-      {@render head?.()}
-    {:else}
-      {#if headers && (Object.prototype.toString.call(headers) === "[object Object]" || Array.isArray(headers))}
-        <THead {headers} {keys} />
-      {/if}
+    {#if headers && (Object.prototype.toString.call(headers) === "[object Object]" || Array.isArray(headers))}
+      <THead {headers} {keys} />
     {/if}
 
     {#if data}
       <TBody {data} {keys}/>
     {/if}
 
-    {#if children}
-      {@render children?.()}
-    {/if}
+    {@render children?.()}
 
   </table>
 </div>

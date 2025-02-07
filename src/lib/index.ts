@@ -64,4 +64,5 @@ export { default as Table } from "./Table/Table.svelte";
 export { default as THead } from "./Table/THead.svelte";
 export { default as TBody } from "./Table/TBody.svelte";
 export { default as TR } from "./Table/TR.svelte";
-export { default as Cell } from "./Table/Cell.svelte";
+export { default as TH } from "./Table/TH.svelte";
+export { default as TD } from "./Table/TD.svelte";

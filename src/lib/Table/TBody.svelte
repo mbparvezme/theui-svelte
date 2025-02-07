@@ -11,9 +11,7 @@
 
 {#if data || children}
 <tbody {...props} class={twMerge("text-start", props?.class as string)}>
-  {#if children}
-    {@render children()}
-  {:else if data}
+  {#if data}
     {#if isMultiRows(data)}
       {#if Array.isArray(data) && Object.prototype.toString.call(data[0]) === "[object Object]"}
         {#each data as r}
@@ -23,6 +21,8 @@
     {:else}
       <TR data={data as string[] | Record<string, unknown>} {keys} />
     {/if}
+  {:else}
+    {@render children?.()}
   {/if}
 </tbody>
 {/if}

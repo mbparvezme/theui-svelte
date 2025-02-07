@@ -1,6 +1,6 @@
 {
 	"name": "theui-svelte",
-	"version": "2.0.0rc28",
+	"version": "2.0.0rc29",
 	"description": "theui-svelte A component library by TheUI. Out-of-the-box accessible and easy to customize built with TailwindCSS (v3).",
 	"author": {
 		"name": "M B Parvez",
@@ -238,9 +238,13 @@
 			"types": "./dist/Table\\TR.svelte.d.ts",
 			"svelte": "./dist/Table\\TR.svelte"
 		},
-		"./Cell.svelte": {
-			"types": "./dist/Table\\Cell.svelte.d.ts",
-			"svelte": "./dist/Table\\Cell.svelte"
+		"./TH.svelte": {
+			"types": "./dist/Table\\TH.svelte.d.ts",
+			"svelte": "./dist/Table\\TH.svelte"
+		},
+		"./TD.svelte": {
+			"types": "./dist/Table\\TD.svelte.d.ts",
+			"svelte": "./dist/Table\\TD.svelte"
 		},
 		"./Tabs.svelte": {
 			"types": "./dist/Tabs\\Tabs.svelte.d.ts",

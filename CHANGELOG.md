@@ -8,6 +8,9 @@
 
 > Only important changes are listed here.
 
+- **Version 2.0.0rc29**
+  - Table "Cell" removed, "TD" & "TR" added.
+
 - **Version 2.0.0rc18**
   - Gradient added to notification theme.
 
