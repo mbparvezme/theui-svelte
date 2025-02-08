@@ -5,8 +5,8 @@
 	import { generateToken } from "$lib/function"
 
   interface Props {
-    tabList : Snippet,
-    tabPanel : Snippet,
+    tabs : Snippet,
+    panels : Snippet,
     variant ?: 'tabs' | 'pills',
     animate ?: ANIMATE_SPEED,
     borderClasses ?: boolean|string,
@@ -19,8 +19,8 @@
   }
 
   let {
-    tabList,
-    tabPanel,
+    tabs,
+    panels,
     variant = "pills",
     animate = "normal",
     borderClasses = true,
@@ -67,15 +67,13 @@
 </script>
 
 <div {id} {...props} class="theui-tabs {twMerge("-mb-0.5", props?.class as string)}">
-	{#if tabList}
+	{#if tabs}
     <div class="theui-tab-list {twMerge((borderClasses ? "" : "mb-4") , tabListClasses)}">
-      {@render tabList()}
+      {@render tabs()}
       {#if borderClasses !== false}
         <div class="theui-tabs-border -mt-0.5 {twMerge("mb-4 border-b-2 border-gray-500/20", borderClasses as string)}"></div>
       {/if}
     </div>
   {/if}
-	{#if tabPanel}
-    {@render tabPanel()}
-  {/if}
+  {@render panels?.()}
 </div>
