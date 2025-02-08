@@ -17,9 +17,9 @@
     {#if Array.isArray(data)}
       {#each data as d}
         {#if tableHeader}
-          <TH>{d.toString()}</TH>
+          <TH scope="col">{@html d.toString()}</TH>
         {:else}
-          <TD>{d.toString()}</TD>
+          <TD>{@html d.toString()}</TD>
         {/if}
       {/each}
     {/if}
@@ -27,9 +27,9 @@
     {#if keys && data !== null && Object.prototype.toString.call(data) === "[object Object]"}
       {#each keys as k}
         {#if tableHeader}
-          <TH>{(data as Record<string, unknown>)[k] as string | number ?? "INVALID_KEY"}</TH>
+          <TH scope="col">{@html (data as Record<string, unknown>)[k] as string | number ?? "INVALID_KEY"}</TH>
         {:else}
-          <TD>{(data as Record<string, unknown>)[k] as string | number ?? "INVALID_KEY"}</TD>
+          <TD>{@html (data as Record<string, unknown>)[k] as string | number ?? "INVALID_KEY"}</TD>
         {/if}
       {/each}
     {/if}

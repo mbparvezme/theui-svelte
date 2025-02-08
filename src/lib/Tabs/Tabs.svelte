@@ -7,28 +7,28 @@
   interface Props {
     tabList : Snippet,
     tabPanel : Snippet,
-    id ?: string,
-    borderClasses ?: boolean|string,
+    variant ?: 'tabs' | 'pills',
     animate ?: ANIMATE_SPEED,
+    borderClasses ?: boolean|string,
     tabListClasses ?: string,
     tabClasses ?: string,
     activeTabClasses ?: string,
     tabPanelClasses ?: string,
-    variant ?: 'tabs' | 'pills',
+    id ?: string,
     [key: string] : unknown
   }
 
   let {
     tabList,
     tabPanel,
-    id = generateToken(),
-    borderClasses = true,
+    variant = "pills",
     animate = "normal",
+    borderClasses = true,
     tabListClasses = "",
     tabClasses = "",
     activeTabClasses = "",
     tabPanelClasses = "",
-    variant = "pills",
+    id = generateToken(),
     ...props
   } : Props = $props()
 

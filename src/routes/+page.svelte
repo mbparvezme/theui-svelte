@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {  Table, THead, TBody, TR, TH, TD } from "$lib";
+  import {  Table, THead, TBody, TR, TH, TD, Container } from "$lib";
 
   let headers = ['product', 'category', 'price']
   let keys = ['items', 'category', 'price']
@@ -12,23 +12,8 @@
   ]
 </script>
 
+<Container>
 
-{'TD/TH, TD to check inside TBody'}
-<Table keys={keys} stripe hover>
-  <THead>
-    <TR tableHeader>
-      <TH>product</TH>
-      <TH>category</TH>
-      <TH>Price</TH>
-    </TR>
-  </THead>
-  <TBody>
-    {#each data as d}
-      <TR>
-        {#each keys as k}
-          <TD>{(d as Record<string, string>)[k]}</TD>
-        {/each}
-      </TR>
-    {/each}
-  </TBody>
-</Table>
+<Table {headers} {data} {keys} hover="hover:bg-red-100" />
+
+</Container>
