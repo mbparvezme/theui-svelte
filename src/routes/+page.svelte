@@ -1,19 +1,18 @@
 <script lang="ts">
-  import {  Table, THead, TBody, TR, TH, TD, Container } from "$lib";
-
-  let headers = ['product', 'category', 'price']
-  let keys = ['items', 'category', 'price']
-
-  let data = [
-    { items : 'iPhone 11', category : 'Smart phone', price: '$1234' },
-    { items : 'Asus K401UQ', category : 'Laptop', price: '$1234' },
-    { items : 'Microsoft Surface Pro', category : 'Laptop', price: '$2000' },
-    { items : 'iPhone 11', category : 'Smart phone', price: '$1234' },
-  ]
+  import {  Tabs, Tab, TabPanel, Container } from "$lib";
 </script>
 
 <Container>
 
-<Table {headers} {data} {keys} hover="hover:bg-red-100" />
+  <Tabs tabContainerClasses="flex justify-center" variant="tabs">
+    {#snippet tabs()}
+      <Tab>Tab 1</Tab>
+      <Tab>Tab 2</Tab>
+      <Tab>Tab 3</Tab>
+    {/snippet}
+    <TabPanel>TabPanel 1</TabPanel>
+    <TabPanel>TabPanel 2</TabPanel>
+    <TabPanel>TabPanel 3</TabPanel>
+  </Tabs>
 
 </Container>

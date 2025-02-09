@@ -12,11 +12,11 @@
 
 {#if CTX.TABS.selectedPanel === id}
 	{#if CTX.animate}
-		<div {...props} class="theui-tab-panel {twMerge(CTX.tabPanelClasses, props?.class as string)}" in:fade={{duration:150}}>
+		<div {id} {...props} class="theui-tab-panel {twMerge(CTX.tabPanelClasses, props?.class as string)}" in:fade={{duration:150}} role="tabpanel" aria-labelledby={CTX.TABS.selectedTab}>
       {@render children?.()}
     </div>
 	{:else}
-		<div {...props} class="theui-tab-panel {twMerge(CTX.tabPanelClasses, props?.class as string)}">
+		<div {id} {...props} class="theui-tab-panel {twMerge(CTX.tabPanelClasses, props?.class as string)}" role="tabpanel" aria-labelledby={CTX.TABS.selectedTab}>
       {@render children?.()}
     </div>
 	{/if}

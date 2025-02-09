@@ -105,12 +105,12 @@ export type TABLE_CONFIG = {
 };
 
 export type TAB_CONFIG = {
-  activeTabClasses?: string;
-  animate?: ANIMATE_SPEED;
-  tabClasses?: string;
-  tabPanelClasses?: string;
-  borderClasses ?: boolean | string;
   variant: 'tabs' | 'pills';
+  animate?: ANIMATE_SPEED;
+  border ?: boolean | string;
+  tabClasses?: string;
+  tabActiveClasses?: string;
+  tabPanelClasses?: string;
   TABS: { tabs: string[], panels: string[], selectedTab: string | null, selectedPanel: string | null }
 };
 

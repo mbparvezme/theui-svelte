@@ -14,9 +14,20 @@
     CTX.TABS.selectedPanel = CTX.TABS.panels[i]
   }
 
-  let getClass = $derived(`${(CTX.variant == "pills" ? "theui-tab-pill" : "theui-tab")} px-8 py-3 text-center font-medium ${(CTX.TABS.selectedTab == id ? CTX?.activeTabClasses : CTX?.tabClasses)} ${roundedClass("md", (CTX.variant == "tabs" ? "top" : (CTX.borderClasses ? "top" : "all")))} ${animationClass(CTX.animate)}`)
+  let getClass = $derived(`${(CTX.variant == "pills" ? "theui-tab-pill" : "theui-tab")} px-8 py-3 text-center font-medium ${roundedClass("md", (CTX.variant == "tabs" ? "top" : (CTX.border ? "top" : "all")))} ${animationClass(CTX.animate)}`)
 </script>
 
-<button {...props} class={twMerge(getClass, props?.class as string)} class:theui-tab-selected={CTX.TABS.selectedTab === id} onclick={() => selectTabL(id)}>
+<button
+  {id}
+  {...props}
+  class={twMerge(getClass, CTX?.tabClasses, (CTX.TABS.selectedTab == id ? CTX?.tabActiveClasses : ""), props?.class as string)}
+  class:theui-tab-selected={CTX.TABS.selectedTab === id}
+
+  role="tab"
+  aria-selected={CTX.TABS.selectedTab === id ? "true" : "false"}
+  aria-controls={CTX.TABS.selectedPanel}
+
+  onclick={() => selectTabL(id)}
+>
   {@render children?.()}
 </button>
