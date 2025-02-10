@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte"
-  import type { ANIMATE_SPEED } from "$lib/types"
+  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
   import { animationClass, roundedClass } from "$lib/function"
 
@@ -13,6 +13,7 @@
     bgColor ?: string ,
     position ?: TOOLTIP_POSITION,
     tooltipEvent ?: 'hover' | 'click' | string,
+    rounded ?: ROUNDED,
     [key: string] : unknown // class
   }
 
@@ -22,6 +23,7 @@
     bgColor = "#1F2937",
     position = "top",
     tooltipEvent = "hover",
+    rounded = "lg",
     ...props
   } : Props = $props()
 
@@ -47,7 +49,7 @@
     };
 
     let defaultClasses = `theui-tooltip z-[60] absolute ${positionClasses[position]} ${animationClasses[animation ?? 'fade']}`;
-    let customClasses = `min-w-[150px] max-w-xs text-xs text-center p-1 bg-[var(--bg-color)] text-white ${roundedClass("sm")}${animationClass(animate)}`;
+    let customClasses = `min-w-[100px] max-w-xs text-sm text-center px-2 py-3 bg-[var(--bg-color)] text-white ${roundedClass(rounded)}${animationClass(animate)}`;
 
     let custom = (props?.class ?? "") as string
     return `${defaultClasses} ${twMerge(customClasses, custom)}`
