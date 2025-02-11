@@ -14,6 +14,7 @@
     position ?: TOOLTIP_POSITION,
     tooltipEvent ?: 'hover' | 'click' | string,
     rounded ?: ROUNDED,
+    offset?: number,
     [key: string] : unknown // class
   }
 
@@ -24,6 +25,7 @@
     position = "top",
     tooltipEvent = "hover",
     rounded = "lg",
+    offset = 8,
     ...props
   } : Props = $props()
 
@@ -31,29 +33,25 @@
   let tooltipText: string = $state("")
   let showTooltip: boolean = $state(false)
 
-  let tooltipClasses = () => {
-    // Define position classes
-    let positionClasses = {
-      left: 'tooltip-left -translate-x-full -translate-y-1/2',
-      right: 'tooltip-right translate-x-full -translate-y-1/2',
-      bottom: 'tooltip-bottom -translate-x-1/2 translate-y-full',
-      top: 'tooltip-top -translate-x-1/2 -translate-y-full'
-    };
+  // Define position classes
+  let positionClasses = {
+    left: 'tooltip-left after:border-r-0 after:-right-[7px] after:top-1/2 after:-translate-y-1/2',
+    right: 'tooltip-right after:border-l-0 after:-left-[7px] after:top-1/2 after:-translate-y-1/2',
+    bottom: 'tooltip-bottom after:border-t-0 after:-top-2 after:left-1/2 after:-translate-x-1/2',
+    top: "tooltip-top after:border-b-0 after:-bottom-2 after:left-1/2 after:-translate-x-1/2"
+    // after:border-t-4 after:border-t-gray-500 after:-bottom-2 after:left-1/2 after:-translate-x-1/2"
+  };
 
-    // Define animation classes
-    let animationClasses = {
-      slide: 'tooltip-slide',
-      "zoom-in": 'tooltip-zoom-in',
-      "zoom-out": 'tooltip-zoom-out',
-      fade: 'tooltip-fade'
-    };
+  // Define animation classes
+  let animationClasses = {
+    slide: 'tooltip-slide',
+    "zoom-in": 'tooltip-zoom-in',
+    "zoom-out": 'tooltip-zoom-out',
+    fade: 'tooltip-fade'
+  };
 
-    let defaultClasses = `theui-tooltip z-[60] absolute ${positionClasses[position]} ${animationClasses[animation ?? 'fade']}`;
-    let customClasses = `min-w-[100px] max-w-xs text-sm text-center px-2 py-3 bg-[var(--bg-color)] text-white ${roundedClass(rounded)}${animationClass(animate)}`;
-
-    let custom = (props?.class ?? "") as string
-    return `${defaultClasses} ${twMerge(customClasses, custom)}`
-  }
+  let defaultClasses = `theui-tooltip z-[60] absolute after:content-[''] after:absolute after:h-0 after:w-0 after:transform after:border-transparent after:border-8 ${positionClasses[position]} ${animationClasses[animation ?? 'fade']}`;
+  let customClasses = `min-w-[100px] max-w-xs text-sm text-center px-2 py-3 bg-alt after:bg-alt text-white ${roundedClass(rounded)}${animationClass(animate)}`;
 
   onMount(() => {
     let triggerElement: HTMLElement[]|[] = [...document.querySelectorAll<HTMLElement>("[data-tooltip]")];
@@ -88,13 +86,13 @@
       tooltipText = element?.dataset?.tooltip ?? "";
       // Getting tooltip position
       position = element?.dataset.tooltipPosition as TOOLTIP_POSITION ?? position;
+
+      console.log(positionClasses[position])
       // Getting tooltip animation
       animation = element?.dataset.animation as TOOLTIP_ANIMATION ?? animation;
       showTooltip = true;
       // element.prepend(tooltip);
       document.body.appendChild(tooltip);
-
-      
 
       Object.assign(tooltip.style, {
         visibility: "hidden",
@@ -106,24 +104,22 @@
 
       let top = 0, left = 0;
 
-      console.log(tooltipRect);
-
       switch (position) {
         case "top":
-          top = rect.top - tooltipRect.height;
+          top = rect.top - offset - tooltipRect.height;
           left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
           break;
         case "bottom":
-          top = rect.bottom;
+          top = rect.bottom + offset;
           left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
           break;
         case "left":
           top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
-          left = rect.left - tooltipRect.width;
+          left = rect.left - tooltipRect.width - offset;
           break;
         case "right":
           top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
-          left = rect.right;
+          left = rect.right + offset;
           break;
       }
 
@@ -150,7 +146,7 @@
 <span
   bind:this={tooltip}
   {...props}
-  class={tooltipClasses()}
+  class="{defaultClasses} ${twMerge(customClasses, props?.class as string)}}"
   class:show={showTooltip}
   class:inline-block={showTooltip}
   class:hidden={!showTooltip}
@@ -158,7 +154,9 @@
   {@html tooltipText}
 </span>
 
-<style lang="postcss">
+
+
+<!-- <style lang="postcss">
   /* Tooltip arrow */
   .theui-tooltip::after {
     content: " ";
@@ -180,4 +178,4 @@
     border-left-color: var(--bg-color);
     @apply border-r-0 -right-[7px] top-1/2 -translate-y-1/2;
   }
-</style>
+</style> -->
