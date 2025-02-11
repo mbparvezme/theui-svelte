@@ -34,10 +34,10 @@
   let tooltipClasses = () => {
     // Define position classes
     let positionClasses = {
-      left: 'tooltip-left -left-3 top-1/2 -translate-x-full -translate-y-1/2',
-      right: 'tooltip-right -right-3 top-1/2 translate-x-full -translate-y-1/2',
-      bottom: 'tooltip-bottom -bottom-3 left-1/2 -translate-x-1/2 translate-y-full',
-      top: 'tooltip-top -top-3 left-1/2 -translate-x-1/2 -translate-y-full'
+      left: 'tooltip-left -translate-x-full -translate-y-1/2',
+      right: 'tooltip-right translate-x-full -translate-y-1/2',
+      bottom: 'tooltip-bottom -translate-x-1/2 translate-y-full',
+      top: 'tooltip-top -translate-x-1/2 -translate-y-full'
     };
 
     // Define animation classes
@@ -91,12 +91,58 @@
       // Getting tooltip animation
       animation = element?.dataset.animation as TOOLTIP_ANIMATION ?? animation;
       showTooltip = true;
-      element.prepend(tooltip);
+      // element.prepend(tooltip);
+      document.body.appendChild(tooltip);
+
+      
+
+      Object.assign(tooltip.style, {
+        visibility: "hidden",
+        display: "block",
+      });
+
+      const rect = element.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+
+      let top = 0, left = 0;
+
+      console.log(tooltipRect);
+
+      switch (position) {
+        case "top":
+          top = rect.top - tooltipRect.height;
+          left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+          break;
+        case "bottom":
+          top = rect.bottom;
+          left = rect.left + (rect.width / 2) - (tooltipRect.width / 2);
+          break;
+        case "left":
+          top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+          left = rect.left - tooltipRect.width;
+          break;
+        case "right":
+          top = rect.top + (rect.height / 2) - (tooltipRect.height / 2);
+          left = rect.right;
+          break;
+      }
+
+      // Apply position styles
+      Object.assign(tooltip.style, {
+        top: `${top}px`,
+        left: `${left}px`,
+        visibility: "visible",
+      });
+
     }
 
     let removeTooltip = (element: HTMLElement) => {
       if(tooltip.classList.contains('open')) element.removeChild(tooltip);
       showTooltip = false;
+      Object.assign(tooltip.style, {
+        visibility: "hidden", // Hide temporarily to avoid flickering
+        display: "none",
+      });
     }
   })
 </script>
