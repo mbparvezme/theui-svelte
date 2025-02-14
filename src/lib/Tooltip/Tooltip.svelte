@@ -4,8 +4,8 @@
   import { twMerge } from "tailwind-merge"
   import { animationClass, roundedClass } from "$lib/function"
 
-  type TOOLTIP_POSITION = 'left' | 'top' | 'right' | 'bottom';
-  type TOOLTIP_ANIMATION = 'fade' | 'slide' | 'zoom-in' | 'zoom-out';
+  type TOOLTIP_POSITION = 'left' | 'top' | 'right' | 'bottom'
+  type TOOLTIP_ANIMATION = 'fade' | 'slide' | 'zoom-in' | 'zoom-out'
 
   interface Props{
     animate ?: ANIMATE_SPEED,
@@ -29,18 +29,18 @@
     ...props
   } : Props = $props()
 
-  let tooltip: HTMLSpanElement;
+  let tooltip: HTMLSpanElement
   let tooltipText: string = $state("")
   let showTooltip: boolean = $state(false)
+  let positionalClasses: string = $state("")
 
   // Define position classes
   let positionClasses = {
-    left: 'tooltip-left after:border-r-0 after:-right-[7px] after:top-1/2 after:-translate-y-1/2',
-    right: 'tooltip-right after:border-l-0 after:-left-[7px] after:top-1/2 after:-translate-y-1/2',
-    bottom: 'tooltip-bottom after:border-t-0 after:-top-2 after:left-1/2 after:-translate-x-1/2',
-    top: "tooltip-top after:border-b-0 after:-bottom-2 after:left-1/2 after:-translate-x-1/2"
-    // after:border-t-4 after:border-t-gray-500 after:-bottom-2 after:left-1/2 after:-translate-x-1/2"
-  };
+    left    : 'tooltip-left after:border-r-0 after:border-l-[var(--bg-color)] after:-right-[7px] after:top-1/2 after:-translate-y-1/2',
+    right   : 'tooltip-right after:border-l-0 after:border-r-[var(--bg-color)] after:-left-[7px] after:top-1/2 after:-translate-y-1/2',
+    bottom  : 'tooltip-bottom after:border-t-0 after:border-b-[var(--bg-color)] after:-top-2 after:left-1/2 after:-translate-x-1/2',
+    top     : "tooltip-top after:border-b-0 after:border-t-[var(--bg-color)] after:-bottom-2 after:left-1/2 after:-translate-x-1/2",
+  }
 
   // Define animation classes
   let animationClasses = {
@@ -48,13 +48,13 @@
     "zoom-in": 'tooltip-zoom-in',
     "zoom-out": 'tooltip-zoom-out',
     fade: 'tooltip-fade'
-  };
+  }
 
-  let defaultClasses = `theui-tooltip z-[60] absolute after:content-[''] after:absolute after:h-0 after:w-0 after:transform after:border-transparent after:border-8 ${positionClasses[position]} ${animationClasses[animation ?? 'fade']}`;
-  let customClasses = `min-w-[100px] max-w-xs text-sm text-center px-2 py-3 bg-alt after:bg-alt text-white ${roundedClass(rounded)}${animationClass(animate)}`;
+  let defaultClasses = $derived(`theui-tooltip z-[60] absolute after:content-[''] after:absolute after:h-0 after:w-0 after:border-8 after:border-transparent after:transform ${positionalClasses} ${animationClasses[animation ?? 'fade']}`)
+  let customClasses = `min-w-[100px] max-w-xs text-sm text-center px-3 py-2 bg-alt text-white ${roundedClass(rounded)} ${animationClass(animate, "opacity")}`
 
   onMount(() => {
-    let triggerElement: HTMLElement[]|[] = [...document.querySelectorAll<HTMLElement>("[data-tooltip]")];
+    let triggerElement: HTMLElement[]|[] = [...document.querySelectorAll<HTMLElement>("[data-tooltip]")]
     triggerElement.forEach((element: HTMLElement) => {
       if (element) {
         let triggerEvent = element.dataset?.tooltipEvent ?? tooltipEvent;
@@ -80,24 +80,26 @@
         }
       }
     })
-    
+
     let createTooltip = (element: HTMLElement) => {
       // Getting tooltip content
-      tooltipText = element?.dataset?.tooltip ?? "";
-      // Getting tooltip position
-      position = element?.dataset.tooltipPosition as TOOLTIP_POSITION ?? position;
+      tooltipText = element?.dataset?.tooltip ?? ""
 
-      console.log(positionClasses[position])
+      // Getting tooltip position
+      position = element?.dataset.tooltipPosition as TOOLTIP_POSITION ?? position
+      positionalClasses = positionClasses[position]
+
       // Getting tooltip animation
-      animation = element?.dataset.animation as TOOLTIP_ANIMATION ?? animation;
-      showTooltip = true;
-      // element.prepend(tooltip);
-      document.body.appendChild(tooltip);
+      animation = element?.dataset.animation as TOOLTIP_ANIMATION ?? animation
+
+      showTooltip = true
+      document.body.appendChild(tooltip)
 
       Object.assign(tooltip.style, {
         visibility: "hidden",
         display: "block",
-      });
+        opacity: 0
+      })
 
       const rect = element.getBoundingClientRect();
       const tooltipRect = tooltip.getBoundingClientRect();
@@ -128,6 +130,7 @@
         top: `${top}px`,
         left: `${left}px`,
         visibility: "visible",
+        opacity: 100,
       });
 
     }
@@ -146,36 +149,10 @@
 <span
   bind:this={tooltip}
   {...props}
-  class="{defaultClasses} ${twMerge(customClasses, props?.class as string)}}"
+  class="{defaultClasses} {twMerge(customClasses, props?.class as string)}"
   class:show={showTooltip}
   class:inline-block={showTooltip}
   class:hidden={!showTooltip}
   style="--bg-color: {bgColor};">
   {@html tooltipText}
 </span>
-
-
-
-<!-- <style lang="postcss">
-  /* Tooltip arrow */
-  .theui-tooltip::after {
-    content: " ";
-    @apply absolute h-0 w-0 transform border-transparent border-8;
-  }
-  .theui-tooltip.tooltip-top::after {
-    border-top-color: var(--bg-color);
-    @apply border-b-0 -bottom-2 left-1/2 -translate-x-1/2;
-  }
-  .theui-tooltip.tooltip-right::after {
-    border-right-color: var(--bg-color);
-    @apply border-l-0 -left-[7px] top-1/2 -translate-y-1/2;
-  }
-  .theui-tooltip.tooltip-bottom::after {
-    border-bottom-color: var(--bg-color);
-    @apply border-t-0 -top-2 left-1/2 -translate-x-1/2;
-  }
-  .theui-tooltip.tooltip-left::after {
-    border-left-color: var(--bg-color);
-    @apply border-r-0 -right-[7px] top-1/2 -translate-y-1/2;
-  }
-</style> -->
