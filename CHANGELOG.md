@@ -8,6 +8,9 @@
 
 > Only important changes are listed here.
 
+- **Version 2.0.0rc33**
+  - Tooltip completed.
+
 - **Version 2.0.0rc32**
   - Tabs, Tab, TabPanel fixes.
 
