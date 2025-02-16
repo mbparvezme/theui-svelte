@@ -20,6 +20,8 @@ export type SHADOW =
   | "2xl"
   | "inner"
   | "none";
+export type POSITION_TYPES = 'left' | 'top' | 'right' | 'bottom'
+export type ENTRANCE_ANIMATION = 'fade' | 'slide-in' | 'slide-out' | 'zoom-in' | 'zoom-out'
 export type PRELOAD = "" | "off" | "tap" | "hover";
 export type TABLE_ROW = string[] | Record<string, unknown>[];
 export type BUTTON_SIZE = "xs" | "sm" | "md" | "lg" | "xl" | "auto";
