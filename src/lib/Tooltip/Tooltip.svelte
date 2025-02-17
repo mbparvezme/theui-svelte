@@ -73,6 +73,26 @@
   })
 
   let createElement = (element: HTMLElement) => {
+    // elementContent = element?.dataset?.tooltip ?? "";
+    // const finalPosition = element?.dataset.tooltipPosition as POSITION_TYPES ?? position;
+    // positionalClasses = positionClasses[finalPosition];
+    // animation = element?.dataset.animation as ENTRANCE_ANIMATION ?? animation;
+
+    // // Clone the tooltip component to create a new instance for each trigger
+    // const tooltipElement = COMPONENT_ITEM.cloneNode(true) as HTMLElement;
+    // tooltipElement.classList.remove("hidden");
+    // tooltipElement.innerHTML = elementContent; // Ensure correct content
+    // document.body.appendChild(tooltipElement);
+
+    // setInitialStyle(tooltipElement);
+
+    // // Position the tooltip after a short delay
+    // setTimeout(() => resetAndToggle(element, tooltipElement, finalPosition, positionClasses, offset), 0);
+
+    // Ensure tooltip is removed when needed
+    // element.addEventListener("mouseleave", () => removeElement(element, tooltipElement));
+    // element.onblur = () => removeElement(element, tooltipElement);
+
     elementContent = element?.dataset?.tooltip ?? ""
     const finalPosition = element?.dataset.tooltipPosition as POSITION_TYPES ?? position
     positionalClasses = positionClasses[finalPosition]

@@ -489,7 +489,7 @@ export const backdropClasses = (backdrop: string | boolean): string => {
 
 // 
 // =======================================
-// 
+//
 
 export const setInitialStyle = (el: HTMLElement) => {
   Object.assign(el.style, { visibility: "hidden", display: "block", opacity: 0, top: "-9999px", left: "-9999px" })
@@ -531,6 +531,8 @@ export const removeElement = (element: HTMLElement, component: HTMLElement) => {
   if (component.classList.contains('open')) element.removeChild(component)
   component.classList.contains("hidden")
   Object.assign(component.style, { visibility: "hidden" })
+
+
 }
 
 export const calculatePosition = (pos: POSITION_TYPES, rect: DOMRect, elemRect: DOMRect, offset: number) => {
