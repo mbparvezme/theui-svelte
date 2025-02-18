@@ -493,39 +493,7 @@ export const backdropClasses = (backdrop: string | boolean): string => {
 
 export const setInitialStyle = (el: HTMLElement) => {
   Object.assign(el.style, { visibility: "hidden", display: "block", opacity: 0, top: "-9999px", left: "-9999px" });
-};
-
-// export const resetAndToggle = (
-//   el: HTMLElement,
-//   component: HTMLElement,
-//   finalPosition: POSITION_TYPES,
-//   positionClasses: Record<POSITION_TYPES, string>,
-//   offset: number,
-// ): { finalPosition: POSITION_TYPES; positionalClasses: string } => {
-//   const rect: DOMRect = el.getBoundingClientRect();
-//   const elemRect: DOMRect = component.getBoundingClientRect();
-//   let { top: newTop, left: newLeft } = calculatePosition(finalPosition, rect, elemRect, offset);
-
-//   if (isOverflowing(newTop, newLeft, elemRect)) {
-//     const alternatePositions = ["bottom", "top", "right", "left"] as POSITION_TYPES[];
-//     for (const pos of alternatePositions) {
-//       ({ top: newTop, left: newLeft } = calculatePosition(pos, rect, elemRect, offset));
-//       if (!isOverflowing(newTop, newLeft, elemRect)) {
-//         finalPosition = pos;
-//         break;
-//       }
-//     }
-//   }
-
-//   // Final check: Keep tooltip inside screen bounds
-//   ({ top: newTop, left: newLeft } = keepInBounds(newTop, newLeft, elemRect));
-
-//   // Apply position styles
-//   setVisibleStyle(component, newTop, newLeft);
-
-//   // Return the final position and positional classes
-//   return { finalPosition, positionalClasses: positionClasses[finalPosition] };
-// };
+}
 
 
 export const resetAndToggle = (
@@ -558,14 +526,8 @@ export const resetAndToggle = (
 
   // Return the final position and positional classes
   return { finalPosition, positionalClasses: positionClasses[finalPosition] };
-};
+}
 
-
-// export const removeElement = (element: HTMLElement, component: HTMLElement) => {
-//   if (component.classList.contains('open')) element.removeChild(component)
-//   component.classList.contains("hidden")
-//   Object.assign(component.style, { visibility: "hidden" })
-// }
 
 export const removeElement = (element: HTMLElement, component: HTMLElement) => {
   if (component.parentElement === document.body) {
@@ -573,42 +535,12 @@ export const removeElement = (element: HTMLElement, component: HTMLElement) => {
   }
   component.classList.add("hidden");
   Object.assign(component.style, { visibility: "hidden" });
-};
-
-// export const calculatePosition = (pos: POSITION_TYPES, rect: DOMRect, elemRect: DOMRect, offset: number) => {
-//   const scrollX = document.documentElement.scrollLeft;
-//   const scrollY = document.documentElement.scrollTop;
-
-//   switch (pos) {
-//     case "top":
-//       return {
-//         top: rect.top + scrollY - offset - elemRect.height,
-//         left: rect.left + scrollX + (rect.width / 2) - (elemRect.width / 2)
-//       };
-//     case "bottom":
-//       return {
-//         top: rect.bottom + scrollY + offset,
-//         left: rect.left + scrollX + (rect.width / 2) - (elemRect.width / 2)
-//       };
-//     case "left":
-//       return {
-//         top: rect.top + scrollY + (rect.height / 2) - (elemRect.height / 2),
-//         left: rect.left + scrollX - elemRect.width - offset
-//       };
-//     case "right":
-//       return {
-//         top: rect.top + scrollY + (rect.height / 2) - (elemRect.height / 2),
-//         left: rect.right + scrollX + offset
-//       };
-//     default:
-//       return { top: rect.bottom + scrollY + offset, left: rect.left + scrollX };
-//   }
-// }
+}
 
 
 export const calculatePosition = (pos: POSITION_TYPES, rect: DOMRect, elemRect: DOMRect, offset: number) => {
-  const scrollX = document.documentElement.scrollLeft;
-  const scrollY = document.documentElement.scrollTop;
+  const scrollX = window.scrollX;
+  const scrollY = window.scrollY;
 
   switch (pos) {
     case "top":
@@ -634,22 +566,7 @@ export const calculatePosition = (pos: POSITION_TYPES, rect: DOMRect, elemRect: 
     default:
       return { top: rect.bottom + scrollY + offset, left: rect.left + scrollX };
   }
-};
-
-// const isOverflowing = (top: number, left: number, elemRect: DOMRect) => {
-//   return (top < 0 || left < 0 || top + elemRect.height > window.innerHeight || left + elemRect.width > window.innerWidth)
-// }
-
-// const keepInBounds = (top: number, left: number, elemRect: DOMRect) => {
-//   return {
-//     top: Math.max(8, Math.min(window.innerHeight - elemRect.height - 8, top)),
-//     left: Math.max(8, Math.min(window.innerWidth - elemRect.width - 8, left)),
-//   }
-// }
-
-// const setVisibleStyle = (el: HTMLElement, newTop: number, newLeft: number) => {
-//   Object.assign(el.style, { top: `${newTop}px`, left: `${newLeft}px`, visibility: "visible", opacity: 1 })
-// }
+}
 
 
 const isOverflowing = (top: number, left: number, elemRect: DOMRect) => {
@@ -663,6 +580,12 @@ const keepInBounds = (top: number, left: number, elemRect: DOMRect) => {
   };
 };
 
-const setVisibleStyle = (el: HTMLElement, newTop: number, newLeft: number) => {
-  Object.assign(el.style, { top: `${newTop}px`, left: `${newLeft}px`, visibility: "visible", opacity: 1 });
+export const setVisibleStyle = (el: HTMLElement, referenceEl: HTMLElement) => {
+  const rect = referenceEl.getBoundingClientRect();
+  const newTop = rect.top + window.scrollY; // Account for scrolling
+  const newLeft = rect.left + window.scrollX;
+
+  el.style.visibility = "visible";
+  el.style.opacity = "1";
+  el.style.transform = `translate(${newLeft}px, ${newTop}px)`;
 };

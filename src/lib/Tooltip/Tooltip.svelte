@@ -30,7 +30,7 @@
   let COMPONENT_ITEM: HTMLSpanElement
   let elementContent: string = $state("")
   let positionalClasses: string = $state("")
-  let tooltipId: string = $state(`tooltip-${Math.random().toString(36).substring(2, 9)}`);
+  let tooltipId: string = $state(`tooltip-${Math.random().toString(36).substring(2, 9)}`)
 
   // Define position classes
   let positionClasses = {
@@ -62,26 +62,16 @@
         }
 
         // Click trigger event
-        // if(triggerEvent == "click"){
-        //   element.addEventListener("click", () => COMPONENT_ITEM.classList.contains("hidden") ? createElement(element) : removeElement(element, COMPONENT_ITEM))
-        //   element.onblur = () => removeElement(element, COMPONENT_ITEM)
-        // }
-        // else{
-        //   element.addEventListener("mouseenter", () => createElement(element))
-        //   element.onmouseleave = () => removeElement(element, COMPONENT_ITEM)
-        // }
-
-        // Click trigger event
         if (triggerEvent == "click") {
-          element.addEventListener("click", () => COMPONENT_ITEM.classList.contains("hidden") ? createElement(element) : removeElement(element, COMPONENT_ITEM));
-          element.onblur = () => removeElement(element, COMPONENT_ITEM);
+          element.addEventListener("click", () => COMPONENT_ITEM.classList.contains("hidden") ? createElement(element) : removeElement(element, COMPONENT_ITEM))
+          element.onblur = () => removeElement(element, COMPONENT_ITEM)
         } else {
-          element.addEventListener("mouseenter", () => createElement(element));
-          element.onmouseleave = () => removeElement(element, COMPONENT_ITEM);
+          element.addEventListener("mouseenter", () => createElement(element))
+          element.onmouseleave = () => removeElement(element, COMPONENT_ITEM)
         }
-        
+
         if (browser) {
-          window.addEventListener("resize", handleResize);
+          window.addEventListener("resize", handleResize)
         }
 
       }
@@ -90,40 +80,29 @@
 
   onDestroy(() => {
     if (browser) {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handleResize)
     }
-  });
+  })
 
   let handleResize = () => {
     if (!COMPONENT_ITEM.classList.contains("hidden")) {
-      const triggerElement = document.querySelector(`[data-tooltip-id="${tooltipId}"]`);
+      const triggerElement = document.querySelector(`[data-tooltip-id="${tooltipId}"]`)
       if (triggerElement) {
-        createElement(triggerElement as HTMLElement);
+        createElement(triggerElement as HTMLElement)
       }
     }
   }
 
-  // let createElement = (element: HTMLElement) => {
-  //   elementContent = element?.dataset?.tooltip ?? ""
-  //   const finalPosition = element?.dataset.tooltipPosition as POSITION_TYPES ?? position
-  //   positionalClasses = positionClasses[finalPosition]
-  //   animation = element?.dataset.animation as ENTRANCE_ANIMATION ?? animation
-  //   COMPONENT_ITEM.classList.remove("hidden")
-  //   document.body.appendChild(COMPONENT_ITEM)
-  //   setInitialStyle(COMPONENT_ITEM)
-  //   setTimeout(() => resetAndToggle(element, COMPONENT_ITEM, finalPosition, positionClasses, offset), 0)
-  // }
-
   let createElement = (element: HTMLElement) => {
-    elementContent = element?.dataset?.tooltip ?? "";
-    const finalPosition = element?.dataset.tooltipPosition as POSITION_TYPES ?? position;
-    positionalClasses = positionClasses[finalPosition];
-    animation = element?.dataset.animation as ENTRANCE_ANIMATION ?? animation;
-    COMPONENT_ITEM.classList.remove("hidden");
-    document.body.appendChild(COMPONENT_ITEM);
-    setInitialStyle(COMPONENT_ITEM);
-    setTimeout(() => resetAndToggle(element, COMPONENT_ITEM, finalPosition, positionClasses, offset), 0);
-  };
+    elementContent = element?.dataset?.tooltip ?? ""
+    const finalPosition = element?.dataset.tooltipPosition as POSITION_TYPES ?? position
+    positionalClasses = positionClasses[finalPosition]
+    animation = element?.dataset.animation as ENTRANCE_ANIMATION ?? animation
+    COMPONENT_ITEM.classList.remove("hidden")
+    document.body.appendChild(COMPONENT_ITEM)
+    setInitialStyle(COMPONENT_ITEM)
+    setTimeout(() => resetAndToggle(element, COMPONENT_ITEM, finalPosition, positionClasses, offset), 0)
+  }
 </script>
 
 <span bind:this={COMPONENT_ITEM} {...props} class="{defaultClasses} {twMerge(customClasses, props?.class as string)}" data-tooltip-id={tooltipId}>
