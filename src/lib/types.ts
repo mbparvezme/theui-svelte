@@ -20,7 +20,19 @@ export type SHADOW =
   | "2xl"
   | "inner"
   | "none";
-export type POSITION_TYPES = 'left' | 'top' | 'right' | 'bottom'
+export type POSITION_TYPES =
+  | 'top'
+  | 'top-start'
+  | ' top-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end';
 export type ENTRANCE_ANIMATION = 'fade' | 'slide-in' | 'slide-out' | 'zoom-in' | 'zoom-out'
 export type PRELOAD = "" | "off" | "tap" | "hover";
 export type TABLE_ROW = string[] | Record<string, unknown>[];
