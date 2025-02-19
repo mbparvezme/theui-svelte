@@ -31,12 +31,12 @@
   // Define animation classes
   let animationClasses = {slide: 'tooltip-slide', "slide-in": "", "slide-out": "", "zoom-in": 'tooltip-zoom-in', "zoom-out": 'tooltip-zoom-out', fade: 'tooltip-fade'}
   let defaultClasses = $derived(`theui-tooltip z-[60] absolute ${animationClasses[animation ?? 'fade']}`)
-  let customClasses = `min-w-[100px] pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 text-alt ${style} ${roundedClass(rounded)} ${animationClass(animate, "opacity")}`
+  let customClasses = `min-w-[100px] pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt text-alt ${style} ${roundedClass(rounded)} ${animationClass(animate, "opacity")}`
 
   let trigger: HTMLElement | null = null
   let triggerStyle: string = $state("")
-  let COMPONENT: HTMLSpanElement|null = $state(null)
-  let content: string = $state("")
+  let COMPONENT: HTMLDivElement|null = $state(null)
+  let content: string|HTMLElement = $state("")
   let show = $state(false)
 
   async function updatePosition() {
@@ -45,6 +45,7 @@
 
     const { x, y, middlewareData } = await computePosition(trigger, COMPONENT, {
       placement: trigger?.dataset.tooltipPosition as Placement ?? position,
+      
       middleware: [flip(), shift()],
     });
 
@@ -53,19 +54,29 @@
   }
 
   function showTooltip(event: MouseEvent) {
-    const target = event.target instanceof HTMLElement ? event.target : null;
-    if (!target || !target.hasAttribute("data-tooltip")) return;
+    const target = event.target instanceof HTMLElement ? event.target : null
+    if (!target) return
 
-    content = target.getAttribute("data-tooltip") || "";
-    trigger = target;
+    const tooltipTarget = target.getAttribute("data-tooltip-target")
 
-    if(target.hasAttribute("data-tooltip-style")){
-      triggerStyle = target.getAttribute("data-tooltip-style") || "";
+    if (tooltipTarget) {
+      trigger = document.querySelector(tooltipTarget);
+      content = trigger ? trigger.innerHTML : "";
+    } else {
+      const tooltipContent = target.getAttribute("data-tooltip");
+      if (!tooltipContent) return;
+      
+      trigger = target;
+      content = tooltipContent;
     }
 
+    if (!trigger) return;
+
+    triggerStyle = trigger.getAttribute("data-tooltip-style") || "";
     show = true;
     updatePosition();
   }
+
 
   function hideTooltip() {
     show = false;
@@ -74,17 +85,17 @@
 
   onMount(() => {
     if (triggerEvent == "click") {
-      trigger?.addEventListener("click", (e: MouseEvent) => showTooltip(e), true)
-      trigger?.addEventListener("blur", () => hideTooltip(), true)
+      document?.addEventListener("click", showTooltip, true)
+      document?.addEventListener("blur", hideTooltip, true)
     } else {
-      trigger?.addEventListener("mouseenter", showTooltip, true)
-      trigger?.addEventListener("mouseleave", hideTooltip, true)
+      document?.addEventListener("mouseenter", showTooltip, true)
+      document?.addEventListener("mouseleave", hideTooltip, true)
     }
   });
 </script>
 
 {#if show}
-  <span bind:this={COMPONENT} class={`${defaultClasses} ${twMerge(customClasses, style, triggerStyle)}`}>
+  <div bind:this={COMPONENT} class={`${defaultClasses} ${twMerge(customClasses, style, triggerStyle)}`}>
     {@html content}
-  </span>
+  </div>
 {/if}
