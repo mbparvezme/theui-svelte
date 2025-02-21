@@ -1,110 +1,128 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte"
-  import { browser } from "$app/environment";
-  import type { ANIMATE_SPEED, ROUNDED, POSITION_TYPES, ENTRANCE_ANIMATION } from "$lib/types"
+  import { onDestroy, onMount, tick } from "svelte"
+  import { fade } from 'svelte/transition'
+  import { computePosition, flip, shift, offset, arrow, type Placement } from "@floating-ui/dom"
+  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
-  import { animationClass, roundedClass, resetAndToggle, removeElement, setInitialStyle } from "$lib/function"
+  import { roundedClass } from "$lib/function"
 
   interface Props{
     animate ?: ANIMATE_SPEED,
-    animation ?: ENTRANCE_ANIMATION,
-    colorClasses ?: string,
-    position ?: POSITION_TYPES,
-    tooltipEvent ?: 'hover' | 'click' | string,
+    position ?: Placement,
+    triggerEvent ?: 'hover' | 'click' | string,
     rounded ?: ROUNDED,
-    offset?: number,
+    gap?: number,
     [key: string] : unknown // class
   }
 
   let{
-    animate = "slower",
-    animation = "fade",
-    colorClasses = "bg-alt after:border-alt",
+    animate = "normal",
     position = "top",
-    tooltipEvent = "hover",
+    triggerEvent = "hover",
     rounded = "lg",
-    offset = 8,
+    gap = 12,
     ...props
   } : Props = $props()
 
-  let COMPONENT_ITEM: HTMLSpanElement
-  let elementContent: string = $state("")
-  let positionalClasses: string = $state("")
-  let tooltipId: string = $state(`tooltip-${Math.random().toString(36).substring(2, 9)}`)
+  let trigger:      HTMLElement     | null = null
+  let COMPONENT:    HTMLDivElement  | null = $state(null)
+  let ARROW:        HTMLSpanElement | null = $state(null)
+  let content:      string          | HTMLElement = $state("")
+  let triggerStyle: string          = $state("")
+  let show:         boolean         = $state(false)
 
-  // Define position classes
-  let positionClasses = {
-    top: "tooltip-top after:left-1/2 after:-bottom-2 after:border-b-0 after:border-x-transparent after:border-b-transparent after:-translate-x-1/2",
-    right: "tooltip-right after:top-1/2 after:-left-[7px] after:border-l-0 after:border-y-transparent after:border-l-transparent after:-translate-y-1/2",
-    bottom: "tooltip-bottom after:left-1/2 after:-top-2 after:border-t-0 after:border-x-transparent after:border-t-transparent after:-translate-x-1/2",
-    left: "tooltip-left after:top-1/2 after:-right-[7px] after:border-r-0 after:border-y-transparent after:border-r-transparent after:-translate-y-1/2",
+  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
+
+  let defaultClasses = $derived(`theui-tooltip z-[60] absolute ${roundedClass(rounded)}`)
+  let customClasses = `min-w-[100px] pointer-events-none w-max whitespace-nowrap text-sm text-center px-4 py-3 bg-alt text-alt`
+
+  async function updatePosition() {
+    await tick()
+    if (!trigger || !COMPONENT || !ARROW) return
+
+    const { x, y, middlewareData, placement } = await computePosition(trigger, COMPONENT, {
+      placement: trigger?.dataset.tooltipPosition as Placement ?? position,
+      middleware: [flip(), shift(), offset(gap), arrow({ element: ARROW })],
+    })
+
+    COMPONENT.style.left = `${x}px`
+    COMPONENT.style.top = `${y}px`
+
+    if (middlewareData.arrow) {
+      const {x: arrowX, y: arrowY} = middlewareData.arrow
+      const [primaryPlacement, alignment] = placement.split('-')
+      const staticSide = {top: 'bottom', right: 'left', bottom: 'top', left: 'right'}[primaryPlacement]
+
+      let left = arrowX != null ? `${arrowX}px` : ''
+      let top = arrowY != null ? `${arrowY}px` : ''
+
+      if (alignment === 'start') {
+        if (primaryPlacement === 'top' || primaryPlacement === 'bottom') {
+          left = '15px'
+        } else {
+          top = '15px'
+        }
+      } else if (alignment === 'end') {
+        if (primaryPlacement === 'top' || primaryPlacement === 'bottom') {
+          left = 'calc(100% - 28px)'
+        } else {
+          top = 'calc(100% - 28px)'
+        }
+      }
+
+      Object.assign(ARROW.style, {left, top, right: '', bottom: '', [staticSide as string]: '-4px'})
+    }
   }
 
-  // Define animation classes
-  let animationClasses = {slide: 'tooltip-slide', "slide-in": "", "slide-out": "", "zoom-in": 'tooltip-zoom-in', "zoom-out": 'tooltip-zoom-out', fade: 'tooltip-fade'}
-  let defaultClasses = $derived(`theui-tooltip hidden z-[60] absolute after:content-[''] after:absolute after:h-0 after:w-0 after:border-8 after:transform ${positionalClasses} ${animationClasses[animation ?? 'fade']}`)
-  let customClasses = `min-w-[100px] max-w-xs text-sm text-center px-3 py-2 text-alt ${colorClasses} ${roundedClass(rounded)} ${animationClass(animate, "opacity")}`
+  function showTooltip(event: MouseEvent) {
+    const target = event.target instanceof HTMLElement ? event.target : null
+    if (!target) return
+
+    trigger = target
+    content = trigger.getAttribute("data-tooltip") || ""
+    triggerStyle = trigger.getAttribute("data-tooltip-style") || ""
+
+    if (content) {
+      show = true
+      updatePosition()
+    }
+  }
+
+  function hideTooltip() {
+    show = false
+    trigger = null
+  }
 
   onMount(() => {
-    let triggerElement: HTMLElement[]|[] = [...document.querySelectorAll<HTMLElement>("[data-tooltip]")]
-    triggerElement.forEach((element: HTMLElement) => {
-      if (element) {
-        let triggerEvent = element.dataset?.tooltipEvent ?? tooltipEvent
+    const elements = document.querySelectorAll("[data-tooltip]")
 
-        // Making trigger focusable
-        if (element.tabIndex < 0){
-          element.tabIndex = 0
-        }
+    if (triggerEvent === "click") {
+      document.addEventListener("click", showTooltip, true)
+      document.addEventListener("blur", hideTooltip, true)
+    } else {
+      elements.forEach(el => {
+        (el as HTMLElement).addEventListener("mouseenter", showTooltip)
+        el.addEventListener("mouseleave", hideTooltip)
+      })
+    }
 
-        // Setting relative class if not available
-        if(!element.classList.contains("relative")){
-          element.classList.add("relative")
-        }
-
-        // Click trigger event
-        if (triggerEvent == "click") {
-          element.addEventListener("click", () => COMPONENT_ITEM.classList.contains("hidden") ? createElement(element) : removeElement(element, COMPONENT_ITEM))
-          element.onblur = () => removeElement(element, COMPONENT_ITEM)
-        } else {
-          element.addEventListener("mouseenter", () => createElement(element))
-          element.onmouseleave = () => removeElement(element, COMPONENT_ITEM)
-        }
-
-        if (browser) {
-          window.addEventListener("resize", handleResize)
-        }
-
+    onDestroy(() => {
+      if (triggerEvent === "click") {
+        document.removeEventListener("click", showTooltip, true)
+        document.removeEventListener("blur", hideTooltip, true)
+      } else {
+        elements.forEach(el => {
+          (el as HTMLElement).removeEventListener("mouseenter", showTooltip)
+          el.removeEventListener("mouseleave", hideTooltip)
+        })
       }
     })
   })
-
-  onDestroy(() => {
-    if (browser) {
-      window.removeEventListener("resize", handleResize)
-    }
-  })
-
-  let handleResize = () => {
-    if (!COMPONENT_ITEM.classList.contains("hidden")) {
-      const triggerElement = document.querySelector(`[data-tooltip-id="${tooltipId}"]`)
-      if (triggerElement) {
-        createElement(triggerElement as HTMLElement)
-      }
-    }
-  }
-
-  let createElement = (element: HTMLElement) => {
-    elementContent = element?.dataset?.tooltip ?? ""
-    const finalPosition = element?.dataset.tooltipPosition as POSITION_TYPES ?? position
-    positionalClasses = positionClasses[finalPosition]
-    animation = element?.dataset.animation as ENTRANCE_ANIMATION ?? animation
-    COMPONENT_ITEM.classList.remove("hidden")
-    document.body.appendChild(COMPONENT_ITEM)
-    setInitialStyle(COMPONENT_ITEM)
-    setTimeout(() => resetAndToggle(element, COMPONENT_ITEM, finalPosition, positionClasses, offset), 0)
-  }
 </script>
 
-<span bind:this={COMPONENT_ITEM} {...props} class="{defaultClasses} {twMerge(customClasses, props?.class as string)}" data-tooltip-id={tooltipId}>
-  {@html elementContent}
-</span>
+{#if show}
+  <div bind:this={COMPONENT} transition:fade={{duration: animationSpeed[animate] as any}} class={defaultClasses +" "+ twMerge(customClasses, props?.class as string, triggerStyle)}>
+    {@html content}
+    <span bind:this={ARROW} class="absolute w-3 h-3 bg-inherit rotate-45"></span>
+  </div>
+{/if}
