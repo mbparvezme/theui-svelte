@@ -34,7 +34,7 @@
   const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
 
   let defaultClasses =`theui-tooltip z-[60] absolute ${roundedClass(rounded)}`
-  let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt text-alt", props?.class as string, triggerStyle))
+  let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-800 text-alt dark:text-default", props?.class as string, triggerStyle))
 
   let updatePosition = async () => {
     await tick()

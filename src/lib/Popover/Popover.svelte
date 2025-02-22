@@ -11,9 +11,9 @@
     title?: Snippet,
     children: Snippet,
     trigger: string,
-    gap?: number,
     position?: Placement,
     triggerEvent?: 'click'|'hover',
+    gap?: number,
     animate?: ANIMATE_SPEED,
     rounded?: ROUNDED,
     shadow?: SHADOW,
@@ -139,8 +139,7 @@
     })
   })
 
-  let popoverClasses = `border border-gray-100 max-w-80 bg-primary text-sm text-gray-500 ${roundedClass(rounded)} ${shadowClass(shadow)}`;
-
+  let popoverClasses = `max-w-80 bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400 ${title ? "" : "pt-4"}${roundedClass(rounded)} ${shadowClass(shadow)}`
 </script>
 
 {#if show}
@@ -148,9 +147,9 @@
   {#if title}
     <h4 class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</h4>
   {/if}  
-  <span bind:this={ARROW} class="absolute w-4 h-4 bg-inherit rotate-45"></span>
   <div class={twMerge("px-4 pb-4", bodyClasses)}>
     {@render children()}
   </div>
+  <span bind:this={ARROW} class="absolute w-4 h-4 bg-inherit rotate-45"></span>
 </div>
 {/if}

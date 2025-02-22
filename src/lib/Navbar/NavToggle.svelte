@@ -18,7 +18,7 @@
     }
   }
 
-  let getClass = `nav-toggle border border-gray-200 rounded-md w-12 h-12 flex items-center justify-center ${hiddenClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "hidden"}`
+  let getClass = `nav-toggle border border-gray-400 dark:border-gray-700 rounded-md w-12 h-12 flex items-center justify-center ${hiddenClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "hidden"}`
 </script>
 
 {#if config.mobileNavOn !== false}
