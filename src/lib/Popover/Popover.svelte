@@ -3,7 +3,7 @@
   import { fade } from 'svelte/transition'
   import { computePosition, flip, shift, offset, arrow, type Placement } from "@floating-ui/dom"
 
-  import { animationClass, roundedClass, shadowClass } from "$lib/function"
+  import { roundedClass, shadowClass } from "$lib/function"
 	import type { ANIMATE_SPEED, ROUNDED, SHADOW } from "$lib/types"
 	import { twMerge } from "tailwind-merge"
 
@@ -30,15 +30,16 @@
     gap = 8,
     position = "top",
     triggerEvent = "click",
-    animate = "slower",
+    animate = "normal",
     rounded = "md",
     shadow = "lg",
-    closeOnClick = true,
+    closeOnClick = false,
     titleClasses = "",
     bodyClasses = "",
     ...props
   }: Props = $props()
 
+  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
 
   let triggerElement: HTMLElement|null = $state(null)
   let popover: HTMLElement|null = $state(null)
@@ -48,7 +49,7 @@
   async function updatePosition() {
     await tick()
 
-    if (!triggerElement || !popover || !ARROW) return
+    if (!(triggerElement && popover && ARROW)) return
 
     const { x, y, middlewareData, placement } = await computePosition(triggerElement as HTMLElement, popover, {
       placement: position,
@@ -80,52 +81,70 @@
         }
       }
 
-      Object.assign(ARROW.style, {left, top, right: '', bottom: '', [staticSide as string]: '-6px'})
+      if(ARROW){
+        Object.assign(ARROW.style, {left, top, right: '', bottom: '', [staticSide as string]: '-6px'})
+      }
     }
   }
 
-  function showPopover() {
+  let showPopover = () => {
     show = true
-    updatePosition()
+    requestAnimationFrame(updatePosition)
   }
 
-  function hidePopover() {
-    show = false
-    triggerElement = null
-  }
+  let hidePopover = () => show = false
 
   let handleClick = (el: HTMLElement) => {
-    if (!popover) return;
-    if(show){
-      if (!closeOnClick && (popover.contains(el))) return;
+    if (!el) return
+    
+    const isClickInsidePopover = popover?.contains(el)
+    const isClickOnTrigger = triggerElement?.contains(el)
+
+    if (show) {
+      if (!closeOnClick && isClickInsidePopover) return
       hidePopover()
-    }else{
+    } else if (isClickOnTrigger) {
       showPopover()
     }
   }
 
   onMount(() => {
     triggerElement = document.getElementById(trigger) as HTMLElement
+    let clickedElement: EventTarget | null = null
 
-    if (trigger && popover) {
-      if(triggerEvent == "hover"){
-        triggerElement.addEventListener('mouseenter', () => showPopover())
-        triggerElement.addEventListener('mouseleave', () => hidePopover())
-      }
-      if(triggerEvent == "click"){
-        let clickedElement: EventTarget | null = null;
-        document.addEventListener('mousedown', (event) => clickedElement = event.target)
+    const handleDocumentClick = (event: Event) => clickedElement = event.target
+    const handleTriggerClick = () => handleClick(clickedElement as HTMLElement)
+    const handleTriggerBlur = () => handleClick(clickedElement as HTMLElement)
 
-        triggerElement.addEventListener('click', () => handleClick(clickedElement as HTMLElement))
-        triggerElement.addEventListener('blur', () => handleClick(clickedElement as HTMLElement))
+    if (triggerElement) {
+      if (triggerEvent === "hover") {
+        triggerElement.addEventListener('mouseenter', showPopover)
+        triggerElement.addEventListener('mouseleave', hidePopover)
+      } else if (triggerEvent === "click") {
+        document.addEventListener('mousedown', handleDocumentClick)
+        triggerElement.addEventListener('click', handleTriggerClick)
+        triggerElement.addEventListener('blur', handleTriggerBlur)
       }
     }
+
+    onDestroy(() => {
+      if (triggerEvent === "click") {
+        document.removeEventListener('mousedown', handleDocumentClick)
+        triggerElement?.removeEventListener("click", handleTriggerClick)
+        triggerElement?.removeEventListener("blur", handleTriggerBlur)
+      } else {
+        triggerElement?.removeEventListener('mouseleave', hidePopover)
+        triggerElement?.removeEventListener('mouseenter', showPopover)
+      }
+    })
   })
 
-  let popoverClasses = `border max-w-80 border bg-primary overflow-hidden ${roundedClass(rounded)}${animationClass(animate, "opacity")}${shadowClass(shadow)}`
+  let popoverClasses = `border border-gray-100 max-w-80 bg-primary text-sm text-gray-500 ${roundedClass(rounded)} ${shadowClass(shadow)}`;
+
 </script>
 
-<div bind:this={popover} class="theui-popover absolute {twMerge(popoverClasses, shadowClass(shadow), props?.class as string)}" class:hidden={!show}>
+{#if show}
+<div bind:this={popover} transition:fade={{duration: animationSpeed[animate]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}">
   {#if title}
     <h4 class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</h4>
   {/if}  
@@ -134,3 +153,4 @@
     {@render children()}
   </div>
 </div>
+{/if}

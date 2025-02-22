@@ -1,8 +1,8 @@
 <script>
-  import {Popover} from "$lib";
+  import {Popover} from "$lib"
 </script>
 
-<Popover class="bg-red-200" trigger="testPopover">
+<Popover trigger="testPopover">
   {#snippet title()}
     Hello
   {/snippet}

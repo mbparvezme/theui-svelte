@@ -12,7 +12,7 @@
     triggerEvent ?: 'hover' | 'click' | string,
     rounded ?: ROUNDED,
     gap?: number,
-    [key: string] : unknown // class
+    [key: string] : unknown
   }
 
   let{
@@ -33,12 +33,12 @@
 
   const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
 
-  let defaultClasses = $derived(`theui-tooltip z-[60] absolute ${roundedClass(rounded)}`)
-  let customClasses = `min-w-[100px] pointer-events-none w-max whitespace-nowrap text-sm text-center px-4 py-3 bg-alt text-alt`
+  let defaultClasses =`theui-tooltip z-[60] absolute ${roundedClass(rounded)}`
+  let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt text-alt", props?.class as string, triggerStyle))
 
-  async function updatePosition() {
+  let updatePosition = async () => {
     await tick()
-    if (!trigger || !COMPONENT || !ARROW) return
+    if (!(trigger && COMPONENT && ARROW)) return
 
     const { x, y, middlewareData, placement } = await computePosition(trigger, COMPONENT, {
       placement: trigger?.dataset.tooltipPosition as Placement ?? position,
@@ -74,8 +74,8 @@
     }
   }
 
-  function showTooltip(event: MouseEvent) {
-    const target = event.target instanceof HTMLElement ? event.target : null
+  let showTooltip = (event: MouseEvent) => {
+    const target = event.target instanceof HTMLElement ? event.target.closest("[data-tooltip]") as HTMLElement : null
     if (!target) return
 
     trigger = target
@@ -88,7 +88,7 @@
     }
   }
 
-  function hideTooltip() {
+  let hideTooltip = () => {
     show = false
     trigger = null
   }
@@ -111,6 +111,7 @@
         document.removeEventListener("click", showTooltip, true)
         document.removeEventListener("blur", hideTooltip, true)
       } else {
+        const elements = document.querySelectorAll("[data-tooltip]")
         elements.forEach(el => {
           (el as HTMLElement).removeEventListener("mouseenter", showTooltip)
           el.removeEventListener("mouseleave", hideTooltip)
