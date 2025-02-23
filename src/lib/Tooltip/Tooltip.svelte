@@ -7,18 +7,18 @@
   import { roundedClass } from "$lib/function"
 
   interface Props{
-    animate ?: ANIMATE_SPEED,
     position ?: Placement,
-    triggerEvent ?: 'hover' | 'click' | string,
+    triggerEvent ?: 'hover' | 'click',
+    animate ?: ANIMATE_SPEED,
     rounded ?: ROUNDED,
     gap?: number,
     [key: string] : unknown
   }
 
   let{
-    animate = "normal",
     position = "top",
     triggerEvent = "hover",
+    animate = "normal",
     rounded = "lg",
     gap = 12,
     ...props
@@ -74,7 +74,7 @@
     }
   }
 
-  let showTooltip = (event: MouseEvent) => {
+  let showTooltip = (event: Event) => {
     const target = event.target instanceof HTMLElement ? event.target.closest("[data-tooltip]") as HTMLElement : null
     if (!target) return
 
@@ -92,6 +92,18 @@
     show = false
     trigger = null
   }
+
+	let handleKeyboard = (e: KeyboardEvent) => {
+    if(triggerEvent != "click") return
+
+    if (show && e.code === "Escape") {
+      e.preventDefault()
+      hideTooltip()
+    }
+    if(e.code === "Enter" || e.code === "Space"){
+      show ? hideTooltip() : showTooltip(e)
+    }
+	}
 
   onMount(() => {
     const elements = document.querySelectorAll("[data-tooltip]")
@@ -120,6 +132,8 @@
     })
   })
 </script>
+
+<svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if show}
   <div bind:this={COMPONENT} transition:fade={{duration: animationSpeed[animate] as any}} class={defaultClasses +" "+ twMerge(customClasses, props?.class as string, triggerStyle)}>

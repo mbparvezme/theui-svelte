@@ -8,7 +8,7 @@
 	import { twMerge } from "tailwind-merge"
 
   interface Props {
-    title?: Snippet,
+    title?: string|Snippet,
     children: Snippet,
     trigger: string,
     position?: Placement,
@@ -33,7 +33,7 @@
     animate = "normal",
     rounded = "md",
     shadow = "lg",
-    closeOnClick = false,
+    closeOnClick = true,
     titleClasses = "",
     bodyClasses = "",
     ...props
@@ -108,6 +108,18 @@
     }
   }
 
+	let handleKeyboard = (e: KeyboardEvent) => {
+    if(triggerEvent != "click") return
+
+    if (show && e.code === "Escape") {
+      e.preventDefault()
+      hidePopover()
+    }
+    if(!show && e.code === "Enter" || e.code === "Space"){
+      showPopover()
+    }
+	}
+
   onMount(() => {
     triggerElement = document.getElementById(trigger) as HTMLElement
     let clickedElement: EventTarget | null = null
@@ -117,6 +129,11 @@
     const handleTriggerBlur = () => handleClick(clickedElement as HTMLElement)
 
     if (triggerElement) {
+
+      triggerElement.setAttribute("aria-haspopup", "true")
+      triggerElement.setAttribute("aria-controls", `${trigger}-popover`)
+      triggerElement.setAttribute("tadIndex", "0")
+
       if (triggerEvent === "hover") {
         triggerElement.addEventListener('mouseenter', showPopover)
         triggerElement.addEventListener('mouseleave', hidePopover)
@@ -142,10 +159,16 @@
   let popoverClasses = `max-w-80 bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400 ${title ? "" : "pt-4"}${roundedClass(rounded)} ${shadowClass(shadow)}`
 </script>
 
+<svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
+
 {#if show}
-<div bind:this={popover} transition:fade={{duration: animationSpeed[animate]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}">
+<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration: animationSpeed[animate]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
   {#if title}
-    <h4 class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</h4>
+    {#if typeof title === "function"}
+      <div class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</div>
+    {:else}
+      <h4 class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@html title}</h4>
+    {/if}
   {/if}  
   <div class={twMerge("px-4 pb-4", bodyClasses)}>
     {@render children()}
