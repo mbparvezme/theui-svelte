@@ -33,7 +33,7 @@
 
   const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
 
-  let defaultClasses =`theui-tooltip z-[60] absolute ${roundedClass(rounded)}`
+  let defaultClasses =`theui-tooltip z-[60] absolute ${roundedClass(trigger?.getAttribute("data-tooltip-rounded") as ROUNDED || rounded)}`
   let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-800 text-alt dark:text-default", props?.class as string, triggerStyle))
 
   let updatePosition = async () => {
@@ -94,29 +94,29 @@
   }
 
 	let handleKeyboard = (e: KeyboardEvent) => {
-    if(triggerEvent != "click") return
-
     if (show && e.code === "Escape") {
       e.preventDefault()
       hideTooltip()
     }
-    if(e.code === "Enter" || e.code === "Space"){
-      show ? hideTooltip() : showTooltip(e)
+    if(!show && e.code === "Enter" || e.code === "Space"){
+      showTooltip(e)
     }
 	}
 
   onMount(() => {
-    const elements = document.querySelectorAll("[data-tooltip]")
+    const elements = document.querySelectorAll("[data-tooltip]");
 
-    if (triggerEvent === "click") {
-      document.addEventListener("click", showTooltip, true)
-      document.addEventListener("blur", hideTooltip, true)
-    } else {
-      elements.forEach(el => {
-        (el as HTMLElement).addEventListener("mouseenter", showTooltip)
-        el.addEventListener("mouseleave", hideTooltip)
-      })
-    }
+    elements.forEach(el => {
+      const eventType = el.getAttribute("data-tooltip-event") || triggerEvent;
+
+      if (eventType === "click") {
+        el.addEventListener("click", showTooltip);
+        el.addEventListener("blur", hideTooltip);
+      } else {
+        el.addEventListener("mouseenter", showTooltip);
+        el.addEventListener("mouseleave", hideTooltip);
+      }
+    })
 
     onDestroy(() => {
       if (triggerEvent === "click") {
@@ -136,7 +136,7 @@
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if show}
-  <div bind:this={COMPONENT} transition:fade={{duration: animationSpeed[animate] as any}} class={defaultClasses +" "+ twMerge(customClasses, props?.class as string, triggerStyle)}>
+  <div bind:this={COMPONENT} transition:fade={{duration: animationSpeed[trigger?.getAttribute("data-tooltip-animate") as ANIMATE_SPEED || animate] as any}} class={defaultClasses +" "+ twMerge(customClasses, props?.class as string, triggerStyle)}>
     {@html content}
     <span bind:this={ARROW} class="absolute w-3 h-3 bg-inherit rotate-45"></span>
   </div>
