@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte"
-  import { fade } from 'svelte/transition'
+  import { fade, type FadeParams } from 'svelte/transition'
   import { computePosition, flip, shift, offset, arrow, type Placement } from "@floating-ui/dom"
   import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
-  import { roundedClass } from "$lib/function"
+  import { generateToken, roundedClass } from "$lib/function"
 
   interface Props{
     position ?: Placement,
@@ -24,17 +24,16 @@
     ...props
   } : Props = $props()
 
+  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
   let trigger:      HTMLElement     | null = null
   let COMPONENT:    HTMLDivElement  | null = $state(null)
   let ARROW:        HTMLSpanElement | null = $state(null)
   let content:      string          | HTMLElement = $state("")
   let triggerStyle: string          = $state("")
   let show:         boolean         = $state(false)
+  let animObj: FadeParams|undefined = $state(undefined)
 
-  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
-
-  let defaultClasses =`theui-tooltip z-[60] absolute ${roundedClass(trigger?.getAttribute("data-tooltip-rounded") as ROUNDED || rounded)}`
-  let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-800 text-alt dark:text-default", props?.class as string, triggerStyle))
+  const calculateGap = () => Math.max(Number(trigger?.dataset?.tooltipGap) || gap, 8)
 
   let updatePosition = async () => {
     await tick()
@@ -42,7 +41,7 @@
 
     const { x, y, middlewareData, placement } = await computePosition(trigger, COMPONENT, {
       placement: trigger?.dataset.tooltipPosition as Placement ?? position,
-      middleware: [flip(), shift(), offset(gap), arrow({ element: ARROW })],
+      middleware: [flip(), shift(), offset(calculateGap()), arrow({ element: ARROW })],
     })
 
     COMPONENT.style.left = `${x}px`
@@ -79,6 +78,7 @@
     if (!target) return
 
     trigger = target
+    animObj = {duration: animationSpeed[trigger?.getAttribute("data-tooltip-animate") as ANIMATE_SPEED || animate] as any}
     content = trigger.getAttribute("data-tooltip") || ""
     triggerStyle = trigger.getAttribute("data-tooltip-style") || ""
 
@@ -104,8 +104,10 @@
 	}
 
   onMount(() => {
-    const elements = document.querySelectorAll("[data-tooltip]");
+    trigger?.setAttribute("aria-haspopup", "true")
+    trigger?.setAttribute("aria-controls", `${generateToken()}`)
 
+    const elements = document.querySelectorAll("[data-tooltip]")
     elements.forEach(el => {
       const eventType = el.getAttribute("data-tooltip-event") || triggerEvent;
 
@@ -115,6 +117,9 @@
       } else {
         el.addEventListener("mouseenter", showTooltip);
         el.addEventListener("mouseleave", hideTooltip);
+        // Ensure keyboard users can access tooltips
+        el.addEventListener("focus", showTooltip);
+        el.addEventListener("blur", hideTooltip);
       }
     })
 
@@ -131,12 +136,16 @@
       }
     })
   })
+
+  let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-800 text-alt dark:text-default", props?.class as string, triggerStyle))
+
+  const classes = () => `theui-tooltip z-[60] absolute ${customClasses}${roundedClass(trigger?.dataset.tooltipRounded as ROUNDED || rounded)}`
 </script>
 
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if show}
-  <div bind:this={COMPONENT} transition:fade={{duration: animationSpeed[trigger?.getAttribute("data-tooltip-animate") as ANIMATE_SPEED || animate] as any}} class={defaultClasses +" "+ twMerge(customClasses, props?.class as string, triggerStyle)}>
+  <div bind:this={COMPONENT} transition:fade={animObj} class={classes()}>
     {@html content}
     <span bind:this={ARROW} class="absolute w-3 h-3 bg-inherit rotate-45"></span>
   </div>

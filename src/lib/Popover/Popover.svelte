@@ -137,6 +137,9 @@
       if (triggerEvent === "hover") {
         triggerElement.addEventListener('mouseenter', showPopover)
         triggerElement.addEventListener('mouseleave', hidePopover)
+        triggerElement.addEventListener("focus", showPopover)
+        triggerElement.addEventListener("blur", hidePopover)
+
       } else if (triggerEvent === "click") {
         document.addEventListener('mousedown', handleDocumentClick)
         triggerElement.addEventListener('click', handleTriggerClick)
