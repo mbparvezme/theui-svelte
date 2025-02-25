@@ -1,6 +1,6 @@
 {
 	"name": "theui-svelte",
-	"version": "2.0.0rc44",
+	"version": "2.0.0rc45",
 	"description": "theui-svelte A component library by TheUI. Out-of-the-box accessible and easy to customize built with TailwindCSS (v3).",
 	"author": {
 		"name": "M B Parvez",
@@ -191,10 +191,6 @@
 		"./NavLinkGroup.svelte": {
 			"types": "./dist/Navbar\\NavLinkGroup.svelte.d.ts",
 			"svelte": "./dist/Navbar\\NavLinkGroup.svelte"
-		},
-		"./NavToggle.svelte": {
-			"types": "./dist/Navbar\\NavToggle.svelte.d.ts",
-			"svelte": "./dist/Navbar\\NavToggle.svelte"
 		},
 		"./Notification.svelte": {
 			"types": "./dist/Notification\\Notification.svelte.d.ts",

@@ -29,17 +29,18 @@
   }
 
   let structuralClasses: RESPONSIVE_NAV_ON = {
-    sm: "md:flex-row",
-    md: "lg:flex-row",
-    lg: "xl:flex-row",
-    xl: "2xl:flex-row",
+    sm: "flex-col md:flex-row",
+    md: "flex-col lg:flex-row",
+    lg: "flex-col xl:flex-row",
+    xl: "flex-col 2xl:flex-row",
   }
 
-  let navContainerClasses = `h-full ${!config.mobileNavOn ? "items-center flex-row" : (structuralClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "")} ${alignClasses[align as "start" | "center" | "end"][config.mobileNavOn as MOBILE_NAV_ON]}`
+  let navContainerClasses = `h-full ${!config.mobileNavOn ? "items-center flex-row" 
+  : config.responsive ? (structuralClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "") : ""} ${alignClasses[align as "start" | "center" | "end"][config.mobileNavOn as MOBILE_NAV_ON]}`
 </script>
 
 {#if children}
-<div {...props} class="nav-links flex flex-col {twMerge(navContainerClasses, props?.class as string)}">
+<div {...props} class="nav-links flex {twMerge(navContainerClasses, props?.class as string)}">
   {@render children()}
 </div>
 {/if}

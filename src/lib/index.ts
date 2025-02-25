@@ -47,12 +47,9 @@ export { default as NavBrand } from "./Navbar/NavBrand.svelte";
 export { default as NavLinkGroup } from "./Navbar/NavLinkGroup.svelte";
 export { default as NavDropdown } from "./Navbar/NavDropdown.svelte";
 export { default as NavLink } from "./Navbar/NavLink.svelte";
-export { default as NavToggle } from "./Navbar/NavToggle.svelte";
 
 export { default as Slider } from "./Slider/Slider.svelte";
 export { default as Slide } from "./Slider/Slide.svelte";
-// export { default as ContentSlide } from "./Slider/Slide.svelte";
-// export { default as ImageSlide } from "./Slider/ImageSlide.svelte";
 
 // Tabs
 export { default as Tabs } from "./Tabs/Tabs.svelte";

@@ -1,12 +1,16 @@
 <script lang="ts">
+  import {getContext, setContext, type Snippet} from "svelte"
+	import { twMerge } from "tailwind-merge";
+	import type { MOBILE_NAV_ON, RESPONSIVE_NAV_ON } from "$lib/types"
 	import { roundedClass } from "$lib/function"
 	import { ST_MOBILE_NAV } from "$lib/state.svelte"
-	import type { MOBILE_NAV_ON, RESPONSIVE_NAV_ON } from "$lib/types"
-  import {getContext, type Snippet} from "svelte"
-	import { twMerge } from "tailwind-merge";
+	import { Svg } from "$lib"
   const {config, id} = getContext('NAV') as any
 
-  let {children} : {children: Snippet} = $props()
+  const CTX = getContext('NAV') as any
+  setContext('NAV', {...CTX, config: {...CTX.config, responsive: true}});
+
+  let {children, toggleIcon} : {children: Snippet, toggleIcon?: Snippet} = $props()
 
   let responsiveClasses = () => {
     // Determine mobile nav responsive classes
@@ -23,7 +27,20 @@
     return config.mobileNavOn ? `${navMobileStatusClasses["on"]} ${responsiveClassesByBreakPoints[config.mobileNavOn as MOBILE_NAV_ON] ?? ""}` : navMobileStatusClasses["off"]
   }
 
-  let collapseClasses = `theui-navbar-collapse flex-grow z-[1] ${responsiveClasses()}${roundedClass(config?.rounded, "bottom")} ${twMerge("max-h-[80vh] bg-primary", config.navCollapseClasses)}`
+  let collapseClasses = `theui-navbar-collapse flex-grow z-[1] flex ${responsiveClasses()}${roundedClass(config?.rounded, "bottom")} ${twMerge("max-h-[80vh] bg-primary", config.navCollapseClasses)}`
+
+  // Toggle functionality
+  let hiddenClasses: RESPONSIVE_NAV_ON = {sm: "md:hidden", md: "lg:hidden", lg: "xl:hidden", xl: "2xl:hidden"}
+
+  let toggle = () => {
+    if (ST_MOBILE_NAV.value.includes(id)) {
+      ST_MOBILE_NAV.value = ST_MOBILE_NAV.value.filter((i: string) => i !== id);
+    }else{
+      ST_MOBILE_NAV.value.push(id)
+    }
+  }
+
+  let getClass = `nav-toggle w-12 h-12 flex items-center justify-center ${hiddenClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "hidden"}`
 </script>
 
 <div
@@ -31,6 +48,16 @@
   class:flex={!config.mobileNavOn || ST_MOBILE_NAV.value.includes(id)}
   class:hidden={config.mobileNavOn != false && !ST_MOBILE_NAV.value.includes(id)}
   class:overflow-hidden={config.mobileNavOn != false && !ST_MOBILE_NAV.value.includes(id)}
-  class:overflow-auto={config.mobileNavOn != false && ST_MOBILE_NAV.value.includes(id)}>
-  {@render children()}
-</div>
+  class:overflow-auto={config.mobileNavOn != false && ST_MOBILE_NAV.value.includes(id)}
+  >
+    {@render children()}
+  </div>
+  <button type="button" onclick={()=>toggle()} class={getClass} aria-label="Toggle nav bar">
+    {#if toggleIcon}
+      {@render toggleIcon()}
+    {:else}
+      <Svg size={1.25}>
+        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+      </Svg>
+    {/if}
+  </button>

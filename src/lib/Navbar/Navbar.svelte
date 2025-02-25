@@ -9,21 +9,23 @@
 
   interface Props {
     children: Snippet,
-    segment ?: string,
-    activeLinkClasses ?: string,
-    animate ?: ANIMATE_SPEED,
-    height ?: heightTypes | 'string',
-    linkClasses ?: string,
-    dropdownLinkClasses ?: string,
-    mobileNavOn ?: 'md' | 'lg' | 'xl' | false,
-    navInnerClasses ?: string,
-    navCollapseClasses ?: string,
-    rounded ?: ROUNDED,
-    dropdownEvent ?: 'hover' | 'click',
-    scrollAmountToHide ?: number,
-    scrollAmountToShrink ?: number,
-    scrollBehavior ?: 'fixed' | 'default' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide',
-    scrollClasses ?: string,
+    scrollBehavior?: 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide',
+    scrollAmountToHide?: number,
+    scrollAmountToShrink?: number,
+    height?: heightTypes | 'string',
+    mobileNavOn?: 'sm' | 'md' | 'lg' | 'xl',
+
+    segment?: string,
+    animate?: ANIMATE_SPEED,
+    rounded?: ROUNDED,
+    dropdownEvent?: 'hover' | 'click',
+
+    linkClasses?: string,
+    activeLinkClasses?: string,
+    dropdownLinkClasses?: string,
+    navInnerClasses?: string,
+    navCollapseClasses?: string,
+    scrollClasses?: string,
     [key: string] : unknown
   }
 
@@ -42,7 +44,7 @@
     dropdownEvent = "click",
     scrollAmountToHide = 128,
     scrollAmountToShrink = 32,
-    scrollBehavior = "shrinkAndHide",
+    scrollBehavior = "default",
     scrollClasses = "",
     ...props
   } : Props = $props()
@@ -89,7 +91,7 @@
     })
   })
 
-  let navClass = $derived(`bg-primary left-0 top-0 w-full flex items-center justify-center ${animationClass(animate)} 
+  let navClass = $derived(`bg-primary left-0 top-0 w-full flex items-center justify-center bg-slate-50 dark:bg-slate-800 ${animationClass(animate)} 
                   ${paddingHeightCls[height as "sm" | "md" | "lg" | "xl"] ?? height as string}
                   ${((miniNav||(hideNav===false && scrollPos!==0)) && (config.scrollBehavior == "shrinkOnScrollDown" || config.scrollBehavior == "shrinkAndHide") ? config.scrollClasses : "")}${roundedClass(config?.rounded)}`)
 
