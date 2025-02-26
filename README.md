@@ -13,7 +13,7 @@
   <img src="https://theui-sveltekit-doc.vercel.app/img/theui-sveltekit-components.svg" width="400px">
 </div>
 
-The **theui-svelte** is [**TheUI**](https://www.svelte.theui.dev)'s component library for [**Svelte 5**](https://svelte.dev), built on top of TailwindCSS. It combines the strength of Svelte and the features of TailwindCSS to create a powerful tool that accelerates your development process.
+The **theui-svelte** is [**TheUI**](https://www.theui.dev)'s component library for [**Svelte 5**](https://svelte.dev), built on top of TailwindCSS. It combines the strength of Svelte and the features of TailwindCSS to create a powerful tool that accelerates your development process.
 
 <br>
 
@@ -42,52 +42,52 @@ Last but not least, here is the list of components available in the component li
   </thead>
   <tbody style="width: 100%;">
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/accordion">Accordion</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/alert">Alert</a></td>
+      <td><a href="https://www.theui.dev/docs/accordion">Accordion</a></td>
+      <td><a href="https://www.theui.dev/docs/alert">Alert</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/badge">Badge</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/breadcrumb">Breadcrumb</a></td>
+      <td><a href="https://www.theui.dev/docs/badge">Badge</a></td>
+      <td><a href="https://www.theui.dev/docs/breadcrumb">Breadcrumb</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/button">Button</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/button-group">Button group</a></td>
+      <td><a href="https://www.theui.dev/docs/button">Button</a></td>
+      <td><a href="https://www.theui.dev/docs/button-group">Button group</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/quick-action-button">Quick action button</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/card">Card</a></td>
+      <td><a href="https://www.theui.dev/docs/quick-action-button">Quick action button</a></td>
+      <td><a href="https://www.theui.dev/docs/card">Card</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/chips">Chips</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/collapse">Collapse</a></td>
+      <td><a href="https://www.theui.dev/docs/chips">Chips</a></td>
+      <td><a href="https://www.theui.dev/docs/collapse">Collapse</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/drawer">Drawer</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/dropdown">Dropdown</a></td>
+      <td><a href="https://www.theui.dev/docs/drawer">Drawer</a></td>
+      <td><a href="https://www.theui.dev/docs/dropdown">Dropdown</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/list-group">List group</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/modal">Modal</a></td>
+      <td><a href="https://www.theui.dev/docs/list-group">List group</a></td>
+      <td><a href="https://www.theui.dev/docs/modal">Modal</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/navbar">Navbar</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/notification">Notification</a></td>
+      <td><a href="https://www.theui.dev/docs/navbar">Navbar</a></td>
+      <td><a href="https://www.theui.dev/docs/notification">Notification</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/pagination">Pagination</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/popover">Popover</a></td>
+      <td><a href="https://www.theui.dev/docs/pagination">Pagination</a></td>
+      <td><a href="https://www.theui.dev/docs/popover">Popover</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/popup">Popup (Exit and Entry popup)</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/progress-bar">Progress bar</a></td>
+      <td><a href="https://www.theui.dev/docs/popup">Popup (Exit and Entry popup)</a></td>
+      <td><a href="https://www.theui.dev/docs/progress-bar">Progress bar</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/slider">Slider</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/table">Table</a></td>
+      <td><a href="https://www.theui.dev/docs/slider">Slider</a></td>
+      <td><a href="https://www.theui.dev/docs/table">Table</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/tabs">Tabs</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/tooltip">Tooltip</a></td>
+      <td><a href="https://www.theui.dev/docs/tabs">Tabs</a></td>
+      <td><a href="https://www.theui.dev/docs/tooltip">Tooltip</a></td>
     </tr>
   </tbody>
 </table>
@@ -102,24 +102,24 @@ Last but not least, here is the list of components available in the component li
   </thead>
   <tbody style="width: 100%;">
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/form">Form</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/check-box">Check-box</a></td>
+      <td><a href="https://www.theui.dev/docs/form">Form</a></td>
+      <td><a href="https://www.theui.dev/docs/check-box">Check-box</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/fieldset">Fieldset</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/radio-button">Radio button</a></td>
+      <td><a href="https://www.theui.dev/docs/fieldset">Fieldset</a></td>
+      <td><a href="https://www.theui.dev/docs/radio-button">Radio button</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/label">Label</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/file-input">File input</a></td>
+      <td><a href="https://www.theui.dev/docs/label">Label</a></td>
+      <td><a href="https://www.theui.dev/docs/file-input">File input</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/input">Text input</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/toggle">Toggle</a></td>
+      <td><a href="https://www.theui.dev/docs/input">Text input</a></td>
+      <td><a href="https://www.theui.dev/docs/toggle">Toggle</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/select">Select</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/helper-text">Helper text</a></td>
+      <td><a href="https://www.theui.dev/docs/select">Select</a></td>
+      <td><a href="https://www.theui.dev/docs/helper-text">Helper text</a></td>
     </tr>
   </tbody>
 </table>
@@ -134,12 +134,12 @@ Last but not least, here is the list of components available in the component li
   </thead>
   <tbody style="width: 100%;">
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/container">Container</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/dark-mode">Dark mode</a></td>
+      <td><a href="https://www.theui.dev/docs/container">Container</a></td>
+      <td><a href="https://www.theui.dev/docs/dark-mode">Dark mode</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.svelte.theui.dev/docs/close">Close</a></td>
-      <td><a href="https://www.svelte.theui.dev/docs/svg-icon">SVG</a></td>
+      <td><a href="https://www.theui.dev/docs/close">Close</a></td>
+      <td><a href="https://www.theui.dev/docs/svg-icon">SVG</a></td>
     </tr>
   </tbody>
 </table>
