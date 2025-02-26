@@ -21,7 +21,7 @@
   let {
     children,
     id = generateToken(),
-    label = "",
+    label,
     animate = "fast",
     backdrop = true,
     position = "start",
@@ -77,12 +77,14 @@
 
 <svelte:body onkeydown={(e)=>handleKeyboardEsc(e)}></svelte:body>
 
-{#if typeof label == "string"}
-  <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} {ariaLabel} onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}>{label}</Button>
-{:else}
-  <span id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} aria-label={ariaLabel} role="button" onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} tabindex="0">
-    {@render label?.()}
-  </span>
+{#if label}
+  {#if typeof label == "string"}
+    <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} {ariaLabel} onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}>{@html label}</Button>
+  {:else}
+    <span id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} aria-label={ariaLabel} role="button" onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} tabindex="0">
+      {@render label?.()}
+    </span>
+  {/if}
 {/if}
 
 {#if children}

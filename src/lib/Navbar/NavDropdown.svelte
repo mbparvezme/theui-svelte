@@ -81,10 +81,10 @@
 
   let resCls = () => {
     let collapseClasses: RESPONSIVE_NAV_ON = {
-      sm: "md-collapse md:absolute md:flex md:shadow-xl md:block dark:md:bg-tertiary",
-      md: "lg-collapse lg:absolute lg:flex lg:shadow-xl lg:block dark:lg:bg-tertiary",
-      lg: "xl:absolute xl:flex xl:shadow-xl xl:block dark:xl:bg-tertiary",
-      xl: "2xl:absolute 2xl:flex 2xl:shadow-xl 2xl:block dark:2xl:bg-tertiary",
+      sm: "md-collapse md:absolute md:flex md:shadow-xl md:block",
+      md: "lg-collapse lg:absolute lg:flex lg:shadow-xl lg:block",
+      lg: "xl:absolute xl:flex xl:shadow-xl xl:block",
+      xl: "2xl:absolute 2xl:flex 2xl:shadow-xl 2xl:block",
     }
 
     let dropdownMaxHeight: RESPONSIVE_NAV_ON = {
@@ -100,7 +100,7 @@
             ${menuWidthClasses[config?.mobileNavOn as MOBILE_NAV_ON || "md"][width]}`
   }
 
-  let dropdownClasses = `nav-dropdown flex-col py-2 bg-primary dark:bg-secondary overflow-y-auto
+  let dropdownClasses = `nav-dropdown flex-col py-2 bg-secondary overflow-y-auto
   ${width != "full" ? (align=="end" ? "end-0" : "start-0") : ""}
   ${config?.responsive ? resCls() : nonResCls} ${dropdownTopPositionClasses[config.height as MOBILE_NAV_ON]}
   ${roundedClass(config?.rounded, "bottom")}${animationClass(config.animate)}`

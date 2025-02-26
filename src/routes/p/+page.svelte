@@ -2,7 +2,7 @@
   import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, Svg} from "$lib"
 </script>
 
-<Navbar>
+<Navbar scrollBehavior="shrinkOnScrollDown" scrollClasses="bg-red-100">
   <NavBrand href="/">BRAND</NavBrand>
   <NavCollapse>
     <NavLinkGroup align="end">
@@ -22,4 +22,20 @@
       </NavDropdown>
     </NavLinkGroup>
   </NavCollapse>
+  <DarkMode />
 </Navbar>
+<br>
+<br>
+<br>
+
+<div class="h-[50vh] bg-primary"></div>
+<div class="h-[50vh] bg-secondary"></div>
+<div class="h-[50vh] bg-tertiary"></div>
+<div class="h-[50vh] bg-primary"></div>
+
+
+<style lang="postcss">
+  :global(body){
+    @apply bg-primary;
+  }
+</style>

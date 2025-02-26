@@ -40,7 +40,7 @@
     }
   }
 
-  let getClass = `nav-toggle w-12 h-12 flex items-center justify-center ${hiddenClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "hidden"}`
+  let getClass = `nav-toggle w-12 h-12 ms-auto flex items-center justify-center ${hiddenClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "hidden"}`
 </script>
 
 <div

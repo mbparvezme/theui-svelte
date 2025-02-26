@@ -82,25 +82,27 @@
 
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
-{#if typeof label == "string"}
-  <Button id={`${id}-modal-button`}
-  aria-controls={id}
-  aria-expanded={open}
-  aria-haspopup="dialog"
-  aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
-  aria-describedby={`${id}-modal-body`}
-  onclick={()=>toggle()}
-  class={buttonClasses}>{label}</Button>
-{:else}
-  <span id={`${id}-modal-button`}
+{#if label}
+  {#if typeof label == "string"}
+    <Button id={`${id}-modal-button`}
     aria-controls={id}
     aria-expanded={open}
     aria-haspopup="dialog"
     aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
     aria-describedby={`${id}-modal-body`}
-    onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
-    {@render label?.()}
-  </span>
+    onclick={()=>toggle()}
+    class={buttonClasses}>{label}</Button>
+  {:else}
+    <span id={`${id}-modal-button`}
+      aria-controls={id}
+      aria-expanded={open}
+      aria-haspopup="dialog"
+      aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
+      aria-describedby={`${id}-modal-body`}
+      onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
+      {@render label?.()}
+    </span>
+  {/if}
 {/if}
 
 {#if children}

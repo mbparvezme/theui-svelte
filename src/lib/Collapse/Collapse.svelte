@@ -4,7 +4,7 @@
   import { animationClass, generateToken } from "$lib/function"
 
   interface Props {
-    children?: Snippet,
+    children: Snippet,
     title ?: Snippet,
     content ?: string,
     animation ?: ANIMATE_SPEED,
