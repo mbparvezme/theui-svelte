@@ -2,30 +2,31 @@
   import { twMerge } from "tailwind-merge"
   import { roundedClass, generateToken } from "$lib/function"
 	import { onMount } from "svelte"
+  import type { ROUNDED } from "$lib/types";
 
   interface Props {
-    id ?: string,
-    label ?: string|null,
     start ?: number,
     end ?: number,
-    barClasses ?: string,
+    label ?: string,
+    labelVariant ?: 'bubble' | 'inline'
     thickness ?: 'px' | 'sm' | 'md' | 'lg' | 'xl',
-    vertical ?: boolean,
+    rounded?: ROUNDED,
+    id ?: string,
+    barClasses ?: string,
     bubbleClasses ?: string,
-    labelVariant ?: 'default' | 'bubble'
     [key: string] : unknown,
   }
 
   let {
     id = generateToken(),
-    label = null,
+    label,
     start = 0,
     end = 0,
     barClasses = "",
     bubbleClasses = "",
     thickness = "md",
-    vertical = false,
     labelVariant = "bubble",
+    rounded = "full",
     ...props
   } : Props = $props()
 
@@ -64,23 +65,33 @@
   }
 
   let trackCls = () => {
-    const sizeClass = vertical ? (sizes['vertical'][thickness] ?? sizes['vertical'].md) : (sizes['default'][thickness] ?? sizes['default'].md)
-    return `select-none ${sizeClass} ${(vertical ? "inline-flex h-full min-h-[50vh]" : "flex w-full")} ${roundedClass("full")}`
+    const sizeClass = props?.vertical ? (sizes['vertical'][thickness] ?? sizes['vertical'].md) : (sizes['default'][thickness] ?? sizes['default'].md)
+    return `select-none ${sizeClass} ${(props?.vertical ? "inline-flex h-full" : "flex w-full")} ${roundedClass(rounded)}`
   }
 
-  let barCls = () => `progress-bar absolute ${twMerge(`flex items-center justify-center bg-brand-primary-500 text-on-brand-primary-500 ${roundedClass("full")}`, barClasses)}`
+  let barCls = () => `progress-bar absolute ${twMerge(`flex items-center justify-center bg-brand-primary-500 text-on-brand-primary-500 ${roundedClass(rounded)}`, barClasses)}`
 
   let labelCls = () => {
-    const bubblePositionCls: any = vertical ? bubblePosition['vertical'][thickness] : bubblePosition['default'][thickness]
+    const bubblePositionCls: any = props?.vertical ? bubblePosition['vertical'][thickness] : bubblePosition['default'][thickness]
     return  labelVariant == "bubble" || thickness == "px" || thickness == "sm" || thickness == "md"
-            ? `progress-label transform absolute text-[80%] bg-brand-primary-500 text-on-brand-primary-500 w-6 h-6 justify-center flex items-center ${vertical ? "rounded-t-full rounded-r-full rotate-45" : "rounded-t-full rounded-bl-full rotate-45"} ${bubblePositionCls}`
-            : ""
+            ? `progress-label transform absolute text-[80%] bg-brand-primary-500 text-on-brand-primary-500 w-6 h-6 justify-center flex items-center ${props?.vertical ? "rounded-t-full rounded-r-full rotate-45" : "rounded-t-full rounded-bl-full rotate-45"} ${bubblePositionCls} font-semibold`
+            : "font-semibold"
   }
 
   let updateProgress = (container: any) => {
+    if(end > 100){
+      end = 100
+    }
+
+    if(start > end){
+      let temp = end
+      end = start
+      start = temp
+    }
+
     let bar = document.querySelector(`#${id} .progress-bar`);
     let isRTL = getComputedStyle(container).direction === 'rtl';
-    if (vertical) {
+    if (props?.vertical) {
       (bar as HTMLElement).style.inset = `${start}% 0 ${100 - end}% 0`;
     } else {
       if (isRTL) {
@@ -100,9 +111,9 @@
   })
 </script>
 
-<div {id} {...props} class="theui-progress relative {twMerge(`text-on-brand-primary text-xs bg-secondary`,trackCls(), props?.class as string)}">
+<div {id} {...props} class="theui-progress relative {twMerge(`text-on-brand-primary text-xs bg-secondary`,trackCls(), props?.class as string)}" aria-valuenow={end} aria-valuemin={start} aria-valuemax=100>
   <div class={barCls()}>
-    {#if label}<span class={twMerge(labelCls(), bubbleClasses)}><b>{label}</b></span>{/if}
+    {#if label}<span class={twMerge(labelCls(), bubbleClasses)}><span>{label}</span></span>{/if}
   </div>
 </div>
 

@@ -3,33 +3,32 @@
 	import type { ANIMATE_SPEED, TAB_CONFIG } from "$lib/types"
 	import { twMerge } from "tailwind-merge"
 	import { generateToken } from "$lib/function"
-  import { ST_TABS } from "$lib/state.svelte"
 
   interface Props {
-    tabList : Snippet,
-    tabPanel : Snippet,
-    id ?: string,
-    borderClasses ?: boolean|string,
-    animate ?: ANIMATE_SPEED,
-    tabListClasses ?: string,
-    tabClasses ?: string,
-    activeTabClasses ?: string,
-    tabPanelClasses ?: string,
+    tabs : Snippet,
+    children : Snippet,
     variant ?: 'tabs' | 'pills',
+    animate ?: ANIMATE_SPEED,
+    border ?: boolean|string,
+    tabContainerClasses ?: string,
+    tabClasses ?: string,
+    tabActiveClasses ?: string,
+    tabPanelClasses ?: string,
+    id ?: string,
     [key: string] : unknown
   }
 
   let {
-    tabList,
-    tabPanel,
-    id = generateToken(),
-    borderClasses = true,
-    animate = "normal",
-    tabListClasses = "",
-    tabClasses = "",
-    activeTabClasses = "",
-    tabPanelClasses = "",
+    tabs,
+    children,
     variant = "pills",
+    animate = "normal",
+    border = true,
+    tabContainerClasses = "",
+    tabClasses = "",
+    tabActiveClasses = "",
+    tabPanelClasses = "",
+    id = generateToken(),
     ...props
   } : Props = $props()
 
@@ -40,17 +39,20 @@
     },
     inactive : {
       tabs : "border-0 border-b-2 border-transparent",
-      pills : "hover:bg-brand-primary-500 hover:text-on-brand-primary-500",
+      pills : "",
     }
   }
 
-	let config: TAB_CONFIG = {
-    activeTabClasses : twMerge(classes["active"][variant], activeTabClasses),
+  const ST_TABS: TAB_CONFIG["TABS"] =  $state({ tabs: [], panels: [], selectedTab: null, selectedPanel: null })
+
+  let config: TAB_CONFIG = {
+    tabActiveClasses : twMerge(classes["active"][variant], tabActiveClasses),
 		tabClasses : twMerge(classes["inactive"][variant], tabClasses),
 		tabPanelClasses,
 		animate,
-		borderClasses,
+		border,
 		variant,
+    TABS: ST_TABS
 	}
 
   onMount(() => {
@@ -63,16 +65,16 @@
 	setContext('TAB', config)
 </script>
 
-<div {id} {...props} class="theui-tabs {twMerge("-mb-0.5", props?.class as string)}">
-	{#if tabList}
-    <div class="theui-tab-list {twMerge((borderClasses ? "" : "mb-4") , tabListClasses)}">
-      {@render tabList()}
-      {#if borderClasses !== false}
-        <div class="theui-tabs-border -mt-0.5 {twMerge("mb-4 border-b-2 border-gray-500/20", borderClasses as string)}"></div>
-      {/if}
+<div {id} {...props} class="theui-tabs {twMerge("-mb-0.5", props?.class as string)}" role="tablist">
+	{#if tabs}
+    <div class="theui-tab-list {twMerge((border ? "" : "mb-4") , tabContainerClasses)}">
+      {@render tabs()}
     </div>
+
+    {#if border !== false}
+      <hr class="theui-tabs-border -mt-0.5 {twMerge("mb-4 border-b-2 border-gray-500/20", border as string)}" role="presentation" />
+    {/if}
   {/if}
-	{#if tabPanel}
-    {@render tabPanel()}
-  {/if}
+
+  {@render children?.()}
 </div>

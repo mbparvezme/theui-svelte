@@ -15,7 +15,7 @@ export { default as Drawer } from "./Drawer/Drawer.svelte";
 export { default as Dropdown } from "./Dropdown/Dropdown.svelte";
 export { default as DropdownItem } from "./Dropdown/DropdownItem.svelte";
 export { default as Qab } from "./Button/Qab.svelte";
-export { default as QabButton } from "./Button/QabButton.svelte";
+export { default as QabItem } from "./Button/QabItem.svelte";
 export { default as ListGroup } from "./ListGroup/ListGroup.svelte";
 export { default as ListItem } from "./ListGroup/ListItem.svelte";
 export { default as Modal } from "./Modal/Modal.svelte";
@@ -47,11 +47,9 @@ export { default as NavBrand } from "./Navbar/NavBrand.svelte";
 export { default as NavLinkGroup } from "./Navbar/NavLinkGroup.svelte";
 export { default as NavDropdown } from "./Navbar/NavDropdown.svelte";
 export { default as NavLink } from "./Navbar/NavLink.svelte";
-export { default as NavToggle } from "./Navbar/NavToggle.svelte";
 
 export { default as Slider } from "./Slider/Slider.svelte";
-export { default as ContentSlide } from "./Slider/ContentSlide.svelte";
-export { default as ImageSlide } from "./Slider/ImageSlide.svelte";
+export { default as Slide } from "./Slider/Slide.svelte";
 
 // Tabs
 export { default as Tabs } from "./Tabs/Tabs.svelte";
@@ -63,4 +61,5 @@ export { default as Table } from "./Table/Table.svelte";
 export { default as THead } from "./Table/THead.svelte";
 export { default as TBody } from "./Table/TBody.svelte";
 export { default as TR } from "./Table/TR.svelte";
-export { default as Cell } from "./Table/Cell.svelte";
+export { default as TH } from "./Table/TH.svelte";
+export { default as TD } from "./Table/TD.svelte";

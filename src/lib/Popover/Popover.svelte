@@ -1,213 +1,181 @@
 <script lang="ts">
-	import { animationClass, roundedClass, shadowClass } from "$lib/function"
+  import { onDestroy, onMount, tick, type Snippet } from "svelte"
+  import { fade } from 'svelte/transition'
+  import { computePosition, flip, shift, offset, arrow, type Placement } from "@floating-ui/dom"
+
+  import { roundedClass, shadowClass } from "$lib/function"
 	import type { ANIMATE_SPEED, ROUNDED, SHADOW } from "$lib/types"
-  import { onMount, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
 
-  type PopupPosition = 'top' | 'bottom' | 'left' | 'right'
   interface Props {
-    children?: Snippet,
-    triggerID: string,
-    offset?: number,
-    position?: PopupPosition,
+    title?: string|Snippet,
+    children: Snippet,
+    trigger: string,
+    position?: Placement,
+    triggerEvent?: 'click'|'hover',
+    gap?: number,
     animate?: ANIMATE_SPEED,
     rounded?: ROUNDED,
     shadow?: SHADOW,
-    event?: 'click'|'hover',
     closeOnClick?: boolean,
+    titleClasses?: string,
+    bodyClasses?: string,
     [key: string]: unknown,
   }
 
   let {
+    title,
     children,
-    triggerID,
-    offset = 16,
+    trigger,
+    gap = 8,
     position = "top",
-    event = "click",
-    closeOnClick = true,
-    animate = "slower",
+    triggerEvent = "click",
+    animate = "normal",
     rounded = "md",
-    shadow = "md",
+    shadow = "lg",
+    closeOnClick = true,
+    titleClasses = "",
+    bodyClasses = "",
     ...props
   }: Props = $props()
 
-  let trigger: HTMLElement
+  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
+
+  let triggerElement: HTMLElement|null = $state(null)
   let popover: HTMLElement|null = $state(null)
+  let ARROW: HTMLSpanElement|null = $state(null)
+  let show: boolean = $state(false)
 
-  let getOptimalPopupPosition = (): PopupPosition => {
+  async function updatePosition() {
+    await tick()
 
-    if (!(popover instanceof HTMLElement)) {
-      return "top";
-    }
+    if (!(triggerElement && popover && ARROW)) return
 
-    const triggerRect = trigger.getBoundingClientRect();
-    const popoverRect = popover.getBoundingClientRect();
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    const { x, y, middlewareData, placement } = await computePosition(triggerElement as HTMLElement, popover, {
+      placement: position,
+      middleware: [flip(), shift(), offset(gap), arrow({ element: ARROW })],
+    })
 
-    const space = {
-      top: triggerRect.top,
-      bottom: viewportHeight - triggerRect.bottom,
-      left: triggerRect.left,
-      right: viewportWidth - triggerRect.right,
-    };
+    popover.style.left = `${x}px`
+    popover.style.top = `${y}px`
 
-    const tooltipDimensions = {
-      width: popoverRect.width + offset,
-      height: popoverRect.height + offset,
-    };
+    if (middlewareData.arrow) {
+      const {x: arrowX, y: arrowY} = middlewareData.arrow
+      const [primaryPlacement, alignment] = placement.split('-')
+      const staticSide = {top: 'bottom', right: 'left', bottom: 'top', left: 'right'}[primaryPlacement]
 
-    // Check if the preferred position fits
-    if (position) {
-      const fits = {
-        top: space.top >= tooltipDimensions.height,
-        bottom: space.bottom >= tooltipDimensions.height,
-        left: space.left >= tooltipDimensions.width,
-        right: space.right >= tooltipDimensions.width,
-      };
+      let left = arrowX != null ? `${arrowX}px` : ''
+      let top = arrowY != null ? `${arrowY}px` : ''
 
-      if (fits[position]) {
-        return position;
+      if (alignment === 'start') {
+        if (primaryPlacement === 'top' || primaryPlacement === 'bottom') {
+          left = '15px'
+        } else {
+          top = '15px'
+        }
+      } else if (alignment === 'end') {
+        if (primaryPlacement === 'top' || primaryPlacement === 'bottom') {
+          left = 'calc(100% - 28px)'
+        } else {
+          top = 'calc(100% - 28px)'
+        }
+      }
+
+      if(ARROW){
+        Object.assign(ARROW.style, {left, top, right: '', bottom: '', [staticSide as string]: '-6px'})
       }
     }
-
-    // If preferred position doesn't fit, fall back to the optimal position
-    const finalPosition = (Object.keys(space) as PopupPosition[]).find(
-      (key) =>
-        space[key] >=
-        (key === 'top' || key === 'bottom'
-          ? tooltipDimensions.height
-          : tooltipDimensions.width)
-    );
-
-    // If no position fits, choose the side with the largest space
-    const largestSpaceSide = (Object.keys(space) as PopupPosition[]).reduce((largest, current) =>
-      space[current] > space[largest] ? current : largest
-    );
-
-    return finalPosition || largestSpaceSide;
   }
 
-
-  let applyPopupPosition = () => {
-
-    if (!(popover instanceof HTMLElement)) {
-      return null;
-    }
-
-    const position = getOptimalPopupPosition();
-    const triggerRect = trigger.getBoundingClientRect();
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
-
-    const styles: Record<PopupPosition, { left: number; top: number }> = {
-      top: {
-        left: triggerRect.left + triggerRect.width / 2 - popover.offsetWidth / 2 + scrollLeft,
-        top: triggerRect.top - popover.offsetHeight - offset + scrollTop,
-      },
-      bottom: {
-        left: triggerRect.left + triggerRect.width / 2 - popover.offsetWidth / 2 + scrollLeft,
-        top: triggerRect.bottom + offset + scrollTop,
-      },
-      left: {
-        left: triggerRect.left - popover.offsetWidth - offset + scrollLeft,
-        top: triggerRect.top + triggerRect.height / 2 - popover.offsetHeight / 2 + scrollTop,
-      },
-      right: {
-        left: triggerRect.right + offset + scrollLeft,
-        top: triggerRect.top + triggerRect.height / 2 - popover.offsetHeight / 2 + scrollTop,
-      },
-    };
-
-    const appliedStyle = styles[position]
-
-    if (position === 'left' || position === 'right') {
-      appliedStyle.top = Math.max(
-        scrollTop,
-        Math.min(
-          appliedStyle.top,
-          scrollTop + window.innerHeight - popover.offsetHeight
-        )
-      );
-    }
-
-    // Prevent overflow for top and bottom positions
-    if (position === 'top' || position === 'bottom') {
-      appliedStyle.left = Math.max(
-        scrollLeft,
-        Math.min(
-          appliedStyle.left,
-          scrollLeft + window.innerWidth - popover.offsetWidth
-        )
-      );
-    }
-
-    Object.assign(popover.style, {
-      position: 'absolute',
-      zIndex: '1000',
-      left: `${appliedStyle.left}px`,
-      top: `${appliedStyle.top}px`,
-    });
+  let showPopover = () => {
+    show = true
+    requestAnimationFrame(updatePosition)
   }
 
-  let handleClick = () => {
-    popover?.classList.toggle('hidden');
-    if(!popover?.classList.contains('hidden')){
-      popover?.classList.remove('opacity-0');
-      popover?.classList.add('opacity-100');
-      applyPopupPosition();
-    }else{
-      popover?.classList.remove('opacity-100');
-      popover?.classList.add('opacity-0');
+  let hidePopover = () => show = false
+
+  let handleClick = (el: HTMLElement) => {
+    if (!el) return
+    
+    const isClickInsidePopover = popover?.contains(el)
+    const isClickOnTrigger = triggerElement?.contains(el)
+
+    if (show) {
+      if (!closeOnClick && isClickInsidePopover) return
+      hidePopover()
+    } else if (isClickOnTrigger) {
+      showPopover()
     }
   }
 
-  let handleMouseEnter = () => {
-    popover?.classList.remove('hidden');
-    applyPopupPosition();
-  }
+	let handleKeyboard = (e: KeyboardEvent) => {
+    if(triggerEvent != "click") return
 
-  let handleMouseLeave = () => {
-    popover?.classList.add('hidden');
-  }
-
-  let handleBlur = (e: MouseEvent) => {
-    const target = e.target as HTMLElement;
-    if (!target.hasAttribute("data-popover") && (closeOnClick || !target.classList.contains("popover"))) {
-      popover?.classList.add('hidden');
+    if (show && e.code === "Escape") {
+      e.preventDefault()
+      hidePopover()
+    }
+    if(!show && e.code === "Enter" || e.code === "Space"){
+      showPopover()
     }
 	}
 
   onMount(() => {
-    trigger = document.getElementById(triggerID) as HTMLElement
-    if(!children){
-      popover = document.querySelector(`[data-popover-id="${triggerID}"]`) as HTMLElement
-    }
-    if (trigger && popover) {
-      if(event == "hover"){
-        trigger.addEventListener('mouseenter', () => {
-          handleMouseEnter()
-        })
-        trigger.addEventListener('mouseleave', () => {
-          handleMouseLeave()
-        })
+    triggerElement = document.getElementById(trigger) as HTMLElement
+    let clickedElement: EventTarget | null = null
+
+    const handleDocumentClick = (event: Event) => clickedElement = event.target
+    const handleTriggerClick = () => handleClick(clickedElement as HTMLElement)
+    const handleTriggerBlur = () => handleClick(clickedElement as HTMLElement)
+
+    if (triggerElement) {
+
+      triggerElement.setAttribute("aria-haspopup", "true")
+      triggerElement.setAttribute("aria-controls", `${trigger}-popover`)
+      triggerElement.setAttribute("tadIndex", "0")
+
+      if (triggerEvent === "hover") {
+        triggerElement.addEventListener('mouseenter', showPopover)
+        triggerElement.addEventListener('mouseleave', hidePopover)
+        triggerElement.addEventListener("focus", showPopover)
+        triggerElement.addEventListener("blur", hidePopover)
+
+      } else if (triggerEvent === "click") {
+        document.addEventListener('mousedown', handleDocumentClick)
+        triggerElement.addEventListener('click', handleTriggerClick)
+        triggerElement.addEventListener('blur', handleTriggerBlur)
       }
-      if(event == "click"){
-        trigger.addEventListener('click', () => {
-          handleClick()
-        })
-      }
-      applyPopupPosition();
     }
+
+    onDestroy(() => {
+      if (triggerEvent === "click") {
+        document.removeEventListener('mousedown', handleDocumentClick)
+        triggerElement?.removeEventListener("click", handleTriggerClick)
+        triggerElement?.removeEventListener("blur", handleTriggerBlur)
+      } else {
+        triggerElement?.removeEventListener('mouseleave', hidePopover)
+        triggerElement?.removeEventListener('mouseenter', showPopover)
+      }
+    })
   })
 
-  let popoverClasses = `p-2 max-w-64 ${roundedClass(rounded)}${animationClass(animate, "opacity")}${shadowClass(shadow)}`
+  let popoverClasses = `max-w-80 bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 text-sm text-gray-500 dark:text-gray-400 ${title ? "" : "pt-4"}${roundedClass(rounded)} ${shadowClass(shadow)}`
 </script>
 
-<svelte:window onclick={(e: MouseEvent)=>handleBlur(e)} />
+<svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
-{#if children}
-<div bind:this={popover} class="popover hidden opacity-0 {twMerge(popoverClasses, props?.class as string)}">
-  {@render children()}
+{#if show}
+<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration: animationSpeed[animate]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
+  {#if title}
+    {#if typeof title === "function"}
+      <div class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</div>
+    {:else}
+      <h4 class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@html title}</h4>
+    {/if}
+  {/if}  
+  <div class={twMerge("px-4 pb-4", bodyClasses)}>
+    {@render children()}
+  </div>
+  <span bind:this={ARROW} class="absolute w-4 h-4 bg-inherit rotate-45"></span>
 </div>
 {/if}

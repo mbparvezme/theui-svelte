@@ -9,21 +9,23 @@
 
   interface Props {
     children: Snippet,
-    segment ?: string,
-    activeLinkClasses ?: string,
-    animate ?: ANIMATE_SPEED,
-    height ?: heightTypes | 'string',
-    linkClasses ?: string,
-    dropdownLinkClasses ?: string,
-    mobileNavOn ?: 'md' | 'lg' | 'xl' | false,
-    navInnerClasses ?: string,
-    navCollapseClasses ?: string,
-    rounded ?: ROUNDED,
-    dropdownEvent ?: 'hover' | 'click',
-    scrollAmountToHide ?: number,
-    scrollAmountToShrink ?: number,
-    scrollBehavior ?: 'fixed' | 'default' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide',
-    scrollClasses ?: string,
+    scrollBehavior?: 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide',
+    scrollAmountToHide?: number,
+    scrollAmountToShrink?: number,
+    height?: heightTypes | 'string',
+    mobileNavOn?: 'sm' | 'md' | 'lg' | 'xl',
+
+    segment?: string,
+    animate?: ANIMATE_SPEED,
+    rounded?: ROUNDED,
+    dropdownEvent?: 'hover' | 'click',
+
+    linkClasses?: string,
+    activeLinkClasses?: string,
+    dropdownLinkClasses?: string,
+    navInnerClasses?: string,
+    navCollapseClasses?: string,
+    scrollClasses?: string,
     [key: string] : unknown
   }
 
@@ -38,11 +40,11 @@
     mobileNavOn = "lg",
     navInnerClasses = "",
     navCollapseClasses = "",
-    rounded = "none",
+    rounded = "md",
     dropdownEvent = "click",
     scrollAmountToHide = 128,
     scrollAmountToShrink = 32,
-    scrollBehavior = "shrinkAndHide",
+    scrollBehavior = "default",
     scrollClasses = "",
     ...props
   } : Props = $props()
@@ -61,21 +63,32 @@
     navInnerClasses,
     navCollapseClasses,
     linkClasses: twMerge("p-3 text-gray-700 dark:text-gray-300 hover:text-default text-sm", roundedClass(rounded), animationClass(animate), linkClasses),
-    dropdownLinkClasses: twMerge("hover:bg-gray-100 dark:hover:bg-gray-700 h-auto px-4 py-2", animationClass(animate), roundedClass(rounded), dropdownLinkClasses),
+    dropdownLinkClasses: twMerge("hover:bg-tertiary h-auto px-4 py-2", animationClass(animate), roundedClass(rounded), dropdownLinkClasses),
     mobileNavOn,
     rounded,
     dropdownEvent,
-    scrollAmountToHide,
-    scrollAmountToShrink,
-    scrollBehavior,
-    scrollClasses: twMerge(`bg-white dark:bg-secondary shadow-black/10 shadow-2xl ${paddingHeightOnShrinkCls[height as heightTypes]}`, scrollClasses),
   }
+
+  const navCoreClass =  twMerge(`bg-secondary left-0 top-0 w-full flex items-center justify-center ${paddingHeightCls[height as "sm" | "md" | "lg" | "xl"] ?? height as string}${animationClass(animate)}`, props?.class as string)
+  let navClass = $state(navCoreClass)
+  let scrollClass = twMerge(`bg-secondary shadow-black/10 ${paddingHeightOnShrinkCls[height as heightTypes]}`, scrollClasses)
+  let navInnerClass = $derived(`nav-inner w-full max-w-[var(--max-width)] flex grow gap-x-8 items-center justify-between relative
+                      ${animationClass(animate)} ${(miniNav||(hideNav===false && scrollPos!==0) ? " px-4" : " px-8")}`)
+
+  setContext('NAV', {config, id})
 
   onMount(() => {
     window.addEventListener("scroll", () => {
       // Shrink Navbar
       if(scrollBehavior === "shrinkOnScrollDown" || scrollBehavior === "shrinkAndHide") {
-        miniNav = (window.scrollY >= scrollAmountToShrink!)
+        if(window.scrollY >= scrollAmountToShrink!){
+          miniNav = true
+          navClass = twMerge(navCoreClass, scrollClass)
+          console.log(navClass)
+        }else{
+          miniNav = false
+          navClass = navCoreClass
+        }
       }
       // Set / Reset Navbar
       if(scrollBehavior === "hideOnScrollDown" || scrollBehavior === "shrinkAndHide") {
@@ -88,15 +101,6 @@
       }
     })
   })
-
-  let navClass = $derived(`bg-primary left-0 top-0 w-full flex items-center justify-center ${animationClass(animate)} 
-                  ${paddingHeightCls[height as "sm" | "md" | "lg" | "xl"] ?? height as string}
-                  ${((miniNav||(hideNav===false && scrollPos!==0)) && (config.scrollBehavior == "shrinkOnScrollDown" || config.scrollBehavior == "shrinkAndHide") ? config.scrollClasses : "")}${roundedClass(config?.rounded)}`)
-
-  let navInnerClass = $derived(`nav-inner w-full max-w-[var(--max-width)] flex grow gap-x-8 items-center justify-between relative
-                      ${animationClass(animate)} ${(miniNav||(hideNav===false && scrollPos!==0) ? " px-4" : " px-8")}`)
-
-  setContext('NAV', {config, id})
 </script>
 
 <nav
@@ -104,7 +108,7 @@
   class:navbar-mini={miniNav}
   class:-translate-y-full={hideNav}
   class:fixed={scrollBehavior !== "default"}
-  class="theui-navbar z-[21] {twMerge(navClass, props?.class as string)}"
+  class="theui-navbar z-[21] {navClass}"
 >
   <div class={twMerge(navInnerClass, navInnerClasses)}>
     {@render children()}

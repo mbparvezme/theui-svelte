@@ -8,35 +8,42 @@
 
   interface Props {
 		children?: Snippet,
-		content?: string,
     animate?: ANIMATE_SPEED,
     href?: string,
-    type?: 'div'|'li'|'a',
 		variant?: 'bordered' | 'flat',
+    size?: 'sm' | 'md' | 'lg' | 'xl',
     [key: string]: unknown
 	}
 
   let {
     children,
-    content,
-    href = undefined,
-    type = 'li',
+    href,
     animate = CTX?.animate ?? "normal",
     variant = CTX?.variant ?? "bordered",
+    size = CTX?.size ?? "md",
     ...props
   } : Props = $props()
 
-  let itemClasses = `p-4 cursor-pointer hover:bg-gray-100 ${animationClass(animate)}`
+  let sizeClasses: Record<Exclude<Props["size"], undefined>, string> = {
+    "xl" : "p-6",
+    "lg" : "p-5",
+    "md" : "p-4",
+    "sm" : "py-2 px-3"
+  }
+
+  let itemClasses = `${sizeClasses[size]} cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${animationClass(animate)}`
 </script>
 
-{#if content}
-<svelte:element this={href ? "a" : (CTX?.childrenType ?? type)} class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}">
-
-	{#if content}
-		{@html content}
-	{:else if children}
-		{@render children()}
-	{/if}
-
-</svelte:element>
+{#if children}
+  {#if href}
+    <li role="listitem">
+      <a {href} class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}">
+        {@render children()}
+      </a>
+    </li>
+  {:else}
+    <li class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}" role="listitem">
+      {@render children()}
+    </li>
+  {/if}
 {/if}

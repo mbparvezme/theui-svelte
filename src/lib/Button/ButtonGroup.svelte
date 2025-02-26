@@ -9,7 +9,7 @@
     stacked  ?: boolean,
     variant  ?: 'bordered' | 'flat',
     animate ?: ANIMATE_SPEED,
-    ariaLabel ?: string|undefined,
+    ariaLabel ?: string,
     buttonClasses ?: string, // Not tested
     outline ?: boolean,
     rounded ?: ROUNDED,
@@ -17,19 +17,19 @@
     square ?: boolean,
     theme ?: 'default' | 'light' | 'gradient'
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    gradientColors ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     [key: string]: unknown // any props
   }
 
   let {
     children,
     stacked = false,
-    variant = "bordered",
+    variant = "flat",
     ariaLabel = "Button group",
     animate = "normal",
     buttonClasses = "",
     color = "brand",
-    gradientColors = "brand",
+    gradientColor = "brand",
     outline = false,
     rounded = "md",
     size = "md",
@@ -44,20 +44,20 @@
     variant,
     animate,
     buttonClasses,
-    color,
-    gradientColors,
     outline,
     rounded,
     size,
     square,
     theme,
+    color,
+    gradientColor,
   });
 
-  let getClasses = twMerge(`theui-btn-group inline-flex${roundedClass(rounded)}`, (props?.class as string ?? ""))
+  let getClasses = twMerge(`theui-btn-group inline-flex${roundedClass(rounded)}`, props?.class as string)
 </script>
 
 {#if children}
-<div class={getClasses} class:flex-col={stacked} class:theui-btn-stacked={stacked} role="group" aria-label={ariaLabel}>
+<div aria-label={ariaLabel} {...props} class={getClasses} class:flex-col={stacked} class:theui-btn-stacked={stacked} role="group">
   {@render children()}
 </div>
 {/if}

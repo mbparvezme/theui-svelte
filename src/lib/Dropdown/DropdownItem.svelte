@@ -3,41 +3,25 @@
   import type { PRELOAD } from "$lib/types"
   import { twMerge } from "tailwind-merge"
 
-  const CTX : {
-		activeClasses: string,
-		linkClasses: string,
-		dividerClass: string,
-		headerClass: string,
-  } = getContext('DROPDOWN_CTX')
+  const CTX : {activeItemClasses: string, itemClasses: string, dividerClass: string, headerClass: string} = getContext('DROPDOWN_CTX')
 
   interface Props {
     startItem ?: Snippet,
     endItem ?: Snippet,
     children ?: Snippet,
-    text ?: string,
-    url ?: string|undefined,
+    href ?: string,
     preload ?: PRELOAD,
     type ?: 'link' | 'divider' | 'header' | 'button'
     active ?: boolean,
     [key: string]: unknown
   }
 
-  let {
-    startItem,
-    endItem,
-    children,
-    text,
-    url = undefined,
-    preload = "hover",
-    type = "link",
-    active = false,
-    ...props
-  } : Props = $props()
+  let {startItem, endItem, children, text, href, preload = "hover", type = "link", active = false, ...props} : Props = $props()
 
   let itemClass = (t: Props['type']) => {
     const typeClasses: Record<Exclude<Props['type'], undefined>, string> = {
-      link: active ? CTX.activeClasses : CTX.linkClasses,
-      button: active ? CTX.activeClasses : CTX.linkClasses,
+      link: active ? CTX.activeItemClasses : CTX.itemClasses,
+      button: active ? CTX.activeItemClasses : CTX.itemClasses,
       header: CTX.headerClass,
       divider: CTX.dividerClass,
     }
@@ -68,8 +52,8 @@
         {@render content()}
       </h6>
     {:else}
-      {#if url}
-        <a href={url} class={itemClass(type)} data-sveltekit-preload-data={preload||preload}>
+      {#if href}
+        <a href={href} class={itemClass(type)} data-sveltekit-preload-data={preload||preload}>
           {@render content()}
         </a>
       {:else}

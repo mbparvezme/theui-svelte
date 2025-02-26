@@ -279,11 +279,11 @@ const animationSpeed: { [speed in Exclude<ANIMATE_SPEED, "none">]: string } = {
   slower: "duration-700",
   slow: "duration-500",
   normal: "duration-300",
-  fast: "duration-150",
+  fast: "duration-200",
   faster: "duration-100",
 }
 
-const animationType: any = {
+const animationType: Record<string, string> = {
   color: "transition-colors",
   opacity: "transition-opacity",
   shadow: "transition-shadow",
@@ -312,7 +312,7 @@ const shadowClasses: { [size in Exclude<SHADOW, "none">]: string } = {
 export const messageTheme = {
   default: {
     brand: "bg-brand-primary-500 text-on-brand-primary-500",
-    error: "bg-error-400 text-error-50 dark:bg-error-600",
+    error: "bg-error-500 text-error-50 dark:bg-error-600",
     info: "bg-info-600 text-info-50 dark:bg-info-700",
     success: "bg-success-600 text-success-50 dark:bg-success-700",
     warning: "bg-warning-300 dark:bg-warning-600 text-warning-900 dark:text-warning-50",
@@ -323,10 +323,17 @@ export const messageTheme = {
     info: "bg-info-100 text-info-900 dark:bg-info-900 dark:text-info-200",
     success: "bg-success-100 text-success-900 dark:bg-success-900 dark:text-success-200",
     warning: "bg-warning-100 text-warning-900 dark:bg-warning-900 dark:text-warning-200",
+  },
+  gradient: {
+    brand: "bg-gradient-to-r from-brand-primary-300 via-brand-primary-400 to-brand-primary-500 text-on-brand-primary-500",
+    error: "bg-gradient-to-r from-error-400 via-error-500 to-error-600",
+    info: "bg-gradient-to-r from-info-400 via-info-500 to-info-600",
+    success: "bg-gradient-to-r from-success-400 via-success-500 to-success-600",
+    warning: "bg-gradient-to-r from-warning-300 via-warning-400 to-warning-600",
   }
 }
 
-export const messageBorderTheme = {
+export const messageBarTheme = {
   default: {
     brand: "border-brand-primary-200 dark:border-brand-primary-800",
     error: "border-error-200 dark:border-error-800",
@@ -335,6 +342,13 @@ export const messageBorderTheme = {
     warning: "border-warning-500 dark:border-warning-700",
   },
   light: {
+    brand: "border-brand-primary-300 dark:border-brand-primary-700",
+    error: "border-error-300 dark:border-error-700",
+    info: "border-info-300 dark:border-info-800",
+    success: "border-success-300 dark:border-success-800",
+    warning: "border-warning-500 dark:border-warning-800",
+  },
+  gradient: {
     brand: "border-brand-primary-300 dark:border-brand-primary-700",
     error: "border-error-300 dark:border-error-700",
     info: "border-info-300 dark:border-info-800",
@@ -450,12 +464,12 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
 
   const variantClasses: Record<string, string> = {
     card: roundedClass(config?.rounded || "md"),
-    borderTop: `${roundedClass(config?.rounded || "md", "bottom")} ${messageBorderTheme[theme][type]} border-t-4`,
-    borderBottom: `${roundedClass(config?.rounded || "md", "top")} ${messageBorderTheme[theme][type]} border-b-4`,
-    borderStart: `${roundedClass(config?.rounded || "md")} ${messageBorderTheme[theme][type]} border-s-4`,
+    barTop: `${roundedClass(config?.rounded || "md", "bottom")} ${messageBarTheme[theme][type]} border-t-4`,
+    barBottom: `${roundedClass(config?.rounded || "md", "top")} ${messageBarTheme[theme][type]} border-b-4`,
+    barStart: `${roundedClass(config?.rounded || "md")} ${messageBarTheme[theme][type]} border-s-4`,
   }
 
-  return twMerge(baseClass, variantClasses[config?.variant || "card"], props.class as string || "")
+  return twMerge(baseClass, theme !== "gradient" ? variantClasses[config?.variant || "card"] : "", props.class as string)
 }
 
 
@@ -466,7 +480,112 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
  * @returns A string of merged classes for the backdrop.
  */
 export const backdropClasses = (backdrop: string | boolean): string => {
-  const defaultClasses = "backdrop fixed inset-0 bg-black/50 z-[-1]"
+  const defaultClasses = "backdrop fixed inset-0 bg-black z-[-1] opacity-50 dark:opacity-75"
   const customClasses = typeof backdrop === "string" ? backdrop : ""
   return twMerge(defaultClasses, customClasses)
 }
+
+
+
+// 
+// =======================================
+//
+
+// export const setInitialStyle = (el: HTMLElement) => {
+//   Object.assign(el.style, { visibility: "hidden", display: "block", opacity: 0, top: "-9999px", left: "-9999px" });
+// }
+
+
+// export const resetAndToggle = (
+//   el: HTMLElement,
+//   component: HTMLElement,
+//   finalPosition: POSITION_TYPES,
+//   positionClasses: Record<POSITION_TYPES, string>,
+//   offset: number,
+// ): { finalPosition: POSITION_TYPES; positionalClasses: string } => {
+//   const rect: DOMRect = el.getBoundingClientRect();
+//   const elemRect: DOMRect = component.getBoundingClientRect();
+//   let { top: newTop, left: newLeft } = calculatePosition(finalPosition, rect, elemRect, offset);
+
+//   if (isOverflowing(newTop, newLeft, elemRect)) {
+//     const alternatePositions = ["bottom", "top", "right", "left"] as POSITION_TYPES[];
+//     for (const pos of alternatePositions) {
+//       ({ top: newTop, left: newLeft } = calculatePosition(pos, rect, elemRect, offset));
+//       if (!isOverflowing(newTop, newLeft, elemRect)) {
+//         finalPosition = pos;
+//         break;
+//       }
+//     }
+//   }
+
+//   // Final check: Keep tooltip inside screen bounds
+//   ({ top: newTop, left: newLeft } = keepInBounds(newTop, newLeft, elemRect));
+
+//   // Apply position styles
+//   setVisibleStyle(component, newTop, newLeft);
+
+//   // Return the final position and positional classes
+//   return { finalPosition, positionalClasses: positionClasses[finalPosition] };
+// }
+
+
+// export const removeElement = (element: HTMLElement, component: HTMLElement) => {
+//   if (component.parentElement === document.body) {
+//     document.body.removeChild(component);
+//   }
+//   component.classList.add("hidden");
+//   Object.assign(component.style, { visibility: "hidden" });
+// }
+
+
+// export const calculatePosition = (pos: POSITION_TYPES, rect: DOMRect, elemRect: DOMRect, offset: number) => {
+//   const scrollX = window.scrollX;
+//   const scrollY = window.scrollY;
+
+//   switch (pos) {
+//     case "top":
+//       return {
+//         top: rect.top + scrollY - offset - elemRect.height,
+//         left: rect.left + scrollX + (rect.width / 2) - (elemRect.width / 2)
+//       };
+//     case "bottom":
+//       return {
+//         top: rect.bottom + scrollY + offset,
+//         left: rect.left + scrollX + (rect.width / 2) - (elemRect.width / 2)
+//       };
+//     case "left":
+//       return {
+//         top: rect.top + scrollY + (rect.height / 2) - (elemRect.height / 2),
+//         left: rect.left + scrollX - elemRect.width - offset
+//       };
+//     case "right":
+//       return {
+//         top: rect.top + scrollY + (rect.height / 2) - (elemRect.height / 2),
+//         left: rect.right + scrollX + offset
+//       };
+//     default:
+//       return { top: rect.bottom + scrollY + offset, left: rect.left + scrollX };
+//   }
+// }
+
+
+// const isOverflowing = (top: number, left: number, elemRect: DOMRect) => {
+//   return (top < 0 || left < 0 || top + elemRect.height > window.innerHeight || left + elemRect.width > window.innerWidth);
+// };
+
+// const keepInBounds = (top: number, left: number, elemRect: DOMRect) => {
+//   return {
+//     top: Math.max(8, Math.min(window.innerHeight - elemRect.height - 8, top)),
+//     left: Math.max(8, Math.min(window.innerWidth - elemRect.width - 8, left)),
+//   };
+// };
+
+// export const setVisibleStyle = (el: HTMLElement, referenceEl: HTMLElement) => {
+//   const rect = referenceEl.getBoundingClientRect();
+//   const newTop = rect.top + window.scrollY; // Account for scrolling
+//   const newLeft = rect.left + window.scrollX;
+
+//   el.style.visibility = "visible";
+//   el.style.opacity = "1";
+//   el.style.transform = `translate(${newLeft}px, ${newTop}px)`;
+// };

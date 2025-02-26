@@ -4,17 +4,22 @@
   import { setContext, type Snippet } from "svelte"
   import { animationClass, generateToken, roundedClass } from "$lib/function"
   import { twMerge } from "tailwind-merge"
-  import { QabButton } from "$lib"
+  import { QabItem } from "$lib"
+  import Svg from "$lib/Utility/Svg.svelte";
 
   interface Props {
     children?: Snippet,
     animate?: ANIMATE_SPEED,
-    align?: 'start' | 'end',
-    size?: 'sm' | 'md' | 'lg' | 'xl',
+    icon?: Snippet,
+    ariaLabel ?: string,
+    href?: string,
     rounded?: ROUNDED,
-    href?: string|undefined,
+    size?: 'sm' | 'md' | 'lg' | 'xl',
+    theme ?: 'default' | 'light' | 'gradient'
+    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    align?: 'start' | 'end',
     triggerEvent?: 'click' | 'hover',
-    btnClasses?: string,
     iconClasses?: string,
     direction?: 'horizontal' | 'vertical',
     [key: string] : unknown
@@ -22,15 +27,19 @@
 
   let {
     children,
+    icon,
     animate = "normal",
     align = "end",
     size = "md",
-    rounded = size == "xl" || size == "lg" ? "lg" : "full",
-    href = undefined,
+    rounded = "full",
+    href,
     triggerEvent = "click",
-    btnClasses = "",
     iconClasses = "",
     direction = "vertical",
+    theme = "default",
+    color = "brand",
+    gradientColor = "brand",
+    ariaLabel = "Quick Action Button",
     ...props
   } : Props = $props()
 
@@ -46,8 +55,7 @@
   }
 
   let visible = $state(false)
-
-  let alignClasses = {start: "fab-start start-6 bottom-6", end: "fab-end end-6 bottom-6"}
+  let alignClasses = {start: "qab-start start-6 bottom-6", end: "qab-end end-6 bottom-6"}
 
   let animObj = {
     horizontal: {
@@ -65,7 +73,7 @@
     vertical: "flex-col end-1/2 translate-x-1/2",
   }
 
-  let fabSpaces = {
+  let qabSpaces = {
     horizontal: {
       end: {
         sm: "end-12 space-x-2 pe-3",
@@ -96,11 +104,10 @@
     }
   }
 
-  let fabSize  = {sm: "w-12 h-12", md: "w-14 h-14", lg: "w-16 h-16", xl: "w-20 h-20"}
+  let qabSize  = {sm: "w-12 h-12", md: "w-14 h-14", lg: "w-16 h-16", xl: "w-20 h-20"}
   
-  let fabClasses = `theui-fab-trigger ${twMerge(`static flex items-center justify-center bg-brand-primary-500 text-on-brand-primary-500 shadow-2xl hover:bg-brand-primary-600 ${fabSize[size]}${roundedClass(rounded)}${animationClass(animate)}`, btnClasses)}`
-  
-  let iconSizeClasses = {sm: "w-[1.25em] h-[1.25em]", md: "w-[1.5em] h-[1.5em]", lg: "w-[1.75em] h-[1.75em]", xl: "w-[2em] h-[2em]"}
+  let propClass = props?.class as string
+  let mainButtonClasses = `theui-qab-trigger ${twMerge(`static flex items-center justify-center shadow-2xl ${qabSize[size]}${roundedClass(rounded)}${animationClass(animate)}`, propClass)}`
 
 	let handleClick = $derived(() => {
     if(triggerEvent == "click"){
@@ -122,7 +129,7 @@
 		}
 	})
 
-  setContext('FAB', {size, rounded, iconClasses})
+  setContext('QAB', {size, rounded, iconClasses, theme, color, gradientColor, mainButtonClasses})
 </script>
 
 <svelte:window onclick={(e: MouseEvent)=>handleBlur(e)} />
@@ -131,17 +138,25 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   {id}
-  class={`theui-fab fixed ${alignClasses[align]}`}
-  class:fab-vertical={direction == "vertical"}
-  class:fab-horizontal={direction == "horizontal"}
+  class={`theui-qab fixed ${alignClasses[align]}`}
+  class:qab-vertical={direction == "vertical"}
+  class:qab-horizontal={direction == "horizontal"}
   onclick={()=>handleClick()}
   onmouseenter={(e: MouseEvent)=>handleMouse(e)}
   onmouseleave={(e: MouseEvent)=>handleMouse(e)}
 >
   {#if children && visible}
-  <div class="theui-fab-items flex absolute {fabSpaces[direction][align][size]} {directionClasses[direction]}" in:fly={animObj[direction][align]}>
-    {@render children()}
+  <div class="theui-qab-items flex absolute {qabSpaces[direction][align][size]} {directionClasses[direction]}" in:fly={animObj[direction][align]}>
+    {@render children?.()}
   </div>
   {/if}
-  <FabButton class={twMerge(fabClasses, props?.classes as string)} {href} />
+  <QabItem mainButton {ariaLabel} {href}>
+    {#if icon}
+      {@render icon()}
+    {:else}
+      <Svg class="w-[60%] h-[60%]">
+        <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+      </Svg>
+    {/if}
+  </QabItem>
 </div>

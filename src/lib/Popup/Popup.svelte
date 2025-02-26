@@ -5,28 +5,26 @@
   import { twMerge } from "tailwind-merge"
 
   interface Props {
-    children ?: Snippet|undefined,
-    entryContent ?: Snippet|undefined,
-    exitContent ?: Snippet|undefined,
+    children ?: Snippet,
+    entryContent ?: Snippet,
+    exitContent ?: Snippet,
     trigger ?: 'onEntry' | 'onExit' | 'onEntryExit',
     repeat ?: boolean | 'page',
     backdrop ?: boolean|string,
-    containerClass ?: string,
-    rounded ?: ROUNDED,
     staticBackdrop ?: boolean,
+    rounded ?: ROUNDED,
     [key: string]: unknown // class
   }
 
   let {
-    children = undefined,
-    entryContent = undefined,
-    exitContent = undefined,
+    children,
+    entryContent,
+    exitContent,
     trigger = "onEntry", 
     repeat = true,
     backdrop = true,
-    containerClass = "",
-    rounded = "xl",
     staticBackdrop = false,
+    rounded = "xl",
     ...props // class
   } : Props = $props()
 
@@ -103,7 +101,7 @@
 <svelte:body on:keydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if entryPopup || exitPopup}
-<div {...props} class="theui-popup !z-[80] fixed inset-0 {twMerge("overflow-y-hidden flex items-center justify-center", containerClass)}" class:entry-popup={trigger == "onEntry"} class:exit-popup={trigger == "onExit"} role='dialog'>
+<div {...props} class="theui-popup !z-[80] fixed inset-0 overflow-y-hidden flex items-center justify-center" class:entry-popup={trigger == "onEntry"} class:exit-popup={trigger == "onExit"} role='dialog' aria-hidden={!entryPopup && !exitPopup}>
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   {#if backdrop !== false}
     <!-- svelte-ignore a11y_click_events_have_key_events -->
@@ -116,6 +114,7 @@
     {#if entryPopup}
       {@render entryContent?.()}
     {/if}
+
     {#if exitPopup}
       {@render exitContent?.()}
     {/if}

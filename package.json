@@ -1,6 +1,6 @@
 {
 	"name": "theui-svelte",
-	"version": "2.0.0rc9",
+	"version": "2.0.0rc53",
 	"description": "theui-svelte A component library by TheUI. Out-of-the-box accessible and easy to customize built with TailwindCSS (v3).",
 	"author": {
 		"name": "M B Parvez",
@@ -52,10 +52,12 @@
 		"vitest": "^2.0.4"
 	},
 	"dependencies": {
+		"@floating-ui/dom": "^1.6.13",
 		"@sveltejs/adapter-node": "^5.2.10",
 		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",
+		"dompurify": "^3.2.4",
 		"nvm": "^0.0.4",
 		"svelte-package": "^0.1.0",
 		"tailwind-merge": "^2.5.4",
@@ -126,9 +128,9 @@
 			"types": "./dist/Button\\Qab.svelte.d.ts",
 			"svelte": "./dist/Button\\Qab.svelte"
 		},
-		"./QabButton.svelte": {
-			"types": "./dist/Button\\QabButton.svelte.d.ts",
-			"svelte": "./dist/Button\\QabButton.svelte"
+		"./QabItem.svelte": {
+			"types": "./dist/Button\\QabItem.svelte.d.ts",
+			"svelte": "./dist/Button\\QabItem.svelte"
 		},
 		"./Card.svelte": {
 			"types": "./dist/Card\\Card.svelte.d.ts",
@@ -190,10 +192,6 @@
 			"types": "./dist/Navbar\\NavLinkGroup.svelte.d.ts",
 			"svelte": "./dist/Navbar\\NavLinkGroup.svelte"
 		},
-		"./NavToggle.svelte": {
-			"types": "./dist/Navbar\\NavToggle.svelte.d.ts",
-			"svelte": "./dist/Navbar\\NavToggle.svelte"
-		},
 		"./Notification.svelte": {
 			"types": "./dist/Notification\\Notification.svelte.d.ts",
 			"svelte": "./dist/Notification\\Notification.svelte"
@@ -218,13 +216,9 @@
 			"types": "./dist/Slider\\Slider.svelte.d.ts",
 			"svelte": "./dist/Slider\\Slider.svelte"
 		},
-		"./ContentSlide.svelte": {
-			"types": "./dist/Slider\\ContentSlide.svelte.d.ts",
-			"svelte": "./dist/Slider\\ContentSlide.svelte"
-		},
-		"./ImageSlide.svelte": {
-			"types": "./dist/Slider\\ImageSlide.svelte.d.ts",
-			"svelte": "./dist/Slider\\ImageSlide.svelte"
+		"./Slide.svelte": {
+			"types": "./dist/Slider\\Slide.svelte.d.ts",
+			"svelte": "./dist/Slider\\Slide.svelte"
 		},
 		"./Table.svelte": {
 			"types": "./dist/Table\\Table.svelte.d.ts",
@@ -242,9 +236,13 @@
 			"types": "./dist/Table\\TR.svelte.d.ts",
 			"svelte": "./dist/Table\\TR.svelte"
 		},
-		"./Cell.svelte": {
-			"types": "./dist/Table\\Cell.svelte.d.ts",
-			"svelte": "./dist/Table\\Cell.svelte"
+		"./TH.svelte": {
+			"types": "./dist/Table\\TH.svelte.d.ts",
+			"svelte": "./dist/Table\\TH.svelte"
+		},
+		"./TD.svelte": {
+			"types": "./dist/Table\\TD.svelte.d.ts",
+			"svelte": "./dist/Table\\TD.svelte"
 		},
 		"./Tabs.svelte": {
 			"types": "./dist/Tabs\\Tabs.svelte.d.ts",

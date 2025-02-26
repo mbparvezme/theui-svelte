@@ -1,13 +1,16 @@
 <script lang="ts">
+  import { generateToken } from "$lib/function";
   import { setContext, type Snippet } from "svelte"
-  import { generateToken } from "$lib/function"
+  import { twMerge } from "tailwind-merge";
 
-  interface Props {children: Snippet, size?: "compact" | "default" | "large", standalone?: boolean, id?: string}
-  let {children, size = "default", standalone = true, id = generateToken()} : Props = $props()
+  interface Props {children: Snippet, size?: "compact" | "default" | "large", standalone?: boolean, [key: string] : unknown}
+  let {children, size = "default", standalone = true, ...props} : Props = $props()
 
-  setContext("ACCORDION", {group: true, id, size, standalone})
+  let id: string = generateToken()
+
+  setContext("ACCORDION", {group: true, size, standalone, id, flush: props?.flush})
 </script>
 
-<div {id} class="theui-accordion-group flex flex-col">
+<div {id} class={twMerge("theui-accordion-group flex flex-col", props?.class as string)} role="group">
   {@render children()}
 </div>

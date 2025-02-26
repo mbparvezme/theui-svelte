@@ -20,6 +20,20 @@ export type SHADOW =
   | "2xl"
   | "inner"
   | "none";
+export type POSITION_TYPES =
+  | 'top'
+  | 'top-start'
+  | ' top-end'
+  | 'right'
+  | 'right-start'
+  | 'right-end'
+  | 'bottom'
+  | 'bottom-start'
+  | 'bottom-end'
+  | 'left'
+  | 'left-start'
+  | 'left-end';
+export type ENTRANCE_ANIMATION = 'fade' | 'slide-in' | 'slide-out' | 'zoom-in' | 'zoom-out'
 export type PRELOAD = "" | "off" | "tap" | "hover";
 export type TABLE_ROW = string[] | Record<string, unknown>[];
 export type BUTTON_SIZE = "xs" | "sm" | "md" | "lg" | "xl" | "auto";
@@ -89,10 +103,9 @@ export type MOBILE_NAV_ON = keyof RESPONSIVE_NAV_ON
 export type NOTIFY_CONFIG = {
   removeAfter?: number;
   removeOnClick?: boolean;
-  animate?: boolean;
   rounded?: ROUNDED;
-  theme ?: "default" | "light"
-  variant?: "card" | "borderTop" | "borderBottom" | "borderStart";
+  theme ?: "default" | "light" | "gradient"
+  variant?: "card" | "barTop" | "barBottom" | "barStart";
 };
 
 export type TABLE_CONFIG = {
@@ -106,12 +119,13 @@ export type TABLE_CONFIG = {
 };
 
 export type TAB_CONFIG = {
-  activeTabClasses?: string;
-  animate?: ANIMATE_SPEED;
-  tabClasses?: string;
-  tabPanelClasses?: string;
-  borderClasses ?: boolean | string;
   variant: 'tabs' | 'pills';
+  animate?: ANIMATE_SPEED;
+  border ?: boolean | string;
+  tabClasses?: string;
+  tabActiveClasses?: string;
+  tabPanelClasses?: string;
+  TABS: { tabs: string[], panels: string[], selectedTab: string | null, selectedPanel: string | null }
 };
 
 export type TABS_CONTEXT = {

@@ -3,48 +3,49 @@
   import type { ANIMATE_SPEED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
   import { animationClass, generateToken, backdropClasses } from "$lib/function"
-	import { Close } from "$lib"
+	import { Close, Button } from "$lib"
 
   interface Props {
-    trigger ?: Snippet,
     children ?: Snippet,
     id ?: string,
-    label ?: string,
+    label ?: string | Snippet,
     animate ?: ANIMATE_SPEED,
     backdrop ?: boolean|string,
-    closeOnEsc ?: boolean,
     position ?: 'top' | 'end' | 'bottom' | 'start',
     staticBackdrop ?: boolean,
-    [key: string]: unknown // class
+    buttonClasses?: string,
+    ariaLabel ?: string,
+    [key: string]: unknown
   }
 
   let {
     children,
-    trigger,
     id = generateToken(),
-    label = "",
+    label,
     animate = "fast",
     backdrop = true,
-    closeOnEsc = true,
     position = "start",
     staticBackdrop = false,
+    buttonClasses = "",
+    ariaLabel = "Drawer component",
     ...props
   } : Props = $props()
 
-  let active: boolean = false
+  let active: boolean = $state(false)
 
-  let attr = $derived({
-		"id" : `${id}Heading`,
-		"aria-label" : label,
-		"aria-haspopup" : "true",
-		"aria-controls" : `${id}Drawer`,
-		"aria-expanded" : active
-	})
+  let toggle = (id: string) => {
+    active = !active
+    document.getElementById(id)?.classList.toggle("open")
+  }
 
-  let toggle = (id: string) => document.getElementById(id)?.classList.toggle("open")
+  let handleKeyboardEsc = (e: KeyboardEvent) => {
+    if (document.getElementById(id)?.classList.contains("open") && e.key === "Escape") {
+      toggle(id);
+    }
+  }
 
-  let handleKeyboard = (e: KeyboardEvent) => {
-    if (document.getElementById(id)?.classList.contains("open") && closeOnEsc && e.key === "Escape") {
+  let handleKeyboardEnter = (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
       toggle(id);
     }
   }
@@ -59,36 +60,42 @@
     return positions[position] || "drawer-start"
   }
 
-  let getClass = twMerge(`drawer-body fixed bg-white dark:bg-secondary${animationClass(animate)}`, (props?.class ?? "") as string)
+  let sizeCls = () => {
+    const sizes: { [key: string]: string } = {
+      top: "w-full min-h-[160px] inset-x-0 top-0",
+      bottom: "w-full min-h-[160px] inset-x-0 bottom-0",
+      start: "w-full sm:w-96 inset-y-0 start-0",
+      end: "w-full sm:w-96 inset-y-0 end-0",
+      fullscreen: "start-0 top-0 end-0 bottom-0"
+    }
+
+    return sizes[props?.fullscreen ? "fullscreen" : position] || sizes["start"]
+  }
+
+  let getClass = twMerge(`drawer-body fixed bg-white ${sizeCls()} dark:bg-secondary${animationClass(animate)}`, (props?.class ?? "") as string)
 </script>
 
-<svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
+<svelte:body onkeydown={(e)=>handleKeyboardEsc(e)}></svelte:body>
 
-{#if trigger || label}
-<span role="button" onclick={()=>toggle(id)} onkeydown={(e)=>handleKeyboard(e)}
-  id="{id}Btn"
-  aria-label={label}
-  aria-haspopup="true"
-  aria-controls="{id}Drawer"
-  aria-expanded={active}
-  tabindex="-1">
-  {#if label}
-    {@html label}
-  {:else if typeof trigger === "function"}
-    {@render trigger()}
+{#if label}
+  {#if typeof label == "string"}
+    <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} {ariaLabel} onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}>{@html label}</Button>
+  {:else}
+    <span id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} aria-label={ariaLabel} role="button" onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} tabindex="0">
+      {@render label?.()}
+    </span>
   {/if}
-</span>
 {/if}
 
 {#if children}
-  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animate)} {positionCls()}" role="dialog" class:animate={animate}>
+  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animate)} {positionCls()}" role="complementary" class:animate={animate}>
 
-    {#if backdrop}
+    {#if backdrop && !props?.fullscreen}
       <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle(id)}></div>
     {/if}
 
-    <div id="{id}Drawer" class={getClass} aria-labelledby="{id}Btn" aria-hidden={!active}>
-      <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-2 right-4" onclick={()=>toggle(id)}/>
+    <div id="{id}-drawer" class={getClass} aria-labelledby={`drawer-trigger-${id}`} aria-hidden={!active}>
+      <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-4 end-4 p-1" onclick={()=>toggle(id)}/>
       {@render children()}
     </div>
 
@@ -101,24 +108,6 @@
   }
   .theui-drawer{
     @apply invisible opacity-0;
-  }
-  .theui-drawer.drawer-end .drawer-body, .theui-drawer.drawer-start .drawer-body{
-    @apply top-0 bottom-0 w-full sm:w-96;
-  }
-  .theui-drawer.drawer-top .drawer-body, .theui-drawer.drawer-bottom .drawer-body{
-    @apply start-0 end-0 w-full min-h-[160px];
-  }
-  .theui-drawer.drawer-end .drawer-body{
-    @apply end-0;
-  }
-  .theui-drawer.drawer-bottom .drawer-body{
-    @apply bottom-0;
-  }
-  .theui-drawer.animate .backdrop{
-    @apply opacity-0;
-  }
-  .theui-drawer.open .backdrop{
-    @apply opacity-50 dark:opacity-75;
   }
   .theui-drawer.animate .drawer-body{
     @apply transform;

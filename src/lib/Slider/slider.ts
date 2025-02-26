@@ -1,6 +1,6 @@
-import { generateToken } from "$lib/function"
-import { ST_SLIDER } from "$lib/state.svelte"
-import { twMerge } from "tailwind-merge"
+import { generateToken } from "$lib/function";
+import { ST_SLIDER } from "$lib/state.svelte";
+import { twMerge } from "tailwind-merge";
 
 export interface SliderConfig {
   autoPlay: boolean;
@@ -13,11 +13,13 @@ export interface SliderConfig {
 }
 
 export class Slider {
-  config: SliderConfig
-  autoPlayInterval!: ReturnType<typeof setInterval>
-  id: string = generateToken()
+  config: SliderConfig;
+  autoPlayInterval!: ReturnType<typeof setInterval>;
+  id: string = generateToken();
+  isTransitioning: boolean = false; // To track if a transition is in progress
 
-  private indicatorClasses: string = "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000"
+  private indicatorClasses: string =
+    "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none";
 
   constructor(config: Partial<SliderConfig>) {
     const defaultConfig: SliderConfig = {
@@ -49,10 +51,13 @@ export class Slider {
 
     itemsContainer.appendChild(firstClone);
     itemsContainer.insertBefore(lastClone, firstSlide);
-    ST_SLIDER.slides = [lastClone, ...slides as HTMLElement[], firstClone];
+    ST_SLIDER.slides = [lastClone, ...(slides as HTMLElement[]), firstClone];
   }
 
   changeSlide(updateType: "next" | "prev") {
+    if (this.isTransitioning) return; // Prevent multiple transitions
+    this.isTransitioning = true;
+
     const newIndex = this.calculateNextSlideIndex(updateType);
     this.updateActiveIndicator(this.calculateNextIndicatorIndex(newIndex));
     ST_SLIDER.activeSlide = ST_SLIDER.slides[newIndex];
@@ -82,6 +87,7 @@ export class Slider {
           ST_SLIDER.activeSlide = slides[1];
           this.updateTrackPosition();
         }
+        this.isTransitioning = false; // Reset transitioning flag
       });
     }
   }
@@ -96,7 +102,9 @@ export class Slider {
 
   calculateNextSlideIndex(updateType: "next" | "prev") {
     const totalSlides = ST_SLIDER.slides.length;
-    const currentSlideIndex = ST_SLIDER.slides.indexOf(ST_SLIDER.activeSlide as HTMLElement);
+    const currentSlideIndex = ST_SLIDER.slides.indexOf(
+      ST_SLIDER.activeSlide as HTMLElement
+    );
     return updateType === "next"
       ? (currentSlideIndex + 1) % totalSlides
       : (currentSlideIndex - 1 + totalSlides) % totalSlides;
@@ -136,8 +144,6 @@ export class Slider {
     }
   }
 
-
-
   startAutoPlay() {
     this.autoPlayInterval = setInterval(
       () => this.changeSlide("next"),
@@ -150,18 +156,25 @@ export class Slider {
   }
 
   createIndicator() {
-    const itemsContainer = document.getElementById(`${this.id}-items`)
-    if (itemsContainer){
-      const slides = Array.from(itemsContainer.children)
+    const itemsContainer = document.getElementById(`${this.id}-items`);
+    if (itemsContainer) {
+      const slides = Array.from(itemsContainer.children);
       if (slides.length) {
-        const indicatorContainer = document.getElementById(`${this.id}-indicators`)
+        const indicatorContainer = document.getElementById(
+          `${this.id}-indicators`
+        );
         if (indicatorContainer) {
-          for (let i = 0; i < slides.length; i++){
-            const button = document.createElement('button')
-            button.className = `slide-indicator ${twMerge(this.indicatorClasses, this.config.indicatorClasses)}`
-            button.type = "button"
-            button.setAttribute("aria-label", "Slide indicator")
-            button.addEventListener('click', ()=>this.changeSlideByIndicator(i))
+          for (let i = 0; i < slides.length; i++) {
+            const button = document.createElement("button");
+            button.className = `slide-indicator ${twMerge(
+              this.indicatorClasses,
+              this.config.indicatorClasses
+            )}`;
+            button.type = "button";
+            button.setAttribute("aria-label", `Go to slide ${i + 1}`);
+            button.addEventListener("click", () =>
+              this.changeSlideByIndicator(i)
+            );
             indicatorContainer.appendChild(button);
           }
         }
@@ -170,6 +183,7 @@ export class Slider {
   }
 
   changeSlideByIndicator(index: number) {
+    if (this.isTransitioning) return; // Prevent multiple transitions
     this.updateActiveIndicator(index);
     ST_SLIDER.activeSlide = ST_SLIDER.slides[index + 1];
     this.slideTransition();
@@ -181,12 +195,15 @@ export class Slider {
 
     const buttons = indicatorContainer.querySelectorAll<HTMLButtonElement>(
       ".slide-indicator"
-    )
+    );
 
     buttons.forEach((button, i) => {
-      button.className = `slide-indicator ${twMerge(this.indicatorClasses,
+      button.className = `slide-indicator ${twMerge(
+        this.indicatorClasses,
         this.config.indicatorClasses,
-        i === index ? twMerge("opacity-100", this.config.indicatorActiveClasses) : "opacity-50"
+        i === index
+          ? twMerge("opacity-100", this.config.indicatorActiveClasses)
+          : "opacity-50"
       )}`;
     });
   }
@@ -214,7 +231,7 @@ export class Slider {
 
   getButtonClasses(classes: string, type: "prev" | "next") {
     return twMerge(
-      `absolute top-1/2 transform -translate-y-1/2 bg-gray-200/50 p-2 w-10 h-10 rounded-full ${type === "next" ? "right-4" : "left-4"
+      `absolute flex justify-center items-center top-1/2 transform -translate-y-1/2 bg-gray-200 dark:text-black opacity-60 p-2 w-12 h-12 rounded-full transition-opacity duration-300 hover:opacity-100 ${type === "next" ? "right-4" : "left-4"
       }`,
       classes
     );
@@ -225,7 +242,10 @@ export class Slider {
   }
 }
 
-
 export const getSlideClasses = (slideClasses: string, classes: string) => {
-  return twMerge('relative flex-shrink-0 w-full min-h-48   flex items-center justify-center', slideClasses, classes)
-}
+  return twMerge(
+    "relative flex-shrink-0 w-full min-h-48 flex items-center justify-center",
+    slideClasses,
+    classes
+  );
+};

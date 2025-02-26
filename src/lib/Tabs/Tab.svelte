@@ -2,22 +2,32 @@
   import { getContext, type Snippet } from "svelte"
   import { twMerge } from "tailwind-merge"
   import { animationClass, generateToken, roundedClass } from "$lib/function"
-	import { ST_TABS } from "$lib/state.svelte"
 
   let {children, ...props} : {children : Snippet, [key: string] : unknown} = $props()
   const CTX = getContext('TAB') as any
   const id: string = generateToken()
-  ST_TABS.tabs.push(id)
+  CTX.TABS.tabs.push(id)
 
   let selectTabL = (tab: string) => {
-    const i = ST_TABS.tabs.indexOf(tab)
-    ST_TABS.selectedTab = tab
-    ST_TABS.selectedPanel = ST_TABS.panels[i]
+    const i = CTX.TABS.tabs.indexOf(tab)
+    CTX.TABS.selectedTab = tab
+    CTX.TABS.selectedPanel = CTX.TABS.panels[i]
   }
 
-  let getClass = $derived(`${(CTX.variant == "pills" ? "theui-tab-pill" : "theui-tab")} px-8 py-3 text-center font-medium ${(ST_TABS.selectedTab == id ? CTX?.activeTabClasses : CTX?.tabClasses)} ${roundedClass("md", (CTX.variant == "tabs" ? "top" : (CTX.borderClasses ? "top" : "all")))} ${animationClass(CTX.animate)}`)
+  let getClass = $derived(`${(CTX.variant == "pills" ? "theui-tab-pill" : "theui-tab")} px-8 py-3 text-center font-medium ${roundedClass("md", (CTX.variant == "tabs" ? "top" : (CTX.border ? "top" : "all")))} ${animationClass(CTX.animate)}`)
 </script>
 
-<button {...props} class={twMerge(getClass, props?.class as string)} class:theui-tab-selected={ST_TABS.selectedTab === id} onclick={() => selectTabL(id)}>
+<button
+  {id}
+  {...props}
+  class={twMerge(getClass, CTX?.tabClasses, (CTX.TABS.selectedTab == id ? CTX?.tabActiveClasses : ""), props?.class as string)}
+  class:theui-tab-selected={CTX.TABS.selectedTab === id}
+
+  role="tab"
+  aria-selected={CTX.TABS.selectedTab === id ? "true" : "false"}
+  aria-controls={CTX.TABS.selectedPanel}
+
+  onclick={() => selectTabL(id)}
+>
   {@render children?.()}
 </button>
