@@ -84,7 +84,6 @@
         if(window.scrollY >= scrollAmountToShrink!){
           miniNav = true
           navClass = twMerge(navCoreClass, scrollClass)
-          console.log(navClass)
         }else{
           miniNav = false
           navClass = navCoreClass

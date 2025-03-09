@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onDestroy, onMount, tick } from "svelte"
   import { fade, type FadeParams } from 'svelte/transition'
+  import { page } from '$app/state'
+  import { browser } from '$app/environment'
   import { computePosition, flip, shift, offset, arrow, type Placement } from "@floating-ui/dom"
   import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
@@ -32,6 +34,8 @@
   let triggerStyle: string          = $state("")
   let show:         boolean         = $state(false)
   let animObj: FadeParams|undefined = $state(undefined)
+
+  let url: string = ""
 
   const calculateGap = () => Math.max(Number(trigger?.dataset?.tooltipGap) || gap, 8)
 
@@ -103,13 +107,11 @@
     }
 	}
 
-  onMount(() => {
-    trigger?.setAttribute("aria-haspopup", "true")
-    trigger?.setAttribute("aria-controls", `${generateToken()}`)
-
-    const elements = document.querySelectorAll("[data-tooltip]")
-    elements.forEach(el => {
-      const eventType = el.getAttribute("data-tooltip-event") || triggerEvent;
+  let attachEventListeners = () => {
+    if(!browser) return
+    const elements = document.querySelectorAll("[data-tooltip]");
+    elements.forEach((el) => {
+      const eventType = el.getAttribute("data-tooltip-event") || "hover";
 
       if (eventType === "click") {
         el.addEventListener("click", showTooltip);
@@ -117,28 +119,44 @@
       } else {
         el.addEventListener("mouseenter", showTooltip);
         el.addEventListener("mouseleave", hideTooltip);
-        // Ensure keyboard users can access tooltips
         el.addEventListener("focus", showTooltip);
         el.addEventListener("blur", hideTooltip);
       }
-    })
+    });
+  }
 
-    onDestroy(() => {
-      if (triggerEvent === "click") {
-        document.removeEventListener("click", showTooltip, true)
-        document.removeEventListener("blur", hideTooltip, true)
+  let removeEventListeners = () => {
+    if(!browser) return
+    const elements = document.querySelectorAll("[data-tooltip]");
+    elements.forEach((el) => {
+      const eventType = el.getAttribute("data-tooltip-event") || "hover";
+
+      if (eventType === "click") {
+        el.removeEventListener("click", showTooltip);
+        el.removeEventListener("blur", hideTooltip);
       } else {
-        const elements = document.querySelectorAll("[data-tooltip]")
-        elements.forEach(el => {
-          (el as HTMLElement).removeEventListener("mouseenter", showTooltip)
-          el.removeEventListener("mouseleave", hideTooltip)
-        })
+        el.removeEventListener("mouseenter", showTooltip);
+        el.removeEventListener("mouseleave", hideTooltip);
+        el.removeEventListener("focus", showTooltip);
+        el.removeEventListener("blur", hideTooltip);
       }
-    })
+    });
+  }
+
+  onMount(() => {
+    trigger?.setAttribute("aria-haspopup", "true")
+    trigger?.setAttribute("aria-controls", `${generateToken()}`)
+    attachEventListeners()
   })
 
-  let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-800 text-alt dark:text-default", props?.class as string, triggerStyle))
+  onDestroy(() => removeEventListeners())
 
+  if(url != page.url.pathname){
+    attachEventListeners()
+    url = page.url.pathname
+  }
+
+  let customClasses = $derived(twMerge("pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-800 text-alt dark:text-default", props?.class as string, triggerStyle))
   const classes = () => `theui-tooltip z-[60] absolute ${customClasses}${roundedClass(trigger?.dataset.tooltipRounded as ROUNDED || rounded)}`
 </script>
 
