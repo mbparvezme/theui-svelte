@@ -1,6 +1,8 @@
 <script>
-  import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, Svg} from "$lib"
+  import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, Svg, Tooltip} from "$lib"
 </script>
+
+<Tooltip />
 
 <Navbar scrollBehavior="shrinkOnScrollDown" scrollClasses="bg-red-100">
   <NavBrand href="/">BRAND</NavBrand>
@@ -24,15 +26,20 @@
   </NavCollapse>
   <DarkMode />
 </Navbar>
+
 <br>
 <br>
 <br>
 
-<div class="h-[50vh] bg-primary"></div>
+<div class="h-[50vh] bg-primary">
+
+  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
+  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
+
+</div>
 <div class="h-[50vh] bg-secondary"></div>
 <div class="h-[50vh] bg-tertiary"></div>
 <div class="h-[50vh] bg-primary"></div>
-
 
 <style lang="postcss">
   :global(body){

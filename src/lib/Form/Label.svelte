@@ -6,13 +6,13 @@
   let {label, id = "", ...props} : {label: Snippet|string, id: string, [key : string]: unknown} = $props()
 </script>
 
+{#if label}
 <label class={labelClasses(CTX, props)} for={id}>
-  {#if label}
-    {#if typeof label == "string"}
-      {@html label}
-    {/if}
-    {#if typeof label == "function"}
-      {@render label?.()}
-    {/if}
+  {#if typeof label == "string"}
+    {@html label}
+  {/if}
+  {#if typeof label == "function"}
+    {@render label()}
   {/if}
 </label>
+{/if}
