@@ -63,6 +63,13 @@ export const inputTypeSizeClasses: {
   },
 }
 
+const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
+  sm: "h-4 w-6 after:w-3 after:h-3 px-0.5 checked:after:translate-x-2",
+  md: "h-5 w-8 after:w-3 after:h-3 px-1 checked:after:translate-x-3",
+  lg: "h-6 w-10 after:w-4 after:h-4 px-1 checked:after:translate-x-4",
+  xl: "h-7 w-12 after:w-5 after:h-5 px-1 checked:after:translate-x-5"
+}
+
 
 /**
  * Generates the base class for an input container based on configuration, attributes, and input type.
@@ -207,3 +214,7 @@ const attributesClasses = (attr: Record<string, unknown> = {}): string =>
 const fileInputClasses = (config: INPUT_CONFIG): string =>
   `file:mr-4 file:bg-secondary file:cursor-pointer cursor-pointer file:border-0 ${roundedClass(config?.rounded, "all", "fileButton")
   }${roundedClass(config?.rounded)}`;
+
+
+
+export const getToggleSize = (size: INPUT_SIZE): string => toggleSizes[size]

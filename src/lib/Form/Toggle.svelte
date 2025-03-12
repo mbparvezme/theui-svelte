@@ -1,43 +1,50 @@
 <script lang="ts">
   import type { INPUT_CONFIG } from "$lib/types"
-	import { generateToken, roundedClass } from "$lib/function"
+	import { animationClass, generateToken, roundedClass } from "$lib/function"
 	import { getContext, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
+	import { getToggleSize } from "./form";
 
   interface Props {
-    helperText?: string | Snippet | undefined,
     id?: string,
     label?: string|Snippet,
-    name?: string,
+    name: string,
     type?: "checkbox" | "radio",
-    value?: boolean | null | undefined,
+    value?: boolean | string,
+    wrapperClasses?: string,
     [key: string]: unknown
   }
 
   const CTX: any = getContext('FORM') ?? {}
 
   let {
-    helperText = undefined,
     label,
+    type = "checkbox",
     name,
     id = generateToken(),
-    value = null,
-    animate = CTX?.animate ?? "normal",
-    labelClasses  = CTX?.labelClasses ?? "",
-    rounded = CTX?.rounded ?? "full",
+    value,
     size = CTX?.size ?? "md",
-    type = "checkbox",
+    animate = CTX?.animate ?? "normal",
+    rounded = "full",
+    wrapperClasses = "",
+    labelClasses = CTX?.labelClasses ?? "",
     ...props
   }: Props & INPUT_CONFIG = $props()
 
-  let classes: string = `h-5 w-9 border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 dark:checked:bg-brand-primary-500 appearance-none relative flex items-center px-1 ease-in-out duration-300 text-brand-primary-500 focus:!ring-gray-500 checked:focus:!ring-brand-primary-500 mt-[6px] ${roundedClass(rounded)} ${rounded ? 'after:rounded-full' : 'after:rounded-sm'} after:w-3 after:h-3 after:bg-white after:transition-all after:ease-in-out after:duration-300 checked:bg-none checked:after:translate-x-[14px] rtl:checked:after:-translate-x-[14px]`
-
-  let setType: any = (node: HTMLInputElement) => node.type = type
+  let classes: string = `border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 dark:checked:bg-brand-primary-500 appearance-none relative flex items-center text-brand-primary-500 focus:!ring-gray-500 checked:focus:!ring-brand-primary-500 ${getToggleSize(size)} rtl:checked:after:-translate-x-full ${roundedClass(rounded)} ${animationClass(animate)} after:bg-white checked:bg-none ${roundedClass(rounded, "all", "after")} ${animationClass(animate, "all", "after")}`
+  let setType: any = (node: HTMLInputElement) => {
+    node.type = type
+    if(type == "checkbox" && value)
+    node.checked = true
+  }
 </script>
 
-<div class="flex items-start gap-2">
-	<input {id} {name} use:setType class={twMerge(classes, props?.class as string)} />
-	{#if label}
-		<label for={id}>{label}</label>
-	{/if}
+<div class={twMerge("flex items-center gap-2", wrapperClasses)}>
+	<input {...props} {id} {name} {value} use:setType class="{twMerge(classes, props?.class as string)} cursor-pointer" />
+  {#if label}
+    <label for={id} class={twMerge("cursor-pointer", labelClasses)}>
+      {#if typeof label == "string"} {@html label} {/if}
+      {#if typeof label == "function"} {@render label()} {/if}
+    </label>
+  {/if}
 </div>

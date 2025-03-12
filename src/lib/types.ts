@@ -137,6 +137,6 @@ export type TABS_CONTEXT = {
   config: TAB_CONFIG;
 }
 
-export type ROUNDED_ITEM_TYPES = "default" | "fileButton" | "first" | "last";
+export type ROUNDED_ITEM_TYPES = "default" | "fileButton" | "first" | "last" | "after" | "before";
 // Private types
 export type ROUNDED_SIDES = "top" | "end" | "bottom" | "start" | "topStart" | "topEnd" | "bottomStart" | "bottomEnd" | "all";
