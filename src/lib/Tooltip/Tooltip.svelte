@@ -109,38 +109,38 @@
 
   let attachEventListeners = () => {
     if(!browser) return
-    const elements = document.querySelectorAll("[data-tooltip]");
+    const elements = document.querySelectorAll("[data-tooltip]")
     elements.forEach((el) => {
-      const eventType = el.getAttribute("data-tooltip-event") || "hover";
+      const eventType = el.getAttribute("data-tooltip-event") || "hover"
 
       if (eventType === "click") {
-        el.addEventListener("click", showTooltip);
-        el.addEventListener("blur", hideTooltip);
+        el.addEventListener("click", showTooltip)
+        el.addEventListener("blur", hideTooltip)
       } else {
-        el.addEventListener("mouseenter", showTooltip);
-        el.addEventListener("mouseleave", hideTooltip);
-        el.addEventListener("focus", showTooltip);
-        el.addEventListener("blur", hideTooltip);
+        el.addEventListener("mouseenter", showTooltip)
+        el.addEventListener("mouseleave", hideTooltip)
+        el.addEventListener("focus", showTooltip)
+        el.addEventListener("blur", hideTooltip)
       }
-    });
+    })
   }
 
   let removeEventListeners = () => {
     if(!browser) return
-    const elements = document.querySelectorAll("[data-tooltip]");
+    const elements = document.querySelectorAll("[data-tooltip]")
     elements.forEach((el) => {
-      const eventType = el.getAttribute("data-tooltip-event") || "hover";
+      const eventType = el.getAttribute("data-tooltip-event") || "hover"
 
       if (eventType === "click") {
-        el.removeEventListener("click", showTooltip);
-        el.removeEventListener("blur", hideTooltip);
+        el.removeEventListener("click", showTooltip)
+        el.removeEventListener("blur", hideTooltip)
       } else {
-        el.removeEventListener("mouseenter", showTooltip);
-        el.removeEventListener("mouseleave", hideTooltip);
-        el.removeEventListener("focus", showTooltip);
-        el.removeEventListener("blur", hideTooltip);
+        el.removeEventListener("mouseenter", showTooltip)
+        el.removeEventListener("mouseleave", hideTooltip)
+        el.removeEventListener("focus", showTooltip)
+        el.removeEventListener("blur", hideTooltip)
       }
-    });
+    })
   }
 
   onMount(() => {

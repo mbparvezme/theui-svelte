@@ -272,23 +272,185 @@ const roundClasses: RoundClassesType = {
       xl: " last:rounded-ee-xl",
       full: " last:rounded-ee-full",
     },
+  },
+  after: {
+    all: {
+      sm: " after:rounded",
+      md: " after:rounded-md",
+      lg: " after:rounded-lg",
+      xl: " after:rounded-xl",
+      full: " after:rounded-full",
+    },
+    top: {
+      sm: " after:rounded-t",
+      md: " after:rounded-t-md",
+      lg: " after:rounded-t-lg",
+      xl: " after:rounded-t-xl",
+      full: " after:rounded-t-full",
+    },
+    end: {
+      sm: " after:rounded-e",
+      md: " after:rounded-e-md",
+      lg: " after:rounded-e-lg",
+      xl: " after:rounded-e-xl",
+      full: " after:rounded-e-full",
+    },
+    bottom: {
+      sm: " after:rounded-b",
+      md: " after:rounded-b-md",
+      lg: " after:rounded-b-lg",
+      xl: " after:rounded-b-xl",
+      full: " after:rounded-b-full",
+    },
+    start: {
+      sm: " after:rounded-s",
+      md: " after:rounded-s-md",
+      lg: " after:rounded-s-lg",
+      xl: " after:rounded-s-xl",
+      full: " after:rounded-s-full",
+    },
+    topStart: {
+      sm: " after:rounded-ss",
+      md: " after:rounded-ss-md",
+      lg: " after:rounded-ss-lg",
+      xl: " after:rounded-ss-xl",
+      full: " after:rounded-ss-full",
+    },
+    topEnd: {
+      sm: " after:rounded-se",
+      md: " after:rounded-se-md",
+      lg: " after:rounded-se-lg",
+      xl: " after:rounded-se-xl",
+      full: " after:rounded-se-full",
+    },
+    bottomStart: {
+      sm: " after:rounded-es",
+      md: " after:rounded-es-md",
+      lg: " after:rounded-es-lg",
+      xl: " after:rounded-es-xl",
+      full: " after:rounded-es-full",
+    },
+    bottomEnd: {
+      sm: " after:rounded-ee",
+      md: " after:rounded-ee-md",
+      lg: " after:rounded-ee-lg",
+      xl: " after:rounded-ee-xl",
+      full: " after:rounded-ee-full",
+    },
+  },
+  before: {
+    all: {
+      sm: " before:rounded",
+      md: " before:rounded-md",
+      lg: " before:rounded-lg",
+      xl: " before:rounded-xl",
+      full: " before:rounded-full",
+    },
+    top: {
+      sm: " before:rounded-t",
+      md: " before:rounded-t-md",
+      lg: " before:rounded-t-lg",
+      xl: " before:rounded-t-xl",
+      full: " before:rounded-t-full",
+    },
+    end: {
+      sm: " before:rounded-e",
+      md: " before:rounded-e-md",
+      lg: " before:rounded-e-lg",
+      xl: " before:rounded-e-xl",
+      full: " before:rounded-e-full",
+    },
+    bottom: {
+      sm: " before:rounded-b",
+      md: " before:rounded-b-md",
+      lg: " before:rounded-b-lg",
+      xl: " before:rounded-b-xl",
+      full: " before:rounded-b-full",
+    },
+    start: {
+      sm: " before:rounded-s",
+      md: " before:rounded-s-md",
+      lg: " before:rounded-s-lg",
+      xl: " before:rounded-s-xl",
+      full: " before:rounded-s-full",
+    },
+    topStart: {
+      sm: " before:rounded-ss",
+      md: " before:rounded-ss-md",
+      lg: " before:rounded-ss-lg",
+      xl: " before:rounded-ss-xl",
+      full: " before:rounded-ss-full",
+    },
+    topEnd: {
+      sm: " before:rounded-se",
+      md: " before:rounded-se-md",
+      lg: " before:rounded-se-lg",
+      xl: " before:rounded-se-xl",
+      full: " before:rounded-se-full",
+    },
+    bottomStart: {
+      sm: " before:rounded-es",
+      md: " before:rounded-es-md",
+      lg: " before:rounded-es-lg",
+      xl: " before:rounded-es-xl",
+      full: " before:rounded-es-full",
+    },
+    bottomEnd: {
+      sm: " before:rounded-ee",
+      md: " before:rounded-ee-md",
+      lg: " before:rounded-ee-lg",
+      xl: " before:rounded-ee-xl",
+      full: " before:rounded-ee-full",
+    },
   }
 }
 
-const animationSpeed: { [speed in Exclude<ANIMATE_SPEED, "none">]: string } = {
-  slower: "duration-700",
-  slow: "duration-500",
-  normal: "duration-300",
-  fast: "duration-200",
-  faster: "duration-100",
+const animationSpeed: { [t in 'default' | 'after' | 'before']: { [speed in Exclude<ANIMATE_SPEED, "none">]: string }} = {
+  default: {
+    slower: "duration-700",
+    slow: "duration-500",
+    normal: "duration-300",
+    fast: "duration-200",
+    faster: "duration-100",
+  },
+  after: {
+    slower: "after:duration-700",
+    slow: "after:duration-500",
+    normal: "after:duration-300",
+    fast: "after:duration-200",
+    faster: "after:duration-100",
+  },
+  before: {
+    slower: "before:duration-700",
+    slow: "before:duration-500",
+    normal: "before:duration-300",
+    fast: "before:duration-200",
+    faster: "before:duration-100",
+  }
 }
 
-const animationType: Record<string, string> = {
-  color: "transition-colors",
-  opacity: "transition-opacity",
-  shadow: "transition-shadow",
-  transform: "transition-transform",
-  all: "transition-all",
+const animationType: { [t in 'default' | 'after' | 'before']: Record<string, string> } = {
+  default: {
+    color: "transition-colors",
+    opacity: "transition-opacity",
+    shadow: "transition-shadow",
+    transform: "transition-transform",
+    all: "transition-all"
+  },
+  after: {
+    color: "after:transition-colors",
+    opacity: "after:transition-opacity",
+    shadow: "after:transition-shadow",
+    transform: "after:transition-transform",
+    all: "after:transition-all"
+  },
+  before: {
+    color: "before:transition-colors",
+    opacity: "before:transition-opacity",
+    shadow: "before:transition-shadow",
+    transform: "before:transition-transform",
+    all: "before:transition-all"
+  }
 }
 
 const fileButtonAnimation: { [speed in Exclude<ANIMATE_SPEED, "none">]: string } = {
@@ -406,10 +568,10 @@ export const generateToken = (prefix: string = "_id"): string => `${prefix}${(Da
  * @param type - Animation property type (e.g., "all", "color"), defaults to "all".
  * @returns A string with the computed CSS animation classes.
  */
-export const animationClass = (animate: ANIMATE_SPEED | undefined, type: ANIMATION_PROPERTY_TYPE = "all"): string => {
+export const animationClass = (animate: ANIMATE_SPEED | undefined, type: ANIMATION_PROPERTY_TYPE = "all", elType: 'default' | 'after' | 'before' = "default"): string => {
   if (!animate || animate === "none") return " "
   return  ` theui-animate ease-in-out ${type === "fileButton" ?
-            (fileButtonAnimation?.[animate] || "") : `${animationSpeed?.[animate] || ""} ${animationType?.[type] || ""}`}`
+    (fileButtonAnimation?.[animate] || "") : `${animationSpeed[elType]?.[animate] || ""} ${animationType[elType]?.[type] || ""}`}`
 }
 
 

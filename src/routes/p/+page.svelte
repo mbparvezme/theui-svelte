@@ -1,5 +1,5 @@
 <script>
-  import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, Svg, Tooltip} from "$lib"
+  import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, Svg, Tooltip, Toggle} from "$lib"
 </script>
 
 <Tooltip />
@@ -31,7 +31,12 @@
 <br>
 <br>
 
-<div class="h-[50vh] bg-primary">
+<div class="h-[50vh] bg-primary pl-24">
+
+<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="sm" />
+<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="md" />
+<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="lg" />
+<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="xl" />
 
   <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
   <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
