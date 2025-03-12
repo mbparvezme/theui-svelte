@@ -104,7 +104,7 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
   if (config?.reset) return baseClass
 
   const commonClasses = `${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
-  const groupClasses = "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 text-brand-primary-500 focus-within:ring-brand-primary-500 !ring-offset-primary"
+  const groupClasses = `bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 text-brand-primary-500 focus-within:ring-brand-primary-500 !ring-offset-primary ${animationClass(config?.animate)}`
 
   const typeSpecificClasses: Record<INPUT_CATEGORY, () => string> = {
     text: () => defaultInputClasses(config),

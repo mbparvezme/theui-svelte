@@ -1,5 +1,6 @@
 <script>
-  import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, Svg, Tooltip, Toggle} from "$lib"
+  import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode} from "$lib"
+  import {Svg, Tooltip, Toggle, Checkbox} from "$lib"
 </script>
 
 <Tooltip />
@@ -33,13 +34,15 @@
 
 <div class="h-[50vh] bg-primary pl-24">
 
-<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="sm" />
-<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="md" />
-<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="lg" />
-<Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="xl" />
+  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="sm" />
+  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="md" />
+  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="lg" />
+  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="xl" />
 
   <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
   <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
+  <br>
+  <Checkbox name="aa" label="test" animate="slower" size="xl" rounded="full" />
 
 </div>
 <div class="h-[50vh] bg-secondary"></div>
