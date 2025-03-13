@@ -1,6 +1,7 @@
 <script>
   import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode} from "$lib"
   import {Svg, Tooltip, Toggle, Checkbox} from "$lib"
+	import Button from "$lib/Button/Button.svelte";
 </script>
 
 <Tooltip />
@@ -32,17 +33,21 @@
 <br>
 <br>
 
-<div class="h-[50vh] bg-primary pl-24">
-
-  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="sm" />
-  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="md" />
-  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="lg" />
-  <Toggle name="preferences" type="checkbox" value="ok" label="Enable Notifications" size="xl" />
-
-  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
-  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
+<div class="h-[50vh] bg-primary pl-80 ">
   <br>
-  <Checkbox name="aa" label="test" animate="slower" size="xl" rounded="full" />
+  <br>
+  <br>
+  <br>
+  <br>
+  <Checkbox name="aa" label="Hello" animate="slower" size="lg" rounded="full" reverse />
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+
+  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
+  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
 
 </div>
 <div class="h-[50vh] bg-secondary"></div>

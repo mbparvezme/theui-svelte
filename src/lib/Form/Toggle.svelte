@@ -3,12 +3,12 @@
 	import { animationClass, generateToken, roundedClass } from "$lib/function"
 	import { getContext, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
-	import { getToggleSize } from "./form";
+	import { getToggleSize, groupInputContainerClass } from "./form"
 
   interface Props {
-    id?: string,
-    label?: string|Snippet,
+    label: string|Snippet,
     name: string,
+    id?: string,
     type?: "checkbox" | "radio",
     value?: boolean | string,
     wrapperClasses?: string,
@@ -19,9 +19,9 @@
 
   let {
     label,
-    type = "checkbox",
     name,
     id = generateToken(),
+    type = "checkbox",
     value,
     size = CTX?.size ?? "md",
     animate = CTX?.animate ?? "normal",
@@ -37,9 +37,11 @@
     if(type == "checkbox" && value)
     node.checked = true
   }
+
+  let C:INPUT_CONFIG & {id: string, type: "group"} = {animate, labelClasses, rounded, size, id, type: "group"}
 </script>
 
-<div class={twMerge("flex items-center gap-2", wrapperClasses)}>
+<div class={twMerge("flex items-center gap-2", groupInputContainerClass(C, {props}), wrapperClasses)}>
 	<input {...props} {id} {name} {value} use:setType class="{twMerge(classes, props?.class as string)} cursor-pointer" />
   {#if label}
     <label for={id} class={twMerge("cursor-pointer", labelClasses)}>

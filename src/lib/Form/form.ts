@@ -82,12 +82,26 @@ const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
 export const inputContainerClass = (
   config: INPUT_CONFIG,
   attr: Record<string, unknown> = {},
-  type: 'default' | 'group' = "default"
 ): string => {
-  const customClass = type === "group" ?
-    `cursor-pointer ${attr?.disabled && `cursor-not-allowed opacity-50 select-none ${attr?.readonly && "pointer-events-none"}`}` :
-    `flex flex-col ${config?.variant != "flat" ? "gap-2" : ""}`
+  const customClass = `flex flex-col ${config?.variant != "flat" ? "gap-2" : ""}`
   return `theui-input-container ${config?.reset ? "" : twMerge(customClass, attr.class as string)}`
+}
+
+
+/**
+ * Generates the base class for an input container based on configuration, attributes, and input type.
+ *
+ * @param config - Configuration object (e.g., size, variant, reset state).
+ * @param attr - Additional attributes (e.g., `disabled`, `readonly`, `class`).
+ * @param type - Input type (`default` for text/select, `group` for radio/checkbox). Default is `default`.
+ * @returns A string with the computed class names for the input container.
+ */
+export const groupInputContainerClass = (
+  config: INPUT_CONFIG,
+  attr: Record<string, unknown> = {},
+): string => {
+  if(config?.reset) return "theui-input-container"
+  return `theui-input-container flex gap-2 items-center ${attr?.disabled || attr?.readonly ? "cursor-not-allowed opacity-50 select-none pointer-events-none" : ""}`
 }
 
 
@@ -104,7 +118,7 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
   if (config?.reset) return baseClass
 
   const commonClasses = `${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
-  const groupClasses = `bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 text-brand-primary-500 focus-within:ring-brand-primary-500 !ring-offset-primary ${animationClass(config?.animate)}`
+  const groupClasses = `bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 text-brand-primary-500 focus-within:ring-brand-primary-500 !ring-offset-primary cursor-pointer ${animationClass(config?.animate)}`
 
   const typeSpecificClasses: Record<INPUT_CATEGORY, () => string> = {
     text: () => defaultInputClasses(config),
