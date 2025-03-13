@@ -6,10 +6,10 @@
 	import { twMerge } from "tailwind-merge"
 
   interface Props {
-    label: string|Snippet,
     name: string,
+    children?: Snippet,
     id?: string,
-    value?: boolean | null,
+    value?: unknown,
     wrapperClasses?: string,
     [key: string]: unknown
   }
@@ -17,8 +17,8 @@
   const CTX: any = getContext('FORM') ?? {}
 
   let {
-    label,
     name,
+    children,
     id            = generateToken(),
     value         = null,
     size          = CTX?.size ?? "md",
@@ -37,11 +37,10 @@
   class:flex-row-reverse={props?.reverse}
   class:justify-end={props?.reverse}
 >
-  <input {...props} class={inputClasses(C, props, "checkbox")} {id} {name} type="checkbox" bind:checked={value}>
-  {#if label}
+  <input {...props} class={inputClasses(C, props, "checkbox")} {id} {name} type="checkbox">
+  {#if children}
     <label for={id} class={twMerge("cursor-pointer", labelClasses)}>
-      {#if typeof label == "string"} {@html label} {/if}
-      {#if typeof label == "function"} {@render label()} {/if}
+      {@render children()}
     </label>
   {/if}
 </div>

@@ -1,7 +1,6 @@
 <script>
   import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode} from "$lib"
-  import {Svg, Tooltip, Toggle, Checkbox} from "$lib"
-	import Button from "$lib/Button/Button.svelte";
+  import {Svg, Tooltip, Toggle, Checkbox, Radio} from "$lib"
 </script>
 
 <Tooltip />
@@ -36,18 +35,22 @@
 <div class="h-[50vh] bg-primary pl-80 ">
   <br>
   <br>
+  <Toggle name="toggle1" type="checkbox" checked>Checkbox 1</Toggle>
   <br>
   <br>
   <br>
-  <Checkbox name="aa" label="Hello" animate="slower" size="lg" rounded="full" reverse />
+  <Checkbox name="aa" animate="slower" size="lg" rounded="full" value="2" checked>Hello</Checkbox>
   <br>
   <br>
   <br>
+  <br>
+  <br>
+  <Radio name="Radio" value="1" size="sm" rounded="none" animate="slower">Hello</Radio>
+  <Radio name="Radio" value="2" size="lg" rounded="none" animate="fast">Hello</Radio>
+  <Radio name="Radio" value="3" size="xl" rounded="sm" animate="none">Hello</Radio>
   <br>
   <br>
 
-  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
-  <p>&nbsp;Hello <a data-tooltip="Tooltip">this</a> is tooltip.</p>
 
 </div>
 <div class="h-[50vh] bg-secondary"></div>
