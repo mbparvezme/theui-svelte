@@ -1,11 +1,32 @@
 <script lang="ts">
-	import type { Snippet } from "svelte"
-  import { twMerge } from "tailwind-merge"
+	import { getContext, setContext, type Snippet } from "svelte"
+  import type { INPUT_CONFIG } from "$lib/types"
 
-  let {children, title, ...props} : {children : Snippet, title ?: string, [key: string] : unknown} = $props()
+  interface Props {
+    children : Snippet,
+    title ?: string,
+    [key: string] : unknown
+  }
+
+  const CTX: any = getContext('FORM') ?? {}
+
+  let {
+    children,
+    title,
+    animate = CTX?.animate ?? "normal",
+    variant = CTX?.variant ?? "bordered",
+    floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
+    labelClasses = CTX?.labelClasses ?? "",
+    rounded = CTX?.rounded ?? "md",
+    size = CTX?.size ?? "md",
+    reset = CTX?.reset ?? false,
+    ...props
+  } : Props & Exclude<INPUT_CONFIG, "inputGrow"> = $props()
+
+  setContext('FIELDSET', {animate, size, floatingLabel, labelClasses, rounded, variant, reset})
 </script>
 
-<fieldset class={twMerge("", props.class as string)}>
+<fieldset class={props?.class as string}>
 	<legend class="sr-only">{title}</legend>
   {@render children?.()}
 </fieldset>

@@ -14,18 +14,19 @@
     [key: string]: unknown
   }
  
-  const CTX: any = getContext('FORM') ?? {}
+  const CTX_FORM: any = getContext('FORM') ?? {}
+  const CTX_FSET: any = getContext('FIELDSET') ?? {}
 
   let {
     name,
     children,
     id            = generateToken(),
     value         = null,
-    size          = CTX?.size ?? "md",
-    animate       = CTX?.animate ?? "normal",
-    rounded       = CTX?.rounded ?? "md",
-    reset         = CTX?.reset ?? false,
-    labelClasses  = CTX?.labelClasses ?? "",
+    size          = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
+    animate       = CTX_FSET?.animate ?? CTX_FORM?.animate ?? "normal",
+    rounded       = CTX_FSET?.rounded ?? CTX_FORM?.rounded ?? "md",
+    reset         = CTX_FSET?.reset ?? CTX_FORM?.reset ?? false,
+    labelClasses  = CTX_FSET?.labelClasses ?? CTX_FORM?.labelClasses ?? "",
     wrapperClasses = "",
     ...props
   }: Props & INPUT_CONFIG = $props()

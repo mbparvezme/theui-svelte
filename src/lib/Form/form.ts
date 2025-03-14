@@ -226,7 +226,7 @@ const attributesClasses = (attr: Record<string, unknown> = {}): string =>
  * @returns A string containing file input-specific classes.
  */
 const fileInputClasses = (config: INPUT_CONFIG): string =>
-  `file:mr-4 file:bg-secondary file:cursor-pointer cursor-pointer file:border-0 ${roundedClass(config?.rounded, "all", "fileButton")
+  `file:mr-4 file:bg-secondary file:cursor-pointer cursor-pointer focus:outline-none file:border-0 focus-within:ring-brand-primary-500 focus-within:ring-1 ${roundedClass(config?.rounded, "all", "fileButton")
   }${roundedClass(config?.rounded)}`;
 
 

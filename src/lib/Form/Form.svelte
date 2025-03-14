@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { INPUT_CONFIG } from "$lib/types"
 	import { setContext, type Snippet } from "svelte"
+  import type { INPUT_CONFIG } from "$lib/types"
   import { twMerge } from "tailwind-merge"
 
   interface Props {

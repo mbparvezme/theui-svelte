@@ -15,7 +15,8 @@
     [key: string]: unknown
   }
 
-  const CTX: any = getContext('FORM') ?? {}
+  const CTX_FORM: any = getContext('FORM') ?? {}
+  const CTX_FSET: any = getContext('FIELDSET') ?? {}
 
   let {
     children,
@@ -23,11 +24,13 @@
     id = generateToken(),
     type = "checkbox",
     value,
-    size = CTX?.size ?? "md",
-    animate = CTX?.animate ?? "normal",
+
+    size = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
+    animate = CTX_FSET?.animate ?? CTX_FORM?.animate ?? "normal",
+    labelClasses = CTX_FSET?.labelClasses ?? CTX_FORM?.labelClasses ?? "",
+
     rounded = "full",
     wrapperClasses = "",
-    labelClasses = CTX?.labelClasses ?? "",
     ...props
   }: Props & INPUT_CONFIG = $props()
 

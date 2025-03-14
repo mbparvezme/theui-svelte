@@ -1,6 +1,6 @@
 <script>
   import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode} from "$lib"
-  import {Svg, Tooltip, Toggle, Checkbox, Radio} from "$lib"
+  import {Svg, Tooltip, Toggle, Checkbox, Radio, FileInput, Input} from "$lib"
 </script>
 
 <Tooltip />
@@ -32,7 +32,7 @@
 <br>
 <br>
 
-<div class="h-[50vh] bg-primary pl-80 ">
+<div class="bg-primary px-80 ">
   <br>
   <br>
   <Toggle name="toggle1" type="checkbox" checked>Checkbox 1</Toggle>
@@ -42,6 +42,12 @@
   <Checkbox name="aa" animate="slower" size="lg" rounded="full" value="2" checked>Hello</Checkbox>
   <br>
   <br>
+  <br>
+  <FileInput name="file" label="A" />
+  <br>
+  <br>
+  <br>
+  <Input name="h" label="Hello" />
   <br>
   <br>
   <br>

@@ -3,34 +3,30 @@
 	import { generateToken } from "$lib/function"
 	import { inputContainerClass, inputClasses } from "./form"
   import { getContext, setContext, type Snippet } from "svelte"
-  import { HelperText } from "$lib"
-  
+	import { HelperText, Label } from "$lib";
+
   interface Props {
-    files ?: any,
-    helperText ?: Snippet|string|undefined,
-    id ?: string,
-    label?: Snippet|string|undefined,
-    name : string,
-    // value ?: any,
+    files?: FileList | null,
+    id?: string,
+    label?: Snippet|string,
+    name: string,
+    helperText ?: Snippet | string,
     [key: string] : unknown
   }
 
   const CTX: any = getContext('FORM') ?? {}
 
   let {
-    files = null,
-    helperText = undefined,
+    files,
     id = generateToken(),
-    label = undefined,
+    label,
     name,
-    // value = null,
-
-    // labelClasses = CTX?.labelClasses ?? "",
     animate = CTX?.animate ?? "normal",
     reset = CTX?.reset ?? false,
     rounded = CTX?.rounded ?? "md",
     size = CTX?.size ?? "md",
     variant = CTX?.variant ?? "bordered",
+    helperText,
     ...props
   } : Props & INPUT_CONFIG = $props()
 
@@ -39,9 +35,19 @@
   setContext('FORM', C)
 </script>
 
+{#snippet labelContent()}
+  {#if typeof label == "string"}
+    <Label {id} {label} />
+  {/if}
+  {#if typeof label == "function"}
+    {@render label?.()}
+  {/if}
+{/snippet}
+
 <div class={inputContainerClass(C, props )}>
+  {#if label} {@render labelContent()} {/if}
   <div class="relative flex focus-within">
-    <input {...props} class={inputClasses(C, props, "file")} {id} {name} type="file" bind:files/>
+    <input type="file" {...props} class={inputClasses(C, props, "file")} {id} {name} bind:files />
   </div>
 
   {#if helperText}
