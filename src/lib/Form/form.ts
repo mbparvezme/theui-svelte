@@ -82,8 +82,9 @@ const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
 export const inputContainerClass = (
   config: INPUT_CONFIG,
   attr: Record<string, unknown> = {},
+  isFile: boolean = false
 ): string => {
-  const customClass = `flex flex-col ${config?.variant != "flat" ? "gap-2" : ""}`
+  const customClass = `flex flex-col ${config?.variant != "flat" || isFile ? "gap-2" : ""}`
   return `theui-input-container ${config?.reset ? "" : twMerge(customClass, attr.class as string)}`
 }
 

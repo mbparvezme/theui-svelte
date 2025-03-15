@@ -21,16 +21,15 @@
     id = generateToken(),
     label,
     name,
-    animate = CTX?.animate ?? "normal",
-    reset = CTX?.reset ?? false,
     rounded = CTX?.rounded ?? "md",
     size = CTX?.size ?? "md",
     variant = CTX?.variant ?? "bordered",
     helperText,
+    reset = CTX?.reset ?? false,
     ...props
   } : Props & INPUT_CONFIG = $props()
 
-  let C:INPUT_CONFIG & {id: string} = {animate, rounded, size, variant, reset, id}
+  let C:INPUT_CONFIG & {id: string} = {rounded, size, variant, reset, id}
 
   setContext('FORM', C)
 </script>

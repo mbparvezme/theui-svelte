@@ -32,7 +32,7 @@
 <br>
 <br>
 
-<div class="bg-primary px-80 ">
+<div class="bg-primary px-60 ">
   <br>
   <br>
   <Toggle name="toggle1" type="checkbox" checked>Checkbox 1</Toggle>
@@ -43,11 +43,20 @@
   <br>
   <br>
   <br>
-  <FileInput name="file" label="A" />
+  <FileInput name="file" label="Profile Picture" rounded="full" size="sm" />
+  <FileInput name="file" label="Profile Picture" rounded="full" size="md" />
+  <FileInput name="file" label="Profile Picture" rounded="full" size="lg" />
+  <FileInput name="file" label="Profile Picture" rounded="full" size="xl" />
   <br>
   <br>
   <br>
-  <Input name="h" label="Hello" />
+  <br>
+  <FileInput name="file" label="Profile Picture" rounded="full" size="sm" variant="flat" />
+  <FileInput name="file" label="Profile Picture" rounded="full" size="md" />
+  <br>
+  <br>
+  <br>
+  <Input name="h" label="Hello" variant="flat" />
   <br>
   <br>
   <br>
