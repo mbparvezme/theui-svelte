@@ -3,16 +3,11 @@
 	import { labelClasses } from "./form"
 
   const CTX: any = getContext('FORM') ?? {}
-  let {label, id = "", ...props} : {label: Snippet|string, id: string, [key : string]: unknown} = $props()
+  let {children, id, ...props} : {children: Snippet, id?: string, [key : string]: unknown} = $props()
 </script>
 
-{#if label}
+{#if children}
 <label class={labelClasses(CTX, props)} for={id}>
-  {#if typeof label == "string"}
-    {@html label}
-  {/if}
-  {#if typeof label == "function"}
-    {@render label()}
-  {/if}
+  {@render children()}
 </label>
 {/if}

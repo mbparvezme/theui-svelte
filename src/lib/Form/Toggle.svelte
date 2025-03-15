@@ -4,6 +4,7 @@
 	import { getContext, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
 	import { getToggleSize, groupInputContainerClass } from "./form"
+	import { Label } from "$lib";
 
   interface Props {
     children: Snippet,
@@ -43,8 +44,8 @@
 <div class={twMerge("flex items-center gap-2", groupInputContainerClass(C, {props}), wrapperClasses)}>
 	<input {...props} {id} {name} {value} use:setType class="{twMerge(classes, props?.class as string)} cursor-pointer" />
   {#if children}
-    <label for={id} class={twMerge("cursor-pointer", labelClasses)}>
+    <Label for={id} class="cursor-pointer font-bold {labelClasses??""}">
       {@render children()}
-    </label>
+    </Label>
   {/if}
 </div>

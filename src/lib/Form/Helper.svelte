@@ -5,7 +5,7 @@
 </script>
 
 {#if children}
-<p {...props} class={twMerge("text-sm text-gray-500 dark:text-gray-600", props?.class as string)}>
+<p {...props} class={twMerge("text-sm font-normal text-gray-600 dark:text-gray-400", props?.class as string)}>
   {@render children()}
 </p>
 {/if}

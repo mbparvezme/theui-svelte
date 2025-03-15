@@ -81,11 +81,10 @@ const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
  */
 export const inputContainerClass = (
   config: INPUT_CONFIG,
-  attr: Record<string, unknown> = {},
   isFile: boolean = false
 ): string => {
   const customClass = `flex flex-col ${config?.variant != "flat" || isFile ? "gap-2" : ""}`
-  return `theui-input-container ${config?.reset ? "" : twMerge(customClass, attr.class as string)}`
+  return `theui-input-container ${config?.reset ? "" : customClass}`
 }
 
 
@@ -141,7 +140,7 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
  * @returns A string containing the computed classes for the label element.
  */
 export const labelClasses = (config: INPUT_CONFIG & { type: INPUT_CATEGORY }, attr: Record<string, unknown> = {}): string => {
-  const baseClasses = `font-medium inline-flex text-sm`
+  const baseClasses = `font-medium flex flex-col text-base text-gray-700 dark:text-gray-300`
   const floatingLabelClasses = config?.floatingLabel
     ? `peer-placeholder-shown:text-base transform cursor-text absolute top-0 peer-placeholder-shown:top-1/2 peer-focus:top-0 -translate-y-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:-translate-y-1/2 peer-placeholder-shown:text-gray-500 peer-focus:text-xs text-xs peer-focus:text-default ${animationClass(config?.animate)}
       ${config?.variant !== "flat" ? labelSizeClass[config?.size as INPUT_SIZE] : "start-0"}
@@ -181,11 +180,12 @@ const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): 
  */
 const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string => {
   const themes: Record<string, string> = {
-    bordered: `border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500 ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`,
-    // filled: "border-0 focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500 bg-gray-100 dark:bg-gray-900",
+    bordered: `border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500
+              ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`,
     flat: type !== "file"
-      ? `border-0 border-b-2 border-gray-300 focus:border-brand-primary-500 dark:border-gray-700 bg-transparent focus:ring-0 ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`
-      : "border-0 [type='file']:focus:outline-none ring-0 [type='file']:focus:outline-none focus:ring-0",
+      ? `border-0 border-b-2 border-gray-300 focus:border-brand-primary-500 dark:border-gray-700 bg-transparent focus:ring-0
+        ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`
+      : "[type='file']:focus:outline-none focus:ring-0 focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500"
   }
 
   const themeClasses = themes[config.variant ?? "bordered"]
@@ -227,9 +227,8 @@ const attributesClasses = (attr: Record<string, unknown> = {}): string =>
  * @returns A string containing file input-specific classes.
  */
 const fileInputClasses = (config: INPUT_CONFIG): string =>
-  `file:mr-4 file:bg-secondary file:cursor-pointer cursor-pointer focus:outline-none file:border-0 focus-within:ring-brand-primary-500 focus-within:ring-1 ${roundedClass(config?.rounded, "all", "fileButton")
+  `file:mr-4 file:bg-secondary file:cursor-pointer file:text-gray-600 dark:file:text-gray-400 cursor-pointer focus:outline-none file:border-0 focus-within:ring-brand-primary-500 focus-within:ring-1 ${roundedClass(config?.rounded, "all", "fileButton")
   }${roundedClass(config?.rounded)}`;
-
 
 
 export const getToggleSize = (size: INPUT_SIZE): string => toggleSizes[size]

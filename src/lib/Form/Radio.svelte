@@ -3,7 +3,8 @@
   import { getContext, type Snippet } from "svelte"
 	import { generateToken } from "$lib/function"
 	import { inputClasses, groupInputContainerClass } from "./form"
-	import { twMerge } from "tailwind-merge";
+	import { twMerge } from "tailwind-merge"
+  import { Label } from "$lib"
 
   interface Props {
     name: string,
@@ -39,8 +40,8 @@
 >
   <input {...props} class={inputClasses(C, props, "radio")} {id} {name} type="radio">
   {#if children}
-    <label for={id} class={twMerge("cursor-pointer", labelClasses)}>
+    <Label for={id} class="cursor-pointer font-bold {labelClasses??""}">
       {@render children()}
-    </label>
+    </Label>
   {/if}
 </div>
