@@ -33,7 +33,7 @@
   let setType: any = (node: HTMLInputElement) => node.type = type
   
   const id = generateToken()
-  let C:INPUT_CONFIG & {id: string, type: "group"} = {animate, labelClasses, rounded, size, id, type: "group"}
+  let C:INPUT_CONFIG & {id: string, type: "group"} = {animate, labelClasses, rounded, size, type: "group"}
 </script>
 
 <div class={twMerge("flex items-center gap-2", groupInputContainerClass(C, {props}), wrapperClasses)}>

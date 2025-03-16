@@ -9,7 +9,7 @@
   interface Props {
     children?: Snippet,
     files?: FileList,
-    helperText ?: Snippet | string,
+    helperText?: Snippet | string,
     labelClasses?: string,
     wrapperClasses?: string,
     [key: string] : unknown
@@ -32,7 +32,7 @@
   } : Props & INPUT_CONFIG = $props()
   
   const id = generateToken()
-  let C:INPUT_CONFIG & {id: string} = {rounded, size, variant, reset, id}
+  let C:INPUT_CONFIG = {rounded, size, variant, reset}
 
   setContext('FORM', C)
 </script>

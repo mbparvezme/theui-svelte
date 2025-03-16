@@ -1,6 +1,6 @@
 <script>
   import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, HelperText} from "$lib"
-  import {Svg, Tooltip, Toggle, Checkbox, Radio, Form, FileInput, Input} from "$lib"
+  import {Svg, Tooltip, Input } from "$lib"
 </script>
 
 <Tooltip />
@@ -35,36 +35,6 @@
 <div class="bg-primary px-60 ">
   <br>
   <br>
-  <Toggle name="toggle1" type="checkbox" checked wrapperClasses=" justify-between flex-row-reverse">
-    Toggle
-    <HelperText>Hello! I am helper text</HelperText>
-  </Toggle>
-  <br>
-  <br>
-  <br>
-  <Checkbox name="aa" animate="slower" size="lg" rounded="full" value="2" checked>
-    Hello
-    <HelperText>Hello! I am helper text</HelperText>
-  </Checkbox>
-  <br>
-  <br>
-  <br>
-  <Radio name="aa" animate="slower" size="lg" rounded="full" value="2">
-    Hello
-    <HelperText>Hello! I am helper text</HelperText>
-  </Radio>
-  <br>
-  <br>
-  <br>
-  <Form>
-    <FileInput name="file" rounded="full" size="sm">Profile Picture</FileInput>
-    <FileInput name="file" rounded="full" size="md">Profile Picture</FileInput>
-    <FileInput name="file" rounded="full" size="lg">Profile Picture</FileInput>
-    <FileInput name="file" rounded="full" size="xl">Profile Picture</FileInput>
-    <FileInput name="file" rounded="full" size="sm" variant="flat">Profile Picture</FileInput>
-    <br>
-    <FileInput name="file" rounded="full" size="md" helperText="Ths text is for help!">Profile Picture</FileInput>
-  </Form>
   <br>
   <br>
   <br>
@@ -72,13 +42,18 @@
   <br>
   <br>
   <br>
-  <Input name="h" label="Hello" variant="flat" />
   <br>
   <br>
   <br>
-  <Radio name="Radio" value="1" size="sm" rounded="none" animate="slower">Hello</Radio>
-  <Radio name="Radio" value="2" size="lg" rounded="none" animate="fast">Hello</Radio>
-  <Radio name="Radio" value="3" size="xl" rounded="sm" animate="none">Hello</Radio>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
   <br>
   <br>
 
