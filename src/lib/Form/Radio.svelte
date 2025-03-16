@@ -7,9 +7,7 @@
   import { Label } from "$lib"
 
   interface Props {
-    name: string,
     children?: Snippet,
-    id?: string,
     value?: unknown,
     wrapperClasses?: string,
     [key: string]: unknown
@@ -19,9 +17,7 @@
   const CTX_FSET: any = getContext('FIELDSET') ?? {}
 
   let {
-    name,
     children,
-    id = generateToken(),
     value = null,
     size = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
     animate = CTX_FSET?.animate ?? CTX_FORM?.animate ?? "normal",
@@ -30,7 +26,8 @@
     wrapperClasses = "",
     ...props
   }: Props & INPUT_CONFIG = $props()
-
+  
+  const id = generateToken()
   let C:INPUT_CONFIG & {id: string, type: "group"} = {animate, labelClasses, size, reset, id, type: "group"}
 </script>
 
@@ -38,9 +35,9 @@
   class:flex-row-reverse={props?.reverse}
   class:justify-end={props?.reverse}
 >
-  <input {...props} class={inputClasses(C, props, "radio")} {id} {name} type="radio">
+  <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio">
   {#if children}
-    <Label for={id} class="cursor-pointer font-bold {labelClasses??""}">
+    <Label for={props?.id ?? id} class="cursor-pointer font-bold {labelClasses??""}">
       {@render children()}
     </Label>
   {/if}

@@ -3,11 +3,11 @@
 	import { labelClasses } from "./form"
 
   const CTX: any = getContext('FORM') ?? {}
-  let {children, id, ...props} : {children: Snippet, id?: string, [key : string]: unknown} = $props()
+  let {children, ...props} : {children: Snippet, [key : string]: unknown} = $props()
 </script>
 
 {#if children}
-<label class={labelClasses(CTX, props)} for={id}>
+<label {...props} class={labelClasses(CTX, props)}>
   {@render children()}
 </label>
 {/if}
