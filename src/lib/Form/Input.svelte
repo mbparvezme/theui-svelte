@@ -4,7 +4,7 @@
 	import { inputContainerClass, inputClasses } from "./form"
   import { getContext, setContext, type Snippet } from "svelte"
   import { HelperText, Label } from "$lib"
-	import { twMerge } from "tailwind-merge";
+	import { twMerge } from "tailwind-merge"
 
   interface Props {
     children?: Snippet,
@@ -35,7 +35,7 @@
   } : Props & INPUT_CONFIG = $props()
 
   const id = generateToken()
-  let C:INPUT_CONFIG & {type: "input"} = {animate, floatingLabel, labelClasses, rounded, size, variant, reset, type: "input"}
+  let C:INPUT_CONFIG & {type: "input", inputType: INPUT_TYPE} = {animate, floatingLabel, labelClasses, rounded, size, variant, reset, type: "input", inputType: type}
   setContext('FORM', C)
 
   let setType: any = (node: HTMLInputElement) => node.type = type
@@ -47,7 +47,7 @@
   {/if}
   <div class="relative flex focus-within">
     {#if type == "textarea"}
-      <textarea {id} {...props} class={inputClasses(C, props)} placeholder={(props?.placeholder ?? " ") as string} rows=1 bind:value></textarea>
+      <textarea {id} rows=3 {...props} class={inputClasses(C, props)} placeholder={(props?.placeholder ?? " ") as string} bind:value></textarea>
     {:else}
       <input {...props} class={inputClasses(C, props)} {id} placeholder={props?.placeholder ?? " "} bind:value use:setType/>
     {/if}

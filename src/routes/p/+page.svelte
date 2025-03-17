@@ -38,6 +38,18 @@
   <br>
   <br>
   <br>
+<div class="flex flex-col gap-2 w-full">
+  <Input class="w-full" name="username" type="text" placeholder="Enter your username">Username</Input>
+  <Input class="w-full" name="email" type="email" placeholder="Enter your email">Email</Input>
+  <Input class="w-full" name="password" type="password" placeholder="Enter your password">Password</Input>
+  <Input class="w-full" name="dob" type="date">Date of birth</Input>
+</div>
+<div class="flex flex-col gap-2 w-full">
+  <Input class="w-full" name="phone" type="tel" placeholder="Enter your phone number">Telephone</Input>
+  <Input class="w-full" name="url" type="url" placeholder="Enter your profile URL">URL</Input>
+  <Input class="w-full" name="dob" type="number">Number</Input>
+  <Input class="w-full" name="dob" type="textarea">Number</Input>
+</div>
   <br>
   <br>
   <br>
