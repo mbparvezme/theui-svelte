@@ -22,7 +22,7 @@
     children,
     type = "text",
     variant = CTX?.variant ?? "bordered",
-    floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
+    floatingLabel = CTX?.floatingLabel ?? variant == "flat" ?? false,
     value,
     size = CTX?.size ?? "md",
     helperText,
