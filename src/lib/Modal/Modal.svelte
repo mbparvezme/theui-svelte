@@ -11,7 +11,7 @@
     header?: Snippet,
     footer?: Snippet,
     id?: string,
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     animation?: 'slide-down' | 'slide-up' | 'fade' | 'zoom-in' | 'zoom-out',
     backdrop?: boolean|string,
     closeButton?: boolean,
@@ -34,7 +34,7 @@
     header,
     footer,
     id = generateToken() + "Modal",
-    animate = "fast",
+    animationSpeed = "fast",
     animation = "fade",
     backdrop = true,
     closeButton = true,
@@ -76,8 +76,8 @@
   }
 
   let positionClass = {top : "modal-top mb-auto", center : "modal-center my-auto", bottom : "modal-bottom mt-auto"}
-  let modalCls = $derived(() => `theui-modal z-50 flex fixed inset-0 visible opacity-100 ${animationClass(animate)}`)
-  let modalBodyCls = $derived(() => `modal-content flex flex-col p-8 relative mx-auto bg-white dark:bg-secondary ${sizes[size]} ${positionClass[position]} ${animationClass(animate)} ${((animate && animation) ? animation : "")}`)
+  let modalCls = $derived(() => `theui-modal z-50 flex fixed inset-0 visible opacity-100 ${animationClass(animationSpeed)}`)
+  let modalBodyCls = $derived(() => `modal-content flex flex-col p-8 relative mx-auto bg-white dark:bg-secondary ${sizes[size]} ${positionClass[position]} ${animationClass(animationSpeed)} ${((animationSpeed && animation) ? animation : "")}`)
 </script>
 
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
@@ -106,7 +106,7 @@
 {/if}
 
 {#if children}
-  <div {id} class={twMerge(modalCls(), modalOuterClasses)} class:open={open} class:animate={animate}>
+  <div {id} class={twMerge(modalCls(), modalOuterClasses)} class:open={open} class:animate={animationSpeed}>
     {#if backdrop}
       <div class={backdropClasses(backdrop)} onclick={()=>toggle(false)} aria-hidden="true"></div>
     {/if}

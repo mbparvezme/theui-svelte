@@ -11,7 +11,7 @@
 </script>
 
 {#if CTX.TABS.selectedPanel === id}
-	{#if CTX.animate}
+	{#if CTX.animationSpeed}
 		<div {id} {...props} class="theui-tab-panel {twMerge(CTX.tabPanelClasses, props?.class as string)}" in:fade={{duration:150}} role="tabpanel" aria-labelledby={CTX.TABS.selectedTab}>
       {@render children?.()}
     </div>

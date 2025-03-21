@@ -11,7 +11,7 @@
 
   let linkCls = () => {
     let baseClasses = active ? config.activeLinkClasses : config.linkClasses
-    return `nav-link flex items-center ${twMerge(baseClasses, (config?.isDropdown ? config.dropdownLinkClasses : ""),  props.class as string)}${roundedClass(config?.rounded)}${animationClass(config?.animate)}`
+    return `nav-link flex items-center ${twMerge(baseClasses, (config?.isDropdown ? config.dropdownLinkClasses : ""),  props.class as string)}${roundedClass(config?.rounded)}${animationClass(config?.animationSpeed)}`
 
   }
 

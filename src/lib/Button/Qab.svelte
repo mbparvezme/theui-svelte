@@ -9,7 +9,7 @@
 
   interface Props {
     children?: Snippet,
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     icon?: Snippet,
     ariaLabel ?: string,
     href?: string,
@@ -28,7 +28,7 @@
   let {
     children,
     icon,
-    animate = "normal",
+    animationSpeed = "normal",
     align = "end",
     size = "md",
     rounded = "full",
@@ -59,12 +59,12 @@
 
   let animObj = {
     horizontal: {
-      end: {x: 16, duration: animSpeed[animate]},
-      start: {x: -16, duration: animSpeed[animate]},
+      end: {x: 16, duration: animSpeed[animationSpeed]},
+      start: {x: -16, duration: animSpeed[animationSpeed]},
     },
     vertical: {
-      end: {y: 16, duration: animSpeed[animate]},
-      start: {y: 16, duration: animSpeed[animate]},
+      end: {y: 16, duration: animSpeed[animationSpeed]},
+      start: {y: 16, duration: animSpeed[animationSpeed]},
     }
   }
 
@@ -107,7 +107,7 @@
   let qabSize  = {sm: "w-12 h-12", md: "w-14 h-14", lg: "w-16 h-16", xl: "w-20 h-20"}
   
   let propClass = props?.class as string
-  let mainButtonClasses = `theui-qab-trigger ${twMerge(`static flex items-center justify-center shadow-2xl ${qabSize[size]}${roundedClass(rounded)}${animationClass(animate)}`, propClass)}`
+  let mainButtonClasses = `theui-qab-trigger ${twMerge(`static flex items-center justify-center shadow-2xl ${qabSize[size]}${roundedClass(rounded)}${animationClass(animationSpeed)}`, propClass)}`
 
 	let handleClick = $derived(() => {
     if(triggerEvent == "click"){

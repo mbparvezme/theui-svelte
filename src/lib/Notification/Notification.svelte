@@ -3,7 +3,7 @@
   import { ST_NOTIFICATIONS, removeNotification } from "$lib/state.svelte"
   import { notificationClasses, type NOTIFICATION_POSITION } from "$lib/function"
 
-  let {position = "top-end", animate = true} : {position?: NOTIFICATION_POSITION, animate?: boolean} = $props()
+  let {position = "top-end", animationSpeed = true} : {position?: NOTIFICATION_POSITION, animationSpeed?: boolean} = $props()
 </script>
 
 {#if ST_NOTIFICATIONS?.value?.length}
@@ -11,7 +11,7 @@
   {#each ST_NOTIFICATIONS.value as notification}
   <li class="notification">
     <!-- svelte-ignore a11y_click_events_have_key_events -->
-    {#if animate}
+    {#if animationSpeed}
       <!-- svelte-ignore a11y_click_events_have_key_events -->
       <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
       <div class={notificationClasses(notification.CONFIG, notification.type)} role="alert" aria-live="assertive" aria-atomic="true" in:fly={{ y: 16 }} out:fade onclick={() => {notification.CONFIG.removeOnClick===false ? false : removeNotification(notification.CONFIG.id)}}>

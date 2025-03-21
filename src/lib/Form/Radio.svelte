@@ -20,7 +20,7 @@
     children,
     value = null,
     size = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
-    animate = CTX_FSET?.animate ?? CTX_FORM?.animate ?? "normal",
+    animationSpeed = CTX_FSET?.animationSpeed ?? CTX_FORM?.animationSpeed ?? "normal",
     reset = CTX_FSET?.reset ?? CTX_FORM?.reset ?? false,
     labelClasses  = CTX_FSET?.labelClasses ?? CTX_FORM?.labelClasses ?? "",
     wrapperClasses = "",
@@ -28,7 +28,7 @@
   }: Props & INPUT_CONFIG = $props()
   
   const id = generateToken()
-  let C:INPUT_CONFIG & {id: string, type: "group"} = {animate, labelClasses, size, reset, type: "group"}
+  let C:INPUT_CONFIG & {id: string, type: "group"} = {animationSpeed, labelClasses, size, reset, type: "group"}
 </script>
 
 <div class={twMerge(groupInputContainerClass(C, {props}), wrapperClasses)}

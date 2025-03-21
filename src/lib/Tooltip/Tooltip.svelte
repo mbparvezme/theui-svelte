@@ -11,7 +11,7 @@
   interface Props{
     position ?: Placement,
     triggerEvent ?: 'hover' | 'click',
-    animate ?: ANIMATE_SPEED,
+    animationSpeed ?: ANIMATE_SPEED,
     rounded ?: ROUNDED,
     gap?: number,
     [key: string] : unknown
@@ -20,13 +20,13 @@
   let{
     position = "top",
     triggerEvent = "hover",
-    animate = "normal",
+    animationSpeed = "normal",
     rounded = "lg",
     gap = 12,
     ...props
   } : Props = $props()
 
-  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
+  const tooltipAnimationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
   let trigger:      HTMLElement     | null = null
   let COMPONENT:    HTMLDivElement  | null = $state(null)
   let ARROW:        HTMLSpanElement | null = $state(null)
@@ -82,7 +82,7 @@
     if (!target) return
 
     trigger = target
-    animObj = {duration: animationSpeed[trigger?.getAttribute("data-tooltip-animate") as ANIMATE_SPEED || animate] as any}
+    animObj = {duration: tooltipAnimationSpeed[trigger?.getAttribute("data-tooltip-animationSpeed") as ANIMATE_SPEED || animationSpeed] as any}
     content = trigger.getAttribute("data-tooltip") || ""
     triggerStyle = trigger.getAttribute("data-tooltip-style") || ""
 

@@ -9,7 +9,7 @@
     children ?: Snippet,
     id ?: string,
     label ?: string | Snippet,
-    animate ?: ANIMATE_SPEED,
+    animationSpeed ?: ANIMATE_SPEED,
     backdrop ?: boolean|string,
     position ?: 'top' | 'end' | 'bottom' | 'start',
     staticBackdrop ?: boolean,
@@ -22,7 +22,7 @@
     children,
     id = generateToken(),
     label,
-    animate = "fast",
+    animationSpeed = "fast",
     backdrop = true,
     position = "start",
     staticBackdrop = false,
@@ -72,7 +72,7 @@
     return sizes[props?.fullscreen ? "fullscreen" : position] || sizes["start"]
   }
 
-  let getClass = twMerge(`drawer-body fixed bg-white ${sizeCls()} dark:bg-secondary${animationClass(animate)}`, (props?.class ?? "") as string)
+  let getClass = twMerge(`drawer-body fixed bg-white ${sizeCls()} dark:bg-secondary${animationClass(animationSpeed)}`, (props?.class ?? "") as string)
 </script>
 
 <svelte:body onkeydown={(e)=>handleKeyboardEsc(e)}></svelte:body>
@@ -88,7 +88,7 @@
 {/if}
 
 {#if children}
-  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animate)} {positionCls()}" role="complementary" class:animate={animate}>
+  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animationSpeed)} {positionCls()}" role="complementary" class:animate={animationSpeed}>
 
     {#if backdrop && !props?.fullscreen}
       <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle(id)}></div>

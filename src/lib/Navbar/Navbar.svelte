@@ -16,7 +16,7 @@
     mobileNavOn?: 'sm' | 'md' | 'lg' | 'xl',
 
     segment?: string,
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
     dropdownEvent?: 'hover' | 'click',
 
@@ -33,7 +33,7 @@
     children,
     segment = "/",
     activeLinkClasses = "",
-    animate = "fast",
+    animationSpeed = "fast",
     height = "md",
     linkClasses = "",
     dropdownLinkClasses = "",
@@ -58,22 +58,22 @@
 
   let config: any = {
     activeLinkClasses : twMerge("p-3 text-default text-sm", activeLinkClasses),
-    animate,
+    animationSpeed,
     height,
     navInnerClasses,
     navCollapseClasses,
-    linkClasses: twMerge("p-3 text-gray-700 dark:text-gray-300 hover:text-default text-sm", roundedClass(rounded), animationClass(animate), linkClasses),
-    dropdownLinkClasses: twMerge("hover:bg-tertiary h-auto px-4 py-2", animationClass(animate), roundedClass(rounded), dropdownLinkClasses),
+    linkClasses: twMerge("p-3 text-gray-700 dark:text-gray-300 hover:text-default text-sm", roundedClass(rounded), animationClass(animationSpeed), linkClasses),
+    dropdownLinkClasses: twMerge("hover:bg-tertiary h-auto px-4 py-2", animationClass(animationSpeed), roundedClass(rounded), dropdownLinkClasses),
     mobileNavOn,
     rounded,
     dropdownEvent,
   }
 
-  const navCoreClass =  twMerge(`bg-secondary left-0 top-0 w-full flex items-center justify-center ${paddingHeightCls[height as "sm" | "md" | "lg" | "xl"] ?? height as string}${animationClass(animate)}`, props?.class as string)
+  const navCoreClass =  twMerge(`bg-secondary left-0 top-0 w-full flex items-center justify-center ${paddingHeightCls[height as "sm" | "md" | "lg" | "xl"] ?? height as string}${animationClass(animationSpeed)}`, props?.class as string)
   let navClass = $state(navCoreClass)
   let scrollClass = twMerge(`bg-secondary shadow-black/10 ${paddingHeightOnShrinkCls[height as heightTypes]}`, scrollClasses)
   let navInnerClass = $derived(`nav-inner w-full max-w-[var(--max-width)] flex grow gap-x-8 items-center justify-between relative
-                      ${animationClass(animate)} ${(miniNav||(hideNav===false && scrollPos!==0) ? " px-4" : " px-8")}`)
+                      ${animationClass(animationSpeed)} ${(miniNav||(hideNav===false && scrollPos!==0) ? " px-4" : " px-8")}`)
 
   setContext('NAV', {config, id})
 

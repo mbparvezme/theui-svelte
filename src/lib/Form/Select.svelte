@@ -26,7 +26,7 @@
     name = "",
     type = "text",
     value = "",
-    animate = CTX?.animate ?? "normal",
+    animationSpeed = CTX?.animationSpeed ?? "normal",
     floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
     labelClasses = CTX?.labelClasses ?? "",
     rounded = CTX?.rounded ?? "md",
@@ -36,7 +36,7 @@
     ...props
   } : Props & INPUT_CONFIG = $props()
 
-  let C:INPUT_CONFIG & {id: string, type: "input"} = {animate, floatingLabel, labelClasses, rounded, size, variant, reset, id, type: "input"}
+  let C:INPUT_CONFIG & {id: string, type: "input"} = {animationSpeed, floatingLabel, labelClasses, rounded, size, variant, reset, id, type: "input"}
   setContext('FORM', C)
 </script>
 

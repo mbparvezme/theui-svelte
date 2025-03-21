@@ -103,7 +103,7 @@
   let dropdownClasses = `nav-dropdown flex-col py-2 bg-secondary overflow-y-auto
   ${width != "full" ? (align=="end" ? "end-0" : "start-0") : ""}
   ${config?.responsive ? resCls() : nonResCls} ${dropdownTopPositionClasses[config.height as MOBILE_NAV_ON]}
-  ${roundedClass(config?.rounded, "bottom")}${animationClass(config.animate)}`
+  ${roundedClass(config?.rounded, "bottom")}${animationClass(config.animationSpeed)}`
 
   let toggle = () => {
     if(dropdownEvent !== "hover"){

@@ -11,7 +11,7 @@
     previousButton ?: string,
     nextButton ?: string,
     rounded ?: ROUNDED,
-    animate ?: ANIMATE_SPEED,
+    animationSpeed ?: ANIMATE_SPEED,
     activeButtonClasses ?: string,
     buttonClasses ?: string,
     onPreviousClick ?: Function,
@@ -26,7 +26,7 @@
     previousButton = "&larr; Prev",
     nextButton = "Next &rarr;",
     rounded = "md",
-    animate = "normal",
+    animationSpeed = "normal",
     activeButtonClasses = "",
     buttonClasses = "",
     onPreviousClick,
@@ -40,7 +40,7 @@
 </script>
 
 <div class={twMerge("theui-pagination flex", props?.class as string)} class:justify-center={align=="center"} class:justify-end={align=="end"}>
-  <ButtonGroup label="Pagination" {size} {rounded} variant={props?.flat ? "flat" : "bordered"} outline={true} {animate} class={props?.flat ? "gap-1" : ""}>
+  <ButtonGroup label="Pagination" {size} {rounded} variant={props?.flat ? "flat" : "bordered"} outline={true} {animationSpeed} class={props?.flat ? "gap-1" : ""}>
     {#if !props?.hidePreviousNext && !props?.hidePrevious}
       <Button class={getNumLinkClass()} onclick={onPreviousClick} ariaLabel="Pagination link: previous">
         {@html previousButton}

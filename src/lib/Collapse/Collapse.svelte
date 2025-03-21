@@ -7,7 +7,7 @@
     children: Snippet,
     title ?: Snippet,
     content ?: string,
-    animation ?: ANIMATE_SPEED,
+    animationSpeed ?: ANIMATE_SPEED,
     id ?: string,
     ariaLabel ?: string,
     isOpen ?: boolean
@@ -16,14 +16,13 @@
   let {
     children,
     title,
-    content,
-    animation = "fast",
+    animationSpeed = "fast",
     id = generateToken(),
     ariaLabel = "",
     isOpen = false,
   } : Props = $props();
 
-  let classes = animationClass(animation)
+  let classes = animationClass(animationSpeed)
   let toggleCollapse = (id: string): void => {}
 
   onMount(() => {
@@ -31,10 +30,10 @@
       let element = document.getElementById(id)!;
       if(element?.classList.contains('collapse-open')){
         isOpen = false;
-        if(animation) element.style.height = "0";
+        if(animationSpeed) element.style.height = "0";
       }else{
         isOpen = true;
-        if(animation) element.style.height = element.scrollHeight + "px";
+        if(animationSpeed) element.style.height = element.scrollHeight + "px";
       }
     }
   })

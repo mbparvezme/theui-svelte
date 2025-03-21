@@ -8,7 +8,7 @@
 
   interface Props {
 		children?: Snippet,
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     href?: string,
 		variant?: 'bordered' | 'flat',
     size?: 'sm' | 'md' | 'lg' | 'xl',
@@ -18,7 +18,7 @@
   let {
     children,
     href,
-    animate = CTX?.animate ?? "normal",
+    animationSpeed = CTX?.animationSpeed ?? "normal",
     variant = CTX?.variant ?? "bordered",
     size = CTX?.size ?? "md",
     ...props
@@ -31,7 +31,7 @@
     "sm" : "py-2 px-3"
   }
 
-  let itemClasses = `${sizeClasses[size]} cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${animationClass(animate)}`
+  let itemClasses = `${sizeClasses[size]} cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${animationClass(animationSpeed)}`
 </script>
 
 {#if children}

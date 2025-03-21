@@ -27,7 +27,7 @@
     size = CTX?.size ?? "md",
     helperText,
     rounded = CTX?.rounded ?? "md",
-    animate = CTX?.animate ?? "normal",
+    animationSpeed = CTX?.animationSpeed ?? "normal",
     labelClasses = CTX?.labelClasses ?? "",
     wrapperClasses = "",
     reset = CTX?.reset ?? false,
@@ -35,7 +35,7 @@
   } : Props & INPUT_CONFIG = $props()
 
   const id = generateToken()
-  let C:INPUT_CONFIG & {type: "input", inputType: INPUT_TYPE} = {animate, floatingLabel, labelClasses, rounded, size, variant, reset, type: "input", inputType: type}
+  let C:INPUT_CONFIG & {type: "input", inputType: INPUT_TYPE} = {animationSpeed, floatingLabel, labelClasses, rounded, size, variant, reset, type: "input", inputType: type}
   setContext('FORM', C)
 
   let setType: any = (node: HTMLInputElement) => node.type = type

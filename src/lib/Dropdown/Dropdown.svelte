@@ -10,7 +10,7 @@
   interface Props {
     children?: Snippet,
     align?: 'start' | 'end'
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     animation?: DROPDOWN_ANIMATION_TYPE,
     backdrop?: boolean | string,
     closeOnBlur?: boolean,
@@ -32,7 +32,7 @@
   let{
     children,
     align = "end",
-    animate = "fast",
+    animationSpeed = "fast",
     animation = "slide-up",
     backdrop = false,
     closeOnBlur = true,
@@ -101,10 +101,10 @@
 		}
 	})
 
-	const getContainerClasses = () => twMerge(`theui-dropdown relative inline-block ${animationClass(animate)}`, containerClasses)
+	const getContainerClasses = () => twMerge(`theui-dropdown relative inline-block ${animationClass(animationSpeed)}`, containerClasses)
 
   const getDropdownClasses = () => {
-    return twMerge(`${animation} dropdown-content absolute list-none z-[11] bg-white dark:bg-secondary text-base shadow-lg py-1 text-nowrap ${sizeClasses()} ${align === "end" ? "start-auto end-0" : ""}${animationClass(animate)}${roundedClass(rounded)}`, dropdownClasses)
+    return twMerge(`${animation} dropdown-content absolute list-none z-[11] bg-white dark:bg-secondary text-base shadow-lg py-1 text-nowrap ${sizeClasses()} ${align === "end" ? "start-auto end-0" : ""}${animationClass(animationSpeed)}${roundedClass(rounded)}`, dropdownClasses)
   }
 
 	let config: {

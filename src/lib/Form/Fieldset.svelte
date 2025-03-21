@@ -13,7 +13,7 @@
   let {
     children,
     title,
-    animate = CTX?.animate ?? "normal",
+    animationSpeed = CTX?.animationSpeed ?? "normal",
     variant = CTX?.variant ?? "bordered",
     floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
     labelClasses = CTX?.labelClasses ?? "",
@@ -23,7 +23,7 @@
     ...props
   } : Props & Exclude<INPUT_CONFIG, "inputGrow"> = $props()
 
-  setContext('FIELDSET', {animate, size, floatingLabel, labelClasses, rounded, variant, reset})
+  setContext('FIELDSET', {animationSpeed, size, floatingLabel, labelClasses, rounded, variant, reset})
 </script>
 
 <fieldset class={props?.class as string}>

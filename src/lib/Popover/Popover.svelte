@@ -14,7 +14,7 @@
     position?: Placement,
     triggerEvent?: 'click'|'hover',
     gap?: number,
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
     shadow?: SHADOW,
     closeOnClick?: boolean,
@@ -30,7 +30,7 @@
     gap = 8,
     position = "top",
     triggerEvent = "click",
-    animate = "normal",
+    animationSpeed = "normal",
     rounded = "md",
     shadow = "lg",
     closeOnClick = true,
@@ -165,7 +165,7 @@
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if show}
-<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration: animationSpeed[animate]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
+<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration: animationSpeed[animationSpeed]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
   {#if title}
     {#if typeof title === "function"}
       <div class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</div>
