@@ -28,7 +28,7 @@
   }: Props & INPUT_CONFIG = $props()
   
   const id = generateToken()
-  let C:INPUT_CONFIG & {id: string, type: "group"} = {animationSpeed, labelClasses, size, reset, type: "group"}
+  let C:INPUT_CONFIG & {type: "group"} = {animationSpeed, labelClasses, size, reset, type: "group"}
 </script>
 
 <div class={twMerge(groupInputContainerClass(C, {props}), wrapperClasses)}

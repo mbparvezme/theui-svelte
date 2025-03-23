@@ -33,7 +33,7 @@ export { default as Form } from "./Form/Form.svelte";
 export { default as Checkbox } from "./Form/Checkbox.svelte";
 export { default as Fieldset } from "./Form/Fieldset.svelte";
 export { default as FileInput } from "./Form/FileInput.svelte";
-export { default as HelperText } from "./Form/Helper.svelte";
+export { default as HelperText } from "./Form/HelperText.svelte";
 export { default as Input } from "./Form/Input.svelte";
 export { default as Label } from "./Form/Label.svelte";
 export { default as Radio } from "./Form/Radio.svelte";

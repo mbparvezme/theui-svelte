@@ -8,18 +8,18 @@
 
   interface Props {
     children?:Snippet,
-    animationSpeed?: ANIMATE_SPEED,
-    href?: string,
     size?: 'sm' | 'md' | 'lg' | 'xl',
+
+    href?: string,
+    animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
-    iconClasses?: string,
-
-    theme ?: 'default' | 'light' | 'gradient',
+    
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    theme ?: 'default' | 'light' | 'gradient',
     gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-
+    
     ariaLabel ?: string,
-
+    iconClasses?: string,
     [key: string]: unknown
   }
 

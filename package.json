@@ -283,8 +283,8 @@
 			"svelte": "./dist/Form\\FileInput.svelte"
 		},
 		"./HelperText.svelte": {
-			"types": "./dist/Form\\Helper.svelte.d.ts",
-			"svelte": "./dist/Form\\Helper.svelte"
+			"types": "./dist/Form\\HelperText.svelte.d.ts",
+			"svelte": "./dist/Form\\HelperText.svelte"
 		},
 		"./Input.svelte": {
 			"types": "./dist/Form\\Input.svelte.d.ts",

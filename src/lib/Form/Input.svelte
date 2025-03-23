@@ -42,25 +42,23 @@
 </script>
 
 <div class={twMerge(inputContainerClass(C, true ), wrapperClasses)}>
-  {#if !floatingLabel && children}
+  {#if children && !floatingLabel}
     <Label for={props?.id ?? id} class={labelClasses}>{@render children()}</Label>
   {/if}
   <div class="relative flex focus-within">
     {#if type == "textarea"}
       <textarea {id} rows=3 {...props} class={inputClasses(C, props)} placeholder={(props?.placeholder ?? " ") as string} bind:value></textarea>
     {:else}
-      <input {...props} class={inputClasses(C, props)} {id} placeholder={props?.placeholder ?? " "} bind:value use:setType/>
+      <input {id} {...props} class={inputClasses(C, props)} placeholder={props?.placeholder ?? " "} bind:value use:setType/>
     {/if}
     {#if floatingLabel && children}
       <Label for={props?.id ?? id} class={labelClasses}>{@render children()}</Label>
     {/if}
   </div>
   {#if helperText}
-    {#if typeof helperText == "string"}
-      <HelperText>{helperText}</HelperText>
-    {/if}
-    {#if typeof helperText == "function"}
-      {@render helperText?.()}
-    {/if}
+    <HelperText>
+      {#if typeof helperText === "function"} {@render helperText()}
+      {:else} {@html helperText} {/if}
+    </HelperText>
   {/if}
 </div>

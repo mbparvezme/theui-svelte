@@ -39,7 +39,7 @@
     ...props
   }: Props = $props()
 
-  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
+  const popoverAnimationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
 
   let triggerElement: HTMLElement|null = $state(null)
   let popover: HTMLElement|null = $state(null)
@@ -165,7 +165,7 @@
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if show}
-<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration: animationSpeed[animationSpeed]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
+<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration:popoverAnimationSpeed[animationSpeed]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
   {#if title}
     {#if typeof title === "function"}
       <div class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</div>

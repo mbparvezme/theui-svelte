@@ -118,7 +118,7 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
   if (config?.reset) return twMerge(baseClass, attr?.class as string)
 
   const commonClasses = `${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
-  const groupClasses = `bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 text-brand-primary-500 focus-within:ring-brand-primary-500 !ring-offset-primary cursor-pointer ${animationClass(config?.animate)}`
+  const groupClasses = `bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 text-brand-primary-500 focus-within:ring-brand-primary-500 !ring-offset-primary cursor-pointer ${animationClass(config?.animationSpeed)}`
 
   const typeSpecificClasses: Record<INPUT_CATEGORY, () => string> = {
     text: () => defaultInputClasses(config),
@@ -142,7 +142,7 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
 export const labelClasses = (config: INPUT_CONFIG & { type: INPUT_CATEGORY }, attr: Record<string, unknown> = {}): string => {
   const baseClasses = `font-medium flex flex-col text-base text-gray-700 dark:text-gray-300`
   const floatingLabelClasses = config?.floatingLabel
-    ? `peer-placeholder-shown:text-base transform cursor-text absolute top-0 peer-placeholder-shown:top-1/2 peer-focus:top-0 -translate-y-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:-translate-y-1/2 peer-placeholder-shown:text-gray-500 peer-focus:text-xs text-xs peer-focus:text-default ${animationClass(config?.animate)}
+    ? `peer-placeholder-shown:text-base transform cursor-text absolute top-0 peer-placeholder-shown:top-1/2 peer-focus:top-0 -translate-y-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:-translate-y-1/2 peer-placeholder-shown:text-gray-500 peer-focus:text-xs text-xs peer-focus:text-default ${animationClass(config?.animationSpeed)}
       ${config?.variant !== "flat" ? labelSizeClass[config?.size as INPUT_SIZE] : "start-0"}
       ${config?.variant === "bordered" ? "bg-primary" : ""}`
     : ""
@@ -207,7 +207,7 @@ const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string =>
  */
 const defaultInputClasses = (config: INPUT_CONFIG): string =>
   `outline-transparent ring-transparent block w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
-  } ${animationClass(config?.animate)}`
+  } ${animationClass(config?.animationSpeed)}`
 
 
 /**
@@ -218,9 +218,9 @@ const defaultInputClasses = (config: INPUT_CONFIG): string =>
  */
 const attributesClasses = (attr: Record<string, unknown> = {}): string =>
   attr?.disabled
-    ? " disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:select-none"
+    ? " disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-75 disabled:select-none"
     : attr?.readonly
-      ? " read-only:bg-gray-100 dark:read-only:bg-gray-800 read-only:pointer-events-none read-only:opacity-50"
+      ? " read-only:bg-gray-100 dark:read-only:bg-gray-800 read-only:pointer-events-none read-only:opacity-75"
       : "";
 
 

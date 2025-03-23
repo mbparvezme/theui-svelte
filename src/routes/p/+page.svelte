@@ -1,6 +1,29 @@
-<script>
+<script lang="ts">
   import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, HelperText} from "$lib"
-  import {Svg, Tooltip, Input } from "$lib"
+  import {Svg, Tooltip, Select } from "$lib"
+	import type { SELECT_DATA } from "$lib/types";
+
+  let selectArray: SELECT_DATA[] = [
+    "select 1",
+    "select 2",
+    "select 3",
+    "select 4",
+  ]
+
+  let selectObj: SELECT_DATA[] = [
+    { text: "Option 1", value: 1 },
+    { text: "Option 2", value: 2 },
+    { text: "Option 3", value: 3 },
+    { text: "Option 4", value: 4 },
+    { text: "Option 5", value: 5, selected: true },
+    { text: "Option 6", value: 6 },
+    { text: "Option 7", value: 7 },
+    { text: "Option 8", value: 8 },
+    { text: "Option 9", value: 9 },
+    { text: "Option 10", value: 10 },
+  ];
+
+
 </script>
 
 <Tooltip />
@@ -37,30 +60,7 @@
   <br>
   <br>
   <br>
-  <br>
-<div class="flex flex-col gap-2 w-full">
-  <Input class="w-full" name="username" type="text" placeholder="Enter your username">Username</Input>
-  <Input class="w-full" name="email" type="email" placeholder="Enter your email">Email</Input>
-  <Input class="w-full" name="password" type="password" placeholder="Enter your password">Password</Input>
-  <Input class="w-full" name="dob" type="date">Date of birth</Input>
-</div>
-<div class="flex flex-col gap-2 w-full">
-  <Input class="w-full" name="phone" type="tel" placeholder="Enter your phone number">Telephone</Input>
-  <Input class="w-full" name="url" type="url" placeholder="Enter your profile URL">URL</Input>
-  <Input class="w-full" name="dob" type="number">Number</Input>
-  <Input class="w-full" name="dob" type="textarea">Number</Input>
-</div>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
+  <Select name="text" options={selectObj} />
   <br>
   <br>
   <br>

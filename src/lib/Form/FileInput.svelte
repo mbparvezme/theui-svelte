@@ -45,12 +45,10 @@
   <div class="relative flex flex-col gap-1 focus-within">
     <input type="file"name="file" {id} {...props} class={inputClasses(C, props, "file")} bind:files />
     {#if helperText}
-      {#if typeof helperText == "string"}
-        <HelperText>{helperText}</HelperText>
-      {/if}
-      {#if typeof helperText == "function"}
-        {@render helperText?.()}
-      {/if}
+      <HelperText>
+        {#if typeof helperText === "function"} {@render helperText()}
+        {:else} {@html helperText} {/if}
+      </HelperText>
     {/if}
   </div>
 </div>

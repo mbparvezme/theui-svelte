@@ -1,27 +1,29 @@
 <script lang="ts">
   import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
-  import { fly } from 'svelte/transition'
+  import { fly } from "svelte/transition"
   import { setContext, type Snippet } from "svelte"
   import { animationClass, generateToken, roundedClass } from "$lib/function"
   import { twMerge } from "tailwind-merge"
-  import { QabItem } from "$lib"
-  import Svg from "$lib/Utility/Svg.svelte";
+  import { QabItem, Svg } from "$lib"
 
   interface Props {
     children?: Snippet,
-    animationSpeed?: ANIMATE_SPEED,
     icon?: Snippet,
-    ariaLabel ?: string,
-    href?: string,
-    rounded?: ROUNDED,
-    size?: 'sm' | 'md' | 'lg' | 'xl',
-    theme ?: 'default' | 'light' | 'gradient'
-    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     align?: 'start' | 'end',
-    triggerEvent?: 'click' | 'hover',
-    iconClasses?: string,
+    size?: 'sm' | 'md' | 'lg' | 'xl',
     direction?: 'horizontal' | 'vertical',
+    triggerEvent?: 'click' | 'hover',
+
+    href?: string,
+    animationSpeed?: ANIMATE_SPEED,
+    rounded?: ROUNDED,
+
+    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    theme ?: 'default' | 'light' | 'gradient'
+    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    
+    ariaLabel ?: string,
+    iconClasses?: string,
     [key: string] : unknown
   }
 
