@@ -31,7 +31,7 @@ export const labelSizeClass: { [size in INPUT_SIZE]: string } = {
 }
 
 export const inputTypeSizeClasses: {
-  [key in 'default' | 'file' | 'group']: key extends 'default'
+  [key in 'default' | 'select' | 'file' | 'group']: key extends 'default' | 'select'
   ? { [type in 'flat' | 'nonFlat']: { [size in INPUT_SIZE]: string } }
   : { [size in INPUT_SIZE]: string };
 } = {
@@ -41,6 +41,20 @@ export const inputTypeSizeClasses: {
       md: "px-0 py-3",
       lg: "px-0 py-4 text-xl",
       xl: "px-0 py-5 text-2xl",
+    },
+    nonFlat: {
+      sm: "px-3 py-2 text-sm",
+      md: "px-4 py-3",
+      lg: "px-5 py-4 text-xl",
+      xl: "px-6 py-5 text-2xl",
+    }
+  },
+  select: {
+    flat: {
+      sm: "px-3 py-2 text-sm",
+      md: "px-4 py-3",
+      lg: "px-5 py-4 text-xl",
+      xl: "px-6 py-5 text-2xl",
     },
     nonFlat: {
       sm: "px-3 py-2 text-sm",
@@ -122,7 +136,7 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
 
   const typeSpecificClasses: Record<INPUT_CATEGORY, () => string> = {
     text: () => defaultInputClasses(config),
-    select: () => defaultInputClasses(config),
+    select: () => defaultSelectClasses(config),
     file: () => fileInputClasses(config),
     checkbox: () => groupClasses,
     radio: () => groupClasses,
@@ -162,7 +176,7 @@ export const labelClasses = (config: INPUT_CONFIG & { type: INPUT_CATEGORY }, at
  * @returns A string representing the appropriate size classes for the input.
  */
 const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): string => {
-  const inputType = ["radio", "checkbox"].includes(type) ? "group" : type === "file" ? "file" : "default"
+  const inputType = ["radio", "checkbox"].includes(type) ? "group" : type === "file" ? "file" : type === "select" ? "select" : "default"
   const sizeKey = config.size ?? "md"
 
   if (config?.inputType && config?.inputType == "color"){
@@ -207,6 +221,17 @@ const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string =>
  */
 const defaultInputClasses = (config: INPUT_CONFIG): string =>
   `outline-transparent ring-transparent block w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
+  } ${animationClass(config?.animationSpeed)}`
+
+
+/**
+ * Generates default classes for an input element, including animation and optional floating label styling.
+ * 
+ * @param config - Configuration object determining animation and floating label behavior.
+ * @returns A string of base classes for styling the Style element.
+ */
+const defaultSelectClasses = (config: INPUT_CONFIG): string =>
+  `outline-transparent ring-transparent block min-w-[10em] w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
   } ${animationClass(config?.animationSpeed)}`
 
 

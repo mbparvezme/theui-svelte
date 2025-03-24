@@ -91,7 +91,7 @@ export type INPUT_CONFIG = {
   variant ?: INPUT_VARIANT;
 };
 
-export type SELECT_DATA = {disabled?: boolean, selected?: boolean, text: string, value?: unknown};
+export type SELECT_DATA = {disabled?: boolean, text: string, value?: unknown};
 
 export type Tools = "strike" | "superscript" | "subscript" | "listItem" | "blockquote" | "code" | "codeblock" | "link" | "horizontalLine" | "youtube" | "highlighter" | "color" | "redoUndo";
 

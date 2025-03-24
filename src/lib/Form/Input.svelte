@@ -21,13 +21,15 @@
   let {
     children,
     type = "text",
+    value,
+    helperText,
+
     variant = CTX?.variant ?? "bordered",
     floatingLabel = CTX?.floatingLabel ?? variant == "flat" ?? false,
-    value,
     size = CTX?.size ?? "md",
-    helperText,
     rounded = CTX?.rounded ?? "md",
     animationSpeed = CTX?.animationSpeed ?? "normal",
+
     labelClasses = CTX?.labelClasses ?? "",
     wrapperClasses = "",
     reset = CTX?.reset ?? false,
@@ -45,6 +47,7 @@
   {#if children && !floatingLabel}
     <Label for={props?.id ?? id} class={labelClasses}>{@render children()}</Label>
   {/if}
+
   <div class="relative flex focus-within">
     {#if type == "textarea"}
       <textarea {id} rows=3 {...props} class={inputClasses(C, props)} placeholder={(props?.placeholder ?? " ") as string} bind:value></textarea>
@@ -55,6 +58,7 @@
       <Label for={props?.id ?? id} class={labelClasses}>{@render children()}</Label>
     {/if}
   </div>
+
   {#if helperText}
     <HelperText>
       {#if typeof helperText === "function"} {@render helperText()}

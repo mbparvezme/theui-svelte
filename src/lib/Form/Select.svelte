@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { INPUT_CONFIG, INPUT_TYPE, SELECT_DATA } from "$lib/types"
+  import type { INPUT_CONFIG, SELECT_DATA } from "$lib/types"
   import { getContext, setContext, type Snippet } from "svelte"
 	import { generateToken } from "$lib/function"
 	import { inputContainerClass, inputClasses } from "./form"
@@ -9,32 +9,31 @@
   const CTX: INPUT_CONFIG = getContext('FORM') ?? {}
 
   interface Props {
-    name: string,
-    options?: SELECT_DATA[]|Snippet,
-    label?: Snippet|string|undefined,
-    helperText?: Snippet|string|undefined,
-    type?: INPUT_TYPE,
+    children?: Snippet,
+    options?: SELECT_DATA[],
     value?: string,
+    label?: Snippet|string,
+    helperText?: Snippet|string,
+    labelClasses?: string,
     wrapperClasses?: string,
     [key: string] : unknown
   }
 
   let {
-    options = [],
-    helperText = undefined,
-    label = undefined,
-    name = "",
-    type = "text",
+    children,
+    options,
     value = "",
-
-    animationSpeed = CTX?.animationSpeed ?? "normal",
-    floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
-    labelClasses = CTX?.labelClasses ?? "",
-    rounded = CTX?.rounded ?? "md",
-    size = CTX?.size ?? "md",
     variant = CTX?.variant ?? "bordered",
-    reset = CTX?.reset ?? false,
+    label,
+    helperText,
+    floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
+    size = CTX?.size ?? "md",
+    rounded = CTX?.rounded ?? "md",
+    animationSpeed = CTX?.animationSpeed ?? "normal",
+
+    labelClasses = CTX?.labelClasses ?? "",
     wrapperClasses = "",
+    reset = CTX?.reset ?? false,
     ...props
   } : Props & INPUT_CONFIG = $props()
 
@@ -45,7 +44,7 @@
 
 {#snippet labelContent()}
   {#if typeof label == "string"}
-    <Label {id}>{label}</Label>
+    <Label for={props?.id ?? id} class={labelClasses}>{label}</Label>
   {/if}
   {#if typeof label == "function"}
     {@render label?.()}
@@ -58,20 +57,19 @@
   {/if}
 
   <div class="relative flex focus-within">
-    <select {id} {name} bind:value={value} {...props} class={inputClasses(C, props, "select")}>
-      {#if props?.placeholder}<option value>{props.placeholder}</option>{/if}
-      {#if options}
-        {#if typeof options == "function"}
-          {@render options()}
-        {:else if options.length}
-          {#each options as d}
-            {#if d}<option value={d.value ?? d.text} selected={d?.selected}>{d.text}</option>{/if}
-          {/each}
-        {/if}
+    <select {id} bind:value={value} {...props} class={inputClasses(C, props, "select")}>
+      {#if props?.placeholder !== false}<option value="" disabled>{String(props?.placeholder??"-- Select --")}</option>{/if}
+      <!-- If options is provided, it will be used; otherwise, children will be rendered. -->
+      {#if options && options.length}
+        {#each options as d}
+          {#if d}<option value={d.value ?? d.text} disabled={d?.disabled}>{d.text}</option>{/if}
+        {/each}
+      {:else if children}
+        {@render children()}
       {/if}
     </select>
-    {#if label && floatingLabel}
-      {@render labelContent()}
+    {#if typeof label == "string" && floatingLabel}
+      <Label for={props?.id ?? id} class={labelClasses}>{label}</Label>
     {/if}
   </div>
 
