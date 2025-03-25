@@ -37,43 +37,43 @@ export const inputTypeSizeClasses: {
 } = {
   default: {
     flat: {
-      sm: "px-0 py-2 text-sm",
-      md: "px-0 py-3",
-      lg: "px-0 py-4 text-xl",
-      xl: "px-0 py-5 text-2xl",
+      sm: "px-0 py-1 text-sm",
+      md: "px-0 py-2",
+      lg: "px-0 py-3 text-lg",
+      xl: "px-0 py-4 text-xl"
     },
     nonFlat: {
-      sm: "px-3 py-2 text-sm",
-      md: "px-4 py-3",
-      lg: "px-5 py-4 text-xl",
-      xl: "px-6 py-5 text-2xl",
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-5 py-3 text-lg",
+      xl: "px-6 py-4 text-xl"
     }
   },
   select: {
     flat: {
-      sm: "px-3 py-2 text-sm",
-      md: "px-4 py-3",
-      lg: "px-5 py-4 text-xl",
-      xl: "px-6 py-5 text-2xl",
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-5 py-3 text-lg",
+      xl: "px-6 py-4 text-xl"
     },
     nonFlat: {
-      sm: "px-3 py-2 text-sm",
-      md: "px-4 py-3",
-      lg: "px-5 py-4 text-xl",
-      xl: "px-6 py-5 text-2xl",
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-5 py-3 text-lg",
+      xl: "px-6 py-4 text-xl"
     }
   },
   file: {
-    sm: "file:px-4 file:py-2 file:text-sm",
-    md: "file:px-6 file:py-3",
-    lg: "file:px-6 file:py-4 file:text-xl",
-    xl: "file:px-8 file:py-5 file:text-2xl",
+    sm: "file:px-4 file:py-1 file:text-sm",
+    md: "file:px-6 file:py-2",
+    lg: "file:px-6 file:py-3 file:text-lg",
+    xl: "file:px-8 file:py-4 file:text-xl"
   },
   group: {
     sm: "h-3 w-3",
     md: "h-4 w-4",
     lg: "h-6 w-6",
-    xl: "h-8 w-8",
+    xl: "h-7 w-7"
   },
 }
 
@@ -185,7 +185,9 @@ const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): 
 
   return inputType === "default"
     ? inputTypeSizeClasses.default[config.variant === "flat" ? "flat" : "nonFlat"][sizeKey]
-    : inputTypeSizeClasses[inputType as "file" | "group"][sizeKey]
+    : inputType === "select"
+      ? inputTypeSizeClasses.select[config.variant === "flat" ? "flat" : "nonFlat"][sizeKey]
+      : inputTypeSizeClasses[inputType as "file" | "group"][sizeKey]
 }
 
 

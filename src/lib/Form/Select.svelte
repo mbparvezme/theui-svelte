@@ -25,11 +25,11 @@
     value = "",
     variant = CTX?.variant ?? "bordered",
     label,
-    helperText,
     floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
     size = CTX?.size ?? "md",
     rounded = CTX?.rounded ?? "md",
     animationSpeed = CTX?.animationSpeed ?? "normal",
+    helperText,
 
     labelClasses = CTX?.labelClasses ?? "",
     wrapperClasses = "",
