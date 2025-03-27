@@ -61,14 +61,14 @@
   });
 
   onMount(() => {
-    if (!ST_SLIDER.slides?.length) {
+    if (!ST_SLIDER[obj.id]?.slides?.length) {
       console.error("ST_SLIDER.slides is not defined or empty.")
       return
     }
     obj.createIndicator()
     obj.cloneSlides()
-    if (!ST_SLIDER.activeSlide) {
-      ST_SLIDER.activeSlide = ST_SLIDER.slides[activeSlide]
+    if (!ST_SLIDER[obj.id].activeSlide) {
+      ST_SLIDER[obj.id].activeSlide = ST_SLIDER[obj.id].slides[activeSlide]
     }
     obj.updateActiveIndicator(activeSlide-1)
     obj.updateTrackPosition()
@@ -77,8 +77,7 @@
       obj.startAutoPlay()
     }
   })
-
-  setContext('SLIDER', {...ST_SLIDER, slideClasses})
+  setContext('SLIDER', {...ST_SLIDER[obj.id], slideClasses})
 </script>
 
 {#if children}

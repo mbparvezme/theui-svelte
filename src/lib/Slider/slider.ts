@@ -15,13 +15,14 @@ export interface SliderConfig {
 export class Slider {
   config: SliderConfig;
   autoPlayInterval!: ReturnType<typeof setInterval>;
-  id: string = generateToken();
+  id: string;
   isTransitioning: boolean = false; // To track if a transition is in progress
 
   private indicatorClasses: string =
     "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none";
 
   constructor(config: Partial<SliderConfig>) {
+    this.id = generateToken();
     const defaultConfig: SliderConfig = {
       autoPlay: true,
       stopOnHover: true,
@@ -51,7 +52,8 @@ export class Slider {
 
     itemsContainer.appendChild(firstClone);
     itemsContainer.insertBefore(lastClone, firstSlide);
-    ST_SLIDER.slides = [lastClone, ...(slides as HTMLElement[]), firstClone];
+
+    ST_SLIDER[this.id as string].slides = [lastClone, ...(slides as HTMLElement[]), firstClone];
   }
 
   changeSlide(updateType: "next" | "prev") {
@@ -60,7 +62,7 @@ export class Slider {
 
     const newIndex = this.calculateNextSlideIndex(updateType);
     this.updateActiveIndicator(this.calculateNextIndicatorIndex(newIndex));
-    ST_SLIDER.activeSlide = ST_SLIDER.slides[newIndex];
+    ST_SLIDER[this.id].activeSlide = ST_SLIDER[this.id].slides[newIndex];
     this.slideTransition();
 
     if (this.config.autoPlay) {
@@ -70,9 +72,9 @@ export class Slider {
 
   slideTransition() {
     const track = document.getElementById(`${this.id}-items`);
-    const slides = ST_SLIDER.slides;
+    const slides = ST_SLIDER[this.id].slides;
     const totalSlides = slides.length;
-    const slideIndex = slides.indexOf(ST_SLIDER.activeSlide as HTMLElement);
+    const slideIndex = slides.indexOf(ST_SLIDER[this.id].activeSlide as HTMLElement);
 
     if (track) {
       const translateValue = -slideIndex * track.clientWidth;
@@ -81,10 +83,10 @@ export class Slider {
 
       this.addTransitionListener(track, () => {
         if (slideIndex === 0) {
-          ST_SLIDER.activeSlide = slides[totalSlides - 2];
+          ST_SLIDER[this.id].activeSlide = slides[totalSlides - 2];
           this.updateTrackPosition();
         } else if (slideIndex === totalSlides - 1) {
-          ST_SLIDER.activeSlide = slides[1];
+          ST_SLIDER[this.id].activeSlide = slides[1];
           this.updateTrackPosition();
         }
         this.isTransitioning = false; // Reset transitioning flag
@@ -101,9 +103,9 @@ export class Slider {
   }
 
   calculateNextSlideIndex(updateType: "next" | "prev") {
-    const totalSlides = ST_SLIDER.slides.length;
-    const currentSlideIndex = ST_SLIDER.slides.indexOf(
-      ST_SLIDER.activeSlide as HTMLElement
+    const totalSlides = ST_SLIDER[this.id].slides.length;
+    const currentSlideIndex = ST_SLIDER[this.id].slides.indexOf(
+      ST_SLIDER[this.id].activeSlide as HTMLElement
     );
     return updateType === "next"
       ? (currentSlideIndex + 1) % totalSlides
@@ -111,18 +113,18 @@ export class Slider {
   }
 
   calculateNextIndicatorIndex(newIndex: number) {
-    const totalSlides = ST_SLIDER.slides.length - 2;
+    const totalSlides = ST_SLIDER[this.id].slides.length - 2;
     return newIndex === 0
       ? totalSlides - 1
-      : newIndex === ST_SLIDER.slides.length - 1
+      : newIndex === ST_SLIDER[this.id].slides.length - 1
         ? 0
         : newIndex - 1;
   }
 
   updateTrackPosition() {
     const track = document.getElementById(`${this.id}-items`);
-    const slides = ST_SLIDER.slides;
-    const slideIndex = slides.indexOf(ST_SLIDER.activeSlide as HTMLElement);
+    const slides = ST_SLIDER[this.id].slides;
+    const slideIndex = slides.indexOf(ST_SLIDER[this.id].activeSlide as HTMLElement);
     if (track) {
       const translateValue = -slideIndex * track.clientWidth;
       track.style.transform = `translateX(${translateValue}px)`;
@@ -185,7 +187,7 @@ export class Slider {
   changeSlideByIndicator(index: number) {
     if (this.isTransitioning) return; // Prevent multiple transitions
     this.updateActiveIndicator(index);
-    ST_SLIDER.activeSlide = ST_SLIDER.slides[index + 1];
+    ST_SLIDER[this.id].activeSlide = ST_SLIDER[this.id].slides[index + 1];
     this.slideTransition();
   }
 

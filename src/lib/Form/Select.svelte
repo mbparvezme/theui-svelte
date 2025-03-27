@@ -22,15 +22,14 @@
   let {
     children,
     options,
-    value = "",
+    value,
     variant = CTX?.variant ?? "bordered",
     label,
-    helperText,
     floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
     size = CTX?.size ?? "md",
     rounded = CTX?.rounded ?? "md",
     animationSpeed = CTX?.animationSpeed ?? "normal",
-
+    helperText,
     labelClasses = CTX?.labelClasses ?? "",
     wrapperClasses = "",
     reset = CTX?.reset ?? false,
@@ -38,7 +37,7 @@
   } : Props & INPUT_CONFIG = $props()
 
   const id = generateToken()
-  let C:INPUT_CONFIG & {type: "input"} = {animationSpeed, floatingLabel, labelClasses, rounded, size, variant, reset, type: "input"}
+  let C:INPUT_CONFIG = {animationSpeed, floatingLabel, labelClasses, rounded, size, variant, reset}
   setContext('FORM', C)
 </script>
 

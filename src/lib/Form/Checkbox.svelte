@@ -38,7 +38,7 @@
 >
   <input {id} {...props} class={inputClasses(C, props, "checkbox")} type="checkbox">
   {#if children}
-    <Label for={props?.id ?? id} class="cursor-pointer font-bold {labelClasses??""}">
+    <Label for={props?.id ?? id} class="cursor-pointer {labelClasses??""}">
       {@render children()}
     </Label>
   {/if}

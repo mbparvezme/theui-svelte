@@ -1,27 +1,6 @@
 <script lang="ts">
   import {Navbar, NavBrand, NavCollapse, NavLinkGroup, NavDropdown, NavLink, DarkMode, HelperText} from "$lib"
-  import {Svg, Tooltip, Select } from "$lib"
-	import type { SELECT_DATA } from "$lib/types";
-
-  let selectArray: SELECT_DATA[] = [
-    "select 1",
-    "select 2",
-    "select 3",
-    "select 4",
-  ]
-
-  let selectObj: SELECT_DATA[] = [
-    { text: "Option 1", value: 1 },
-    { text: "Option 2", value: 2 },
-    { text: "Option 3", value: 3 },
-    { text: "Option 4", value: 4 },
-    { text: "Option 5", value: 5, selected: true },
-    { text: "Option 6", value: 6 },
-    { text: "Option 7", value: 7 },
-    { text: "Option 8", value: 8 },
-    { text: "Option 9", value: 9 },
-    { text: "Option 10", value: 10 },
-  ];
+  import {Svg, Tooltip, Slider, Slide } from "$lib"
 
 
 </script>
@@ -60,7 +39,11 @@
   <br>
   <br>
   <br>
-  <Select name="text" options={selectObj} />
+<Slider>
+  <Slide src="https://placehold.co/1600x700/73C7C7/white?text=Slide 1" alt="Image slide demo image" />
+  <Slide src="https://placehold.co/1600x700/B5828C/white?text=Slide 2" alt="Image slide demo image" />
+  <Slide src="https://placehold.co/1600x700/889E73/white?text=Slide 3" alt="Image slide demo image" />
+</Slider>
   <br>
   <br>
   <br>

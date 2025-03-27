@@ -16,6 +16,7 @@
 
   let id: string = generateToken()
   let CTX = getContext('SLIDER') as any
+  console.log(CTX)
   CTX.slides.push(id)
 </script>
 
