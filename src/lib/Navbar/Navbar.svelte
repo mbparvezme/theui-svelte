@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
+  import type { ANIMATE_SPEED, NAV_SCROLL_BEHAVIOR, ROUNDED } from "$lib/types"
 	import { setContext, type Snippet } from "svelte"
   import { onMount } from "svelte"
   import { twMerge } from "tailwind-merge"
@@ -9,7 +9,7 @@
 
   interface Props {
     children: Snippet,
-    scrollBehavior?: 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide',
+    scrollBehavior?: NAV_SCROLL_BEHAVIOR,
     scrollAmountToHide?: number,
     scrollAmountToShrink?: number,
     height?: heightTypes | 'string',
