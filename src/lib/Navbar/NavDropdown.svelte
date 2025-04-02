@@ -10,10 +10,10 @@
 
   interface Props {
     children?: Snippet,
-    label : string|Snippet,
+    label: string|Snippet,
     align?: 'start'|'end',
     width?: MOBILE_NAV_ON | 'full',
-    dropdownEvent ?: 'hover' | 'click',
+    dropdownEvent?: 'hover' | 'click',
     animation?: 'fade'|'slide'|'zoom',
     arrowIcon?: Snippet|boolean,
     [key: string]: unknown
@@ -95,9 +95,9 @@
     }
 
     return `shadow-none hidden 
-            ${collapseClasses[config.mobileNavOn as MOBILE_NAV_ON]}
-            ${dropdownMaxHeight[config.mobileNavOn as MOBILE_NAV_ON]}
-            ${menuWidthClasses[config?.mobileNavOn as MOBILE_NAV_ON || "md"][width]}`
+            ${collapseClasses[config.navBreakpoint as MOBILE_NAV_ON]}
+            ${dropdownMaxHeight[config.navBreakpoint as MOBILE_NAV_ON]}
+            ${menuWidthClasses[config?.navBreakpoint as MOBILE_NAV_ON || "md"][width]}`
   }
 
   let dropdownClasses = `nav-dropdown flex-col py-2 bg-secondary overflow-y-auto

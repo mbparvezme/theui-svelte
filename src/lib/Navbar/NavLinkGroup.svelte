@@ -35,8 +35,8 @@
     xl: "flex-col 2xl:flex-row",
   }
 
-  let navContainerClasses = `h-full ${!config.mobileNavOn ? "items-center flex-row" 
-  : config.responsive ? (structuralClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "") : ""} ${alignClasses[align as "start" | "center" | "end"][config.mobileNavOn as MOBILE_NAV_ON]}`
+  let navContainerClasses = `h-full ${!config.navBreakpoint ? "items-center flex-row" 
+  : config.responsive ? (structuralClasses[config.navBreakpoint as MOBILE_NAV_ON] ?? "") : ""} ${alignClasses[align as "start" | "center" | "end"][config.navBreakpoint as MOBILE_NAV_ON]}`
 </script>
 
 {#if children}
