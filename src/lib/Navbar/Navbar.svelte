@@ -15,7 +15,6 @@
 
     height?: heightTypes | 'string',
     navBreakpoint?: 'sm' | 'md' | 'lg' | 'xl',
-    segment?: string,
     animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
     dropdownEvent?: 'hover' | 'click',
@@ -31,7 +30,6 @@
 
   let {
     children,
-    segment = "/",
     activeLinkClasses = "",
     animationSpeed = "fast",
     height = "md",
