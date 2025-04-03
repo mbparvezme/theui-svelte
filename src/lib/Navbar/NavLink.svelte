@@ -4,16 +4,12 @@
   import { animationClass, roundedClass } from "$lib/function"
   import { ST_MOBILE_NAV } from "$lib/state.svelte"
 
-  interface Props {children?: Snippet, text?: string, href?: string|null, active?: string|boolean, [key: string]: unknown}
-  let {children, text, href = null, active = false, ...props}: Props = $props()
+  interface Props {children?: Snippet, text?: string, active?: string|boolean, [key: string]: unknown}
+  let {children, text, active = false, ...props}: Props = $props()
 
   const { config, id } = getContext('NAV') as any
 
-  let linkCls = () => {
-    let baseClasses = active ? config.activeLinkClasses : config.linkClasses
-    return `nav-link flex items-center ${twMerge(baseClasses, (config?.isDropdown ? config.dropdownLinkClasses : ""),  props.class as string)}${roundedClass(config?.rounded)}${animationClass(config?.animationSpeed)}`
-
-  }
+  let linkCls = () => `nav-link flex items-center ${twMerge(config.linkClasses, active && config.activeLinkClasses, (config?.isDropdown ? config.dropdownLinkClasses : ""), props.class as string)}${roundedClass(config?.rounded)}${animationClass(config?.animationSpeed)}`
 
   let closeMobileNav = () => {
     if (ST_MOBILE_NAV.value.includes(id)) {
@@ -30,8 +26,8 @@
   {/if}
 {/snippet}
 
-{#if href}
-  <a {href} {...props} class={linkCls()} onclick={()=>closeMobileNav()}>{@render content()}</a>
+{#if props?.href}
+  <a {...props} class={linkCls()} onclick={()=>closeMobileNav()}>{@render content()}</a>
 {:else}
   <span {...props} class="cursor-pointer {linkCls()}">{@render content()}</span>
 {/if}

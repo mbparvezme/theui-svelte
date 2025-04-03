@@ -6,7 +6,6 @@
   import { Svg } from "$lib"
 
   const { config } = getContext('NAV') as any
-  config.isDropdown = true
 
   interface Props {
     children?: Snippet,
@@ -16,6 +15,7 @@
     dropdownEvent?: 'hover' | 'click',
     animation?: 'fade'|'slide'|'zoom',
     arrowIcon?: Snippet|boolean,
+    dropdownLinkClasses?: string,
     [key: string]: unknown
   }
 
@@ -27,8 +27,12 @@
     dropdownEvent = config.dropdownEvent,
     animation = "fade",
     arrowIcon = true,
+    dropdownLinkClasses,
     ...props
   } : Props = $props()
+
+  config.isDropdown = true
+  config.dropdownLinkClasses = twMerge(config.dropdownLinkClasses, dropdownLinkClasses)
 
   let id: string = generateToken()
 

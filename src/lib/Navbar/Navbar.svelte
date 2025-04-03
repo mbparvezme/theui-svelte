@@ -10,40 +10,44 @@
   interface Props {
     children: Snippet,
     scrollBehavior?: NAV_SCROLL_BEHAVIOR,
-    scrollAmountToHide?: number,
     scrollAmountToShrink?: number,
+    scrollAmountToHide?: number,
 
     height?: heightTypes | 'string',
     navBreakpoint?: 'sm' | 'md' | 'lg' | 'xl',
     animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
+
     dropdownEvent?: 'hover' | 'click',
 
+    navInnerClasses?: string,
+    navCollapseClasses?: string,
+    scrollShrinkClasses?: string,
     linkClasses?: string,
     activeLinkClasses?: string,
     dropdownLinkClasses?: string,
-    navInnerClasses?: string,
-    navCollapseClasses?: string,
-    scrollClasses?: string,
     [key: string] : unknown
   }
 
   let {
     children,
-    activeLinkClasses = "",
-    animationSpeed = "fast",
+    scrollBehavior = "default",
+    scrollAmountToShrink = 32,
+    scrollAmountToHide = 128,
+
     height = "md",
-    linkClasses = "",
-    dropdownLinkClasses = "",
     navBreakpoint = "lg",
+    animationSpeed = "fast",
+    rounded = "md",
+
+    dropdownEvent = "click",
+
     navInnerClasses = "",
     navCollapseClasses = "",
-    rounded = "md",
-    dropdownEvent = "click",
-    scrollAmountToHide = 128,
-    scrollAmountToShrink = 32,
-    scrollBehavior = "default",
-    scrollClasses = "",
+    scrollShrinkClasses = "",
+    linkClasses = "",
+    activeLinkClasses = "",
+    dropdownLinkClasses = "",
     ...props
   } : Props = $props()
 
@@ -55,21 +59,21 @@
   let scrollPos = 0
 
   let config: any = {
-    activeLinkClasses : twMerge("p-3 text-default text-sm", activeLinkClasses),
-    animationSpeed,
     height,
-    navInnerClasses,
-    navCollapseClasses,
-    linkClasses: twMerge("p-3 text-gray-700 dark:text-gray-300 hover:text-default text-sm", roundedClass(rounded), animationClass(animationSpeed), linkClasses),
-    dropdownLinkClasses: twMerge("hover:bg-tertiary h-auto px-4 py-2", animationClass(animationSpeed), roundedClass(rounded), dropdownLinkClasses),
     navBreakpoint,
+    animationSpeed,
     rounded,
     dropdownEvent,
+    navInnerClasses,
+    navCollapseClasses,
+    linkClasses: twMerge("p-3 text-gray-700 dark:text-gray-300 hover:text-default text-sm", linkClasses),
+    activeLinkClasses : twMerge("p-3 text-default text-sm", activeLinkClasses),
+    dropdownLinkClasses,
   }
 
   const navCoreClass =  twMerge(`bg-secondary left-0 top-0 w-full flex items-center justify-center ${paddingHeightCls[height as "sm" | "md" | "lg" | "xl"] ?? height as string}${animationClass(animationSpeed)}`, props?.class as string)
   let navClass = $state(navCoreClass)
-  let scrollClass = twMerge(`bg-secondary shadow-black/10 ${paddingHeightOnShrinkCls[height as heightTypes]}`, scrollClasses)
+  let scrollClass = twMerge(`bg-secondary shadow-black/10 ${paddingHeightOnShrinkCls[height as heightTypes]}`, scrollShrinkClasses)
   let navInnerClass = $derived(`nav-inner w-full max-w-[var(--max-width)] flex grow gap-x-8 items-center justify-between relative
                       ${animationClass(animationSpeed)} ${(miniNav||(hideNav===false && scrollPos!==0) ? " px-4" : " px-8")}`)
 
