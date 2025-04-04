@@ -123,7 +123,6 @@
 
 <svelte:window onclick={(e: MouseEvent)=>handleBlur(e)} />
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div {id} {...props} class={getContainerClasses()} class:open={isOpen} onmouseenter={(e: MouseEvent)=>handleMouse(e)} onmouseleave={(e: MouseEvent)=>handleMouse(e)} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboard(e)} aria-labelledby={`${id}-trigger`}>
   {#if typeof label == "string"}
     <Button id={`${id}-trigger`} ariaLabel={label + " dropdown"} aria-controls={`${id}-dropdown`} aria-expanded={isOpen} aria-haspopup="menu" class={buttonClasses}>{label}</Button>

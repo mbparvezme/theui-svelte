@@ -45,7 +45,7 @@
   const hideChips = () => nodeRef.parentNode?.removeChild(nodeRef)
 </script>
 
-<span class={"theui-chips " + twMerge(chipsClasses, (props?.class ?? "") as string)} class:ps-4={!imageUrl} class:py-2={!imageUrl} bind:this={nodeRef}>
+<span class={"theui-chips " + twMerge(chipsClasses, (props?.class ?? "") as string)} class:ps-4={!imageUrl} class:py-2={!imageUrl} bind:this={nodeRef} role="button">
   {#if imageUrl}<img class={chipsImgClass} alt={altText} src={imageUrl}>{/if}
 
   {@render children?.()}
