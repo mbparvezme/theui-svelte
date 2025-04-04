@@ -27,7 +27,7 @@
 {/snippet}
 
 {#if props?.href}
-  <a {...props} class={linkCls()} onclick={()=>closeMobileNav()}>{@render content()}</a>
+  <a {...props} class={linkCls()} onclick={()=>closeMobileNav()} aria-current={active ? "page" : undefined}>{@render content()}</a>
 {:else}
   <span {...props} class="cursor-pointer {linkCls()}">{@render content()}</span>
 {/if}

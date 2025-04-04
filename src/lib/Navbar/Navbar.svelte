@@ -17,6 +17,7 @@
     navBreakpoint?: 'sm' | 'md' | 'lg' | 'xl',
     animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
+    ariaLabel?: string,
 
     dropdownEvent?: 'hover' | 'click',
 
@@ -39,6 +40,7 @@
     navBreakpoint = "lg",
     animationSpeed = "fast",
     rounded = "md",
+    ariaLabel = "Navigation bar",
 
     dropdownEvent = "click",
 
@@ -110,6 +112,7 @@
   class:-translate-y-full={hideNav}
   class:fixed={scrollBehavior !== "default"}
   class="theui-navbar z-[21] {navClass}"
+  aria-label={ariaLabel}
 >
   <div class={twMerge(navInnerClass, navInnerClasses)}>
     {@render children()}

@@ -52,7 +52,7 @@
   >
     {@render children()}
   </div>
-  <button type="button" onclick={()=>toggle()} class={getClass} aria-label="Toggle nav bar">
+  <button type="button" onclick={()=>toggle()} class={getClass} aria-label="Toggle navigation">
     {#if toggleIcon}
       {@render toggleIcon()}
     {:else}

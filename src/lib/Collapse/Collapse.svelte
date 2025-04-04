@@ -23,7 +23,9 @@
   } : Props = $props();
 
   let classes = animationClass(animationSpeed)
+
   let toggleCollapse = (id: string): void => {}
+  let handleKeyboard = (e: KeyboardEvent) => {}
 
   onMount(() => {
     toggleCollapse = (id: string) => {
@@ -36,13 +38,19 @@
         if(animationSpeed) element.style.height = element.scrollHeight + "px";
       }
     }
+
+    handleKeyboard = (e) => {    
+      e.preventDefault()
+      toggleCollapse(id)
+    }
+  
   })
 </script>
 
 {#if title}
-<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
 <span  class="theui-collapse-title select-none" class:collapse-active-title={isOpen} role="button" tabindex="0"
-  onclick={()=>toggleCollapse(id)} aria-controls={id} aria-expanded={isOpen} aria-label={ariaLabel} aria-describedby={id} id="{id}Collapse">
+  onclick={()=>toggleCollapse(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboard(e)}
+  aria-controls={id} aria-expanded={isOpen} aria-label={ariaLabel} aria-describedby={id} id="{id}Collapse">
   {@render title()}
 </span>
 {/if}

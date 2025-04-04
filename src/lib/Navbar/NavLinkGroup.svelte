@@ -40,7 +40,7 @@
 </script>
 
 {#if children}
-<div {...props} class="nav-links flex {twMerge(navContainerClasses, props?.class as string)}">
+<div {...props} class="nav-links flex {twMerge(navContainerClasses, props?.class as string)}" role="navigation">
   {@render children()}
 </div>
 {/if}
