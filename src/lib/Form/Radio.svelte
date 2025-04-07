@@ -37,7 +37,7 @@
 >
   <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio">
   {#if children}
-    <Label for={props?.id ?? id} class="cursor-pointer font-bold {labelClasses??""}">
+    <Label for={props?.id ?? id} class="cursor-pointer {labelClasses??""}">
       {@render children()}
     </Label>
   {/if}

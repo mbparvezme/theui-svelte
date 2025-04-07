@@ -7,7 +7,7 @@
   let {children, size = 1.5, ariaLabel = "Close button", onclick, ...props} : Props = $props()
 </script>
 
-<button class="theui-close {twMerge("opacity-60 dark:opacity-50 hover:opacity-100 transition-opacity", props?.class as string)}" aria-label={ariaLabel} tabindex="-1" {onclick}>
+<button class="theui-close {twMerge("opacity-60 dark:opacity-50 hover:opacity-100 transition-opacity", props?.class as string)}" aria-label={ariaLabel} tabindex="0" {onclick}>
   <span class="sr-only">{ariaLabel}</span>
   {#if children}
     {@render children()}

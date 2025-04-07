@@ -6,16 +6,16 @@
   import { Svg } from "$lib"
 
   const { config } = getContext('NAV') as any
-  config.isDropdown = true
 
   interface Props {
     children?: Snippet,
-    label : string|Snippet,
+    label: string|Snippet,
     align?: 'start'|'end',
     width?: MOBILE_NAV_ON | 'full',
-    dropdownEvent ?: 'hover' | 'click',
+    dropdownEvent?: 'hover' | 'click',
     animation?: 'fade'|'slide'|'zoom',
     arrowIcon?: Snippet|boolean,
+    dropdownLinkClasses?: string,
     [key: string]: unknown
   }
 
@@ -27,10 +27,15 @@
     dropdownEvent = config.dropdownEvent,
     animation = "fade",
     arrowIcon = true,
+    dropdownLinkClasses,
     ...props
   } : Props = $props()
 
+  config.isDropdown = true
+  config.dropdownLinkClasses = twMerge(config.dropdownLinkClasses, dropdownLinkClasses)
+
   let id: string = generateToken()
+  let activeState: boolean = $state(false)
 
   let menuWidthClasses: Record<MOBILE_NAV_ON | 'nonRes', Record<MOBILE_NAV_ON | 'full', string>> = {
     sm: {
@@ -95,9 +100,9 @@
     }
 
     return `shadow-none hidden 
-            ${collapseClasses[config.mobileNavOn as MOBILE_NAV_ON]}
-            ${dropdownMaxHeight[config.mobileNavOn as MOBILE_NAV_ON]}
-            ${menuWidthClasses[config?.mobileNavOn as MOBILE_NAV_ON || "md"][width]}`
+            ${collapseClasses[config.navBreakpoint as MOBILE_NAV_ON]}
+            ${dropdownMaxHeight[config.navBreakpoint as MOBILE_NAV_ON]}
+            ${menuWidthClasses[config?.navBreakpoint as MOBILE_NAV_ON || "md"][width]}`
   }
 
   let dropdownClasses = `nav-dropdown flex-col py-2 bg-secondary overflow-y-auto
@@ -105,15 +110,25 @@
   ${config?.responsive ? resCls() : nonResCls} ${dropdownTopPositionClasses[config.height as MOBILE_NAV_ON]}
   ${roundedClass(config?.rounded, "bottom")}${animationClass(config.animationSpeed)}`
 
+  const showMenu = (dropdown: HTMLElement) =>{
+    dropdown?.classList.remove("hide")
+    activeState = true
+  }
+
+  const hideMenu = (dropdown: HTMLElement|null) =>{
+    dropdown?.classList.add("hide")
+    activeState = false
+  }
+
   let toggle = () => {
     if(dropdownEvent !== "hover"){
       let dd = document.getElementById(id)
       if(dd?.classList.contains("hide")){
         let activeDd = document.querySelectorAll(".theui-nav-dropdown-container:not(.hide)")
         activeDd.forEach(elm => elm.classList.add("hide"))
-        dd.classList.remove("hide")
+        showMenu(dd)
       }else{
-        dd?.classList.add("hide")
+        hideMenu(dd)
       }
     }
   }
@@ -153,7 +168,7 @@
 <svelte:window on:click={(e)=>handleBlur(e)}/>
 
 <div {id} {...props} class="theui-nav-dropdown-container hide z-[1]" class:relative={width != "full"} tabindex="-1" onmouseenter={(e)=>handleMouse(e)} onmouseleave={(e)=>handleMouse(e)} onblur={(e)=>handleBlur(e)}>
-  <button class="theui-nav-dropdown-btn gap-x-1 w-full justify-between flex items-center {config.linkClasses}" onkeydown={(e)=>handleKeyboard(e)} onclick={()=>toggle()} onfocus={handleMouse}>
+  <button class="theui-nav-dropdown-btn gap-x-1 w-full justify-between flex items-center {config.linkClasses}" onkeydown={(e)=>handleKeyboard(e)} onclick={()=>toggle()} onfocus={handleMouse} aria-haspopup="true" aria-expanded={activeState?"true":"false"}>
     {#if label}
       {#if typeof label == "function"}
         {@render label()}
@@ -171,11 +186,9 @@
     {/if}
   </button>
 
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div  class="theui-nav-dropdown {twMerge(dropdownClasses, props?.class as string)}"
         class:fade={animation=="fade"} class:slide={animation=="slide"}
-        class:zoom={animation=="zoom"} onclick={()=>toggle()}>
+        class:zoom={animation=="zoom"} onclick={()=>toggle()} onkeydown={(e)=>handleKeyboard(e)} role="menu" tabindex="0">
     {@render children?.()}
   </div>
 </div>

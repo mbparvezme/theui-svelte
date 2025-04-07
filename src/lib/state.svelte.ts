@@ -10,7 +10,13 @@ export const ST_NOTIFICATIONS: { value: NOTIFICATION_DATA_TYPE[]} = $state({ val
 export const selectedTab: { value: string | null } = $state({ value: null })
 export const selectedPanel: { value: string | null } = $state({ value: null })
 
-export const ST_SLIDER: { slides: HTMLElement[], activeSlide: HTMLElement|null, previousSlide: string, nextSlide: string } = $state({ slides: [], activeSlide: null, previousSlide: "", nextSlide: "" })
+// export const ST_SLIDER: Record<string, {
+//   slides: HTMLElement[],
+//   activeSlide: HTMLElement | null,
+//   previousSlide: string | null,
+//   nextSlide: string | null
+// }> = $state({});
+
 
 export const notify = (msg: string, type: NOTIFICATION_TYPE = "error", config: NOTIFY_CONFIG = {}): string => {
   const defaultConfig: NOTIFY_CONFIG = { removeOnClick: true, removeAfter: 4000, rounded: "md", theme: "default", variant: "card" };

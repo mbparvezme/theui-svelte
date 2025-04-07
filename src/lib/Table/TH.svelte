@@ -3,14 +3,8 @@
   import { twMerge } from "tailwind-merge"
   type SizeVariants = "compact" | "comfortable" | "default"
 
-  interface Props {
-    children ?: Snippet,
-    keys ?: string[],
-    [key : string] : unknown,
-  }
-
   const  CTX: any = getContext("TABLE")
-  let {children, keys, ...props} : Props = $props()
+  let {children, ...props} : {children ?: Snippet, [key : string] : unknown} = $props()
 
   const sizeClasses: Record<SizeVariants, string> = {
     compact: "p-2",

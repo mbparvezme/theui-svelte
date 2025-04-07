@@ -48,6 +48,9 @@ export type DROPDOWN_ITEM = {
   text?: string;
   type?: "button" | "divider" | "header" | "link"
 };
+
+export type CARD_IMAGE_TYPE = { class?: string, src ?: string, alt ?: string, [key: string]: unknown }
+
 export type DROPDOWN_ITEM_CONFIG = {
   activeClass?: string;
   linkClass?: string;
@@ -77,7 +80,7 @@ export type SITE = {
 export type CORE = {
   isRounded: boolean;
   toggleTheme: boolean | "system";
-  animate: ANIMATE_SPEED;
+  animationSpeed: ANIMATE_SPEED;
   reset: boolean;
 };
 
@@ -100,6 +103,8 @@ export type NOTIFICATION_TYPE = "error" | "info" | "success" | "warning";
 export type RESPONSIVE_NAV_ON = { sm: string; md: string; lg: string; xl: string; }
 export type MOBILE_NAV_ON = keyof RESPONSIVE_NAV_ON
 
+export type NAV_SCROLL_BEHAVIOR = 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide';
+
 export type NOTIFY_CONFIG = {
   removeAfter?: number;
   removeOnClick?: boolean;
@@ -109,7 +114,7 @@ export type NOTIFY_CONFIG = {
 };
 
 export type TABLE_CONFIG = {
-  animate: ANIMATE_SPEED;
+  animationSpeed: ANIMATE_SPEED;
   border: "x" | "y" | "both" | "none";
   borderColor: string;
   hover: boolean | string;
@@ -120,7 +125,7 @@ export type TABLE_CONFIG = {
 
 export type TAB_CONFIG = {
   variant: 'tabs' | 'pills';
-  animate?: ANIMATE_SPEED;
+  animationSpeed?: ANIMATE_SPEED;
   border ?: boolean | string;
   tabClasses?: string;
   tabActiveClasses?: string;
