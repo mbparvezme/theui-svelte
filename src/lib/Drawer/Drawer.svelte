@@ -7,7 +7,6 @@
 
   interface Props {
     children ?: Snippet,
-    id ?: string,
     label ?: string | Snippet,
     animationSpeed ?: ANIMATE_SPEED,
     backdrop ?: boolean|string,
@@ -20,7 +19,6 @@
 
   let {
     children,
-    id = generateToken(),
     label,
     animationSpeed = "fast",
     backdrop = true,
@@ -31,6 +29,7 @@
     ...props
   } : Props = $props()
 
+  const id = props?.id ?? generateToken()
   let active: boolean = $state(false)
 
   let toggle = (id: string) => {
