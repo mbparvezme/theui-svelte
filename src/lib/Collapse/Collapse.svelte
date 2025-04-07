@@ -23,7 +23,6 @@
   } : Props = $props();
 
   let element: HTMLElement|null = $state(null)
-  let classes = animationClass(animationSpeed)
 
   const openCollapse = () => {
     if(animationSpeed){
@@ -72,7 +71,7 @@
 {/if}
 
 {#if children}
-<div {id} class="theui-collapse-body overflow-hidden {classes}" class:invisible={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
+<div {id} class="theui-collapse-body overflow-hidden {animationClass(animationSpeed)}" class:invisible={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
   {@render children?.()}
 </div>
 {/if}
