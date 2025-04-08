@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
+  import type { ACCORDION_SIZE, ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { getContext, onMount, type Snippet } from "svelte"
   import { twMerge } from "tailwind-merge"
   import { generateToken, roundedClass, animationClass } from "$lib/function"
@@ -8,16 +8,15 @@
   interface Props {
     children?: Snippet,
     title?: string|Snippet,
-    id?: string,
+    size?: ACCORDION_SIZE,
     animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
-    size?: "compact" | "default" | "large",
     containerClasses?: string,
     openContainerClasses?: string,
     titleClasses?: string,
     openTitleClasses?: string,
     contentClasses?: string,
-    [key: string] : unknown // open, flush
+    [key: string] : unknown   // open, flush
 	}
 
   const CTX: any = getContext("ACCORDION") || {}
@@ -25,20 +24,21 @@
   let {
     children,
     title,
-    id = generateToken(),
-    animationSpeed = "fast",
-    rounded = "md",
-    size = CTX?.size ?? "default",
-    containerClasses = "",
-    contentClasses = "",
-    titleClasses = "",
-    openContainerClasses = "",
-    openContentClasses = "",
-    openTitleClasses = "",
+    animationSpeed        = CTX?.animationSpeed ?? "fast",
+    size                  = CTX?.size ?? "default",
+    rounded               = CTX?.rounded ?? "md",
+    containerClasses      = CTX?.containerClasses ?? "",
+    openContainerClasses  = CTX?.openContainerClasses ?? "",
+    titleClasses          = CTX?.titleClasses ?? "",
+    openTitleClasses      = CTX?.openTitleClasses ?? "",
+    contentClasses        = CTX?.contentClasses ?? "",
     ...props
   } : Props = $props()
+  
+  const id = props?.id as string ?? generateToken()
+  const isFlush = props?.flush || CTX?.flush
 
-  let toggle = () => {
+  const toggle = () => {
     const accordion = document.getElementById(id)
     if (!accordion) return
 
@@ -82,7 +82,7 @@
     }
   })
 
-  let titleClass = {
+  const titleClass = {
     default: {
       compact: "p-3",
       default: "p-4",
@@ -95,7 +95,7 @@
     }
   }
 
-  let contentClass = {
+  const contentClass = {
     default: {
       compact: "p-3",
       default: "p-4",
@@ -108,9 +108,7 @@
     }
   }
 
-  let isFlush = props?.flush || CTX?.flush
-
-  let getContainerClasses = () => {
+  const getContainerClasses = () => {
     let cls = `theui-accordion ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
     if(isFlush){
       cls += "border-b ";
@@ -121,7 +119,7 @@
     return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openContainerClasses) : twMerge(cls, containerClasses);
   }
 
-  let getTitleClasses = () => {
+  const getTitleClasses = () => {
     let cls = `theui-accordion-title flex items-center w-full ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
     if(isFlush){
       cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary-500 " : "border-b border-gray-300 dark:border-gray-700 ";
@@ -131,7 +129,7 @@
     return twMerge(cls, ST_ACTIVE_ACCORDIONS.value.includes(id) ? openTitleClasses : titleClasses);
   }
 
-  let getContentClasses = () => {
+  const getContentClasses = () => {
     return twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
   }
 </script>

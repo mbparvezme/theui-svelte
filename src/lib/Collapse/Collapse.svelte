@@ -5,23 +5,21 @@
 
   interface Props {
     children: Snippet,
-    title ?: Snippet,
-    content ?: string,
+    trigger ?: Snippet,
     animationSpeed ?: ANIMATE_SPEED,
-    id ?: string,
     ariaLabel ?: string,
     isOpen ?: boolean
   }
 
   let {
     children,
-    title,
+    trigger,
     animationSpeed = "fast",
-    id = generateToken(),
     ariaLabel = "",
     isOpen = false,
   } : Props = $props();
-
+  
+  const id = generateToken()
   let element: HTMLElement|null = $state(null)
 
   const openCollapse = () => {
@@ -62,11 +60,11 @@
   onMount(() => { element = document.getElementById(id)! })
 </script>
 
-{#if title}
-<span  class="theui-collapse-title select-none" class:collapse-active-title={isOpen} role="button" tabindex="0"
+{#if trigger}
+<span  class="theui-collapse-trigger select-none" class:collapse-active-title={isOpen} role="button" tabindex="0"
   onclick={()=>toggleCollapse()} onkeydown={(e: KeyboardEvent)=>handleKeyboard(e)}
   aria-controls={id} aria-expanded={isOpen} aria-label={ariaLabel} aria-describedby={id} id="{id}Collapse">
-  {@render title()}
+  {@render trigger()}
 </span>
 {/if}
 

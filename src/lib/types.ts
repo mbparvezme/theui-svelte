@@ -34,6 +34,7 @@ export type POSITION_TYPES =
   | 'left-start'
   | 'left-end';
 export type ENTRANCE_ANIMATION = 'fade' | 'slide-in' | 'slide-out' | 'zoom-in' | 'zoom-out'
+export type ACCORDION_SIZE = "compact" | "default" | "large"
 export type PRELOAD = "" | "off" | "tap" | "hover";
 export type TABLE_ROW = string[] | Record<string, unknown>[];
 export type BUTTON_SIZE = "xs" | "sm" | "md" | "lg" | "xl" | "auto";

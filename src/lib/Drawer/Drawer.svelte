@@ -29,7 +29,7 @@
     ...props
   } : Props = $props()
 
-  const id = props?.id ?? generateToken()
+  const id = props?.id as string ?? generateToken()
   let active: boolean = $state(false)
 
   let toggle = (id: string) => {
