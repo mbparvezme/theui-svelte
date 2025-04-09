@@ -47,7 +47,7 @@
     dropdownEvent = 'click',
     label,
     rounded = "md",
-    width = "auto",
+    width = "md",
 		...props
   } : Props = $props()
 

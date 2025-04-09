@@ -35,7 +35,7 @@
   class:flex-row-reverse={props?.reverse}
   class:justify-end={props?.reverse}
 >
-  <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio">
+  <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio" aria-disabled={props?.disabled as boolean|undefined} bind:group={value} aria-checked={value === props?.value}>
   {#if children}
     <Label for={props?.id ?? id} class="cursor-pointer {labelClasses??""}">
       {@render children()}
