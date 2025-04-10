@@ -1,26 +1,32 @@
 <script lang="ts">
-  import { onMount, type Snippet } from "svelte";
-  import { twMerge } from "tailwind-merge";
+  import { onMount, type Snippet } from "svelte"
+  import { twMerge } from "tailwind-merge"
 
   let {systemDefault = true, children, ...props} : {systemDefault?: boolean, children?: Snippet, [key: string]: unknown} = $props()
   let toggleTheme: () => void = () => {}
 
+  let isDarkModeActive: boolean = $state(false)
+
   onMount((): void => {
     if (!localStorage.theme) {
-      localStorage.setItem("theme", systemDefault && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      localStorage.setItem("theme", systemDefault && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
     }
     if(localStorage.theme === "dark"){
+      isDarkModeActive = true
       document.documentElement.classList.add("dark")
+    }else{
+      isDarkModeActive = false
     }
     toggleTheme = () => {
-      const newTheme = localStorage.theme === "light" ? "dark" : "light";
-      localStorage.setItem("theme", newTheme);
-      document.documentElement.classList.toggle("dark", newTheme === "dark");
+      const newTheme = localStorage.theme === "light" ? "dark" : "light"
+      isDarkModeActive = !isDarkModeActive
+      localStorage.setItem("theme", newTheme)
+      document.documentElement.classList.toggle("dark", newTheme === "dark")
     }
   })
 </script>
 
-<button class={"theui-theme-toggler " + twMerge("bg-transparent p-0.5", (props?.class ?? "") as string)} onclick={()=>toggleTheme()} aria-label="Toggle light or dark mode">
+<button  aria-label="Toggle light or dark mode" {...props}class={"theui-theme-toggler " + twMerge("bg-transparent p-0.5", (props?.class ?? "") as string)} onclick={()=>toggleTheme()}aria-pressed={isDarkModeActive ? "true" : "false"}>
   {#if children}
     {@render children()}
   {:else}

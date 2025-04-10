@@ -27,7 +27,7 @@
     ...props
   }: Props & INPUT_CONFIG = $props()
   
-  const id = generateToken()
+  const id: string = props?.id as string ?? generateToken()
   let C:INPUT_CONFIG & {type: "group"} = {animationSpeed, labelClasses, size, reset, type: "group"}
 </script>
 
@@ -37,7 +37,7 @@
 >
   <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio" aria-disabled={props?.disabled as boolean|undefined} bind:group={value} aria-checked={value === props?.value}>
   {#if children}
-    <Label for={props?.id ?? id} class="cursor-pointer {labelClasses??""}">
+    <Label for={id} class="cursor-pointer {labelClasses??""}">
       {@render children()}
     </Label>
   {/if}

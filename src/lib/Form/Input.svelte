@@ -36,7 +36,7 @@
     ...props
   } : Props & INPUT_CONFIG = $props()
 
-  const id = generateToken()
+  const id: string = props?.id as string ?? generateToken()
   let C:INPUT_CONFIG & {type: "input", inputType: INPUT_TYPE} = {animationSpeed, floatingLabel, labelClasses, rounded, size, variant, reset, type: "input", inputType: type}
   setContext('FORM', C)
 
@@ -45,22 +45,22 @@
 
 <div class={twMerge(inputContainerClass(C, true ), wrapperClasses)}>
   {#if children && !floatingLabel}
-    <Label for={props?.id ?? id} class={labelClasses}>{@render children()}</Label>
+    <Label for={id} class={labelClasses}>{@render children()}</Label>
   {/if}
 
   <div class="relative flex focus-within">
     {#if type == "textarea"}
-      <textarea {id} rows=3 {...props} class={inputClasses(C, props)} placeholder={(props?.placeholder ?? " ") as string} bind:value></textarea>
+      <textarea {id} rows=3 {...props} class={inputClasses(C, props)} placeholder={(props?.placeholder ?? " ") as string} bind:value aria-describedby={helperText ? `${id}-helper` : null}></textarea>
     {:else}
-      <input {id} {...props} class={inputClasses(C, props)} placeholder={props?.placeholder ?? " "} bind:value use:setType/>
+      <input {id} {...props} class={inputClasses(C, props)} placeholder={props?.placeholder ?? " "} bind:value use:setType aria-describedby={helperText ? `${id}-helper` : null}/>
     {/if}
     {#if floatingLabel && children}
-      <Label for={props?.id ?? id} class={labelClasses}>{@render children()}</Label>
+      <Label for={id} class={labelClasses}>{@render children()}</Label>
     {/if}
   </div>
 
   {#if helperText}
-    <HelperText>
+    <HelperText id={id + "-helper"}>
       {#if typeof helperText === "function"} {@render helperText()}
       {:else} {@html helperText} {/if}
     </HelperText>

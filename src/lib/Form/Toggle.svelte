@@ -28,18 +28,23 @@
     wrapperClasses = "",
     ...props
   }: Props & INPUT_CONFIG = $props()
-  
+
   let classes: string = `border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 dark:checked:bg-brand-primary-500 appearance-none relative flex items-center text-brand-primary-500 focus:!ring-gray-500 checked:focus:!ring-brand-primary-500 ${getToggleSize(size)} rtl:checked:after:-translate-x-full ${roundedClass(rounded)} ${animationClass(animationSpeed)} after:bg-white checked:bg-none ${roundedClass(rounded, "all", "after")} ${animationClass(animationSpeed, "all", "after")}`
-  let setType: any = (node: HTMLInputElement) => node.type = type
-  
-  const id = generateToken()
-  let C:INPUT_CONFIG & {id: string, type: "group"} = {animationSpeed, labelClasses, rounded, size, type: "group"}
+
+  let isActive: boolean = $state(!!props?.checked)
+  const id: string = props?.id as string ?? generateToken()
+  let C:INPUT_CONFIG & {type: "group"} = {animationSpeed, labelClasses, rounded, size, type: "group"}
 </script>
 
 <div class={twMerge("flex items-center gap-2", groupInputContainerClass(C, {props}), wrapperClasses)}>
-	<input {id} {...props} {value} use:setType class="{twMerge(classes, props?.class as string)} cursor-pointer" />
+  {#if type == "checkbox"}
+	  <input {id} {...props} {value} type="checkbox" class="{twMerge(classes, props?.class as string)} cursor-pointer" role="switch" aria-checked={isActive} bind:checked={isActive} />
+  {/if}
+  {#if type == "radio"}
+	  <input {id} {...props} {value} type="radio" class="{twMerge(classes, props?.class as string)} cursor-pointer" role="switch" aria-checked={value === props?.value} bind:group={value} />
+  {/if}
   {#if children}
-    <Label for={props?.id ?? id} class="cursor-pointer font-bold {labelClasses??""}">
+    <Label for={id} class="cursor-pointer font-bold {labelClasses??""}">
       {@render children()}
     </Label>
   {/if}

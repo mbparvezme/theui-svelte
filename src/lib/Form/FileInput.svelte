@@ -31,7 +31,7 @@
     ...props
   } : Props & INPUT_CONFIG = $props()
   
-  const id = generateToken()
+  const id: string = props?.id as string ?? generateToken()
   let C:INPUT_CONFIG = {rounded, size, variant, reset}
 
   setContext('FORM', C)
@@ -39,13 +39,13 @@
 
 <div class={twMerge(inputContainerClass(C, true ), wrapperClasses)}>
   {#if children}
-    <Label for={props?.id ?? id} class={labelClasses}>{@render children()}</Label>
+    <Label for={id} class={labelClasses}>{@render children()}</Label>
   {/if}
 
   <div class="relative flex flex-col gap-1 focus-within">
-    <input type="file"name="file" {id} {...props} class={inputClasses(C, props, "file")} bind:files />
+    <input type="file"name="file" {id} {...props} class={inputClasses(C, props, "file")} bind:files aria-describedby={helperText ? `${id}-helper` : null} />
     {#if helperText}
-      <HelperText>
+      <HelperText id={id + "-helper"}>
         {#if typeof helperText === "function"} {@render helperText()}
         {:else} {@html helperText} {/if}
       </HelperText>

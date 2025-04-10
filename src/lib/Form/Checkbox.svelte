@@ -26,8 +26,8 @@
     ...props
   }: Props & INPUT_CONFIG = $props()
 
-  const id = generateToken()
-  let isChecked = $state(!!props?.checked)
+  const id: string = props?.id as string ?? generateToken()
+  let isChecked: boolean = $state(!!props?.checked)
   let C:INPUT_CONFIG & {type: "group"} = {animationSpeed, labelClasses, rounded, size, reset, type: "group"}
 </script>
 
@@ -37,7 +37,7 @@
 >
   <input {id} {...props} class={inputClasses(C, props, "checkbox")} type="checkbox" aria-required={props?.required as boolean|undefined} aria-disabled={props?.disabled as boolean|undefined} aria-checked={isChecked} bind:checked={isChecked}>
   {#if children}
-    <Label for={props?.id ?? id} class="cursor-pointer {labelClasses??""}">
+    <Label for={id} class="cursor-pointer {labelClasses??""}">
       {@render children()}
     </Label>
   {/if}

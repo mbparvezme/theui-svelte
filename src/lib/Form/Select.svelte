@@ -36,7 +36,7 @@
     ...props
   } : Props & INPUT_CONFIG = $props()
 
-  const id = generateToken()
+  const id: string = props?.id as string ?? generateToken()
   let C:INPUT_CONFIG = {animationSpeed, floatingLabel, labelClasses, rounded, size, variant, reset}
   setContext('FORM', C)
 </script>
@@ -56,7 +56,7 @@
   {/if}
 
   <div class="relative flex focus-within">
-    <select {id} bind:value={value} {...props} class={inputClasses(C, props, "select")}>
+    <select {id} bind:value={value} {...props} class={inputClasses(C, props, "select")} aria-describedby={helperText ? `${id}-helper` : null}>
       {#if props?.placeholder !== false}<option value="" disabled>{String(props?.placeholder??"-- Select --")}</option>{/if}
       <!-- If options is provided, it will be used; otherwise, children will be rendered. -->
       {#if options && options.length}
@@ -68,12 +68,12 @@
       {/if}
     </select>
     {#if typeof label == "string" && floatingLabel}
-      <Label for={props?.id ?? id} class={labelClasses}>{label}</Label>
+      <Label for={id} class={labelClasses}>{label}</Label>
     {/if}
   </div>
 
   {#if helperText}
-    <HelperText>
+    <HelperText id={id + "-helper"}>
       {#if typeof helperText === "function"} {@render helperText()}
       {:else} {@html helperText} {/if}
     </HelperText>

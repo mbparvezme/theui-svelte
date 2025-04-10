@@ -26,6 +26,8 @@
   width="{size}rem" height="{size}rem"
   {viewBox}
   {focusable}
+  aria-hidden="true"
+  tabindex="-1"
   {...props}
   class={twMerge(cls, (props?.class || "") as string)}
   class:stroke-icon={props?.stroke}
