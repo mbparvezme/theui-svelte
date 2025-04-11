@@ -44,10 +44,4 @@
   .theui-notifications.bottom-start, .theui-notifications.top-start{
     @apply items-start start-0;
   }
-  /*.theui-notifications.top-start .notification, .theui-notifications.top-center .notification, .theui-notifications.top-end .notification{
-    @apply mb-4;
-  }
-  .theui-notifications.bottom-start .notification, .theui-notifications.bottom-center .notification, .theui-notifications.bottom-end .notification{
-    @apply mt-4;
-  }*/
 </style>

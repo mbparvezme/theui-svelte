@@ -26,7 +26,7 @@
   })
 </script>
 
-<button  aria-label="Toggle light or dark mode" {...props}class={"theui-theme-toggler " + twMerge("bg-transparent p-0.5", (props?.class ?? "") as string)} onclick={()=>toggleTheme()}aria-pressed={isDarkModeActive ? "true" : "false"}>
+<button  aria-label="Toggle light or dark mode" {...props}class={"theui-theme-toggler " + twMerge("bg-transparent p-0.5", (props?.class ?? "") as string)} onclick={()=>toggleTheme()} aria-pressed={isDarkModeActive ? "true" : "false"}>
   {#if children}
     {@render children()}
   {:else}

@@ -179,9 +179,9 @@ const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): 
   const inputType = ["radio", "checkbox"].includes(type) ? "group" : type === "file" ? "file" : type === "select" ? "select" : "default"
   const sizeKey = config.size ?? "md"
 
-  if (config?.inputType && config?.inputType == "color"){
+  // if (config?.inputType && config?.inputType == "color"){
     
-  }
+  // }
 
   return inputType === "default"
     ? inputTypeSizeClasses.default[config.variant === "flat" ? "flat" : "nonFlat"][sizeKey]

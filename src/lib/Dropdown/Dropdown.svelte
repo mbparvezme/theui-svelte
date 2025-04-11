@@ -155,27 +155,6 @@
 	.theui-dropdown.open .dropdown-content,.theui-dropdown.open .backdrop{
 		@apply visible opacity-100;
 	}
-
-	/* Dropdown sizes */
-	/* .dropdown-sm .dropdown-content{
-		@apply w-48;
-	}
-	.dropdown-md .dropdown-content{
-		@apply w-64;
-	}
-	.dropdown-lg .dropdown-content{
-		@apply w-80;
-	}
-	.dropdown-full .dropdown-content{
-		@apply w-full start-0 end-0;
-	}
-	.dropdown-custom .dropdown-content{
-		@apply w-[var(--dropdown-width)] start-0 end-0;
-	}
-	.dropdown-end .dropdown-content{
-		@apply start-auto end-0;
-	} */
-
 	/* Dropdown animations */
 	.theui-dropdown .dropdown-content.slide-down{
 		@apply -translate-y-2;

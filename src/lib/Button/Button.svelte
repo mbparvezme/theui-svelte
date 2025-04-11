@@ -77,18 +77,6 @@
   let getButtonClass = () => {
     let baseClasses = `${(href ? "theui-link" : "theui-button")} inline-flex gap-2 focus:ring-4 focus:outline-none ${sizeClasses[square ? "square" : "default"][size]} ${animationClass(animationSpeed)} ${utilityClasses()}`
 
-    // if(outline){
-    //   return `${baseClasses} ${themes["outline"][color]}`
-    // }else{
-    //   if(theme === "light"){
-    //     return `${baseClasses} ${themes["light"][color]}`
-    //   }
-    //   if(theme === "gradient"){
-    //     return `${baseClasses} ${themes["gradient"][gradientColor]}`
-    //   }
-    //   return `${baseClasses} ${themes["default"][color]}`
-    // }
-
     if(outline){
       return `${baseClasses} ${buttonTheme(CTX, "outline", color)}`
     }else{

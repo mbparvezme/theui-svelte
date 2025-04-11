@@ -79,8 +79,6 @@ export const QABTheme = (type: string, color: string) => {
       warning: `bg-gradient-to-r hover:bg-gradient-to-br from-warning-300 via-warning-400 to-warning-600 text-warning-900 focus:ring-warning-300`,
     },
   }
-  // console.log(type, color, themes[type][color])
-  // console.log(themes[type] ? (themes[type][color] || themes[type]["brand"]) : themes["default"]["brand"])
 
   return themes[type] ? (themes[type][color] || themes[type]["brand"]) : themes["default"]["brand"]
 }
