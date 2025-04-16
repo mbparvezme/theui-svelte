@@ -1,6 +1,6 @@
 {
 	"name": "theui-svelte",
-	"version": "2.0.0rc58",
+	"version": "2.0.0rc59",
 	"description": "theui-svelte - a component library by TheUI. Out-of-the-box accessible and easy to customize built with TailwindCSS (v3).",
 	"author": {
 		"name": "M B Parvez",
@@ -39,7 +39,6 @@
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/package": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
-		"@tailwindcss/aspect-ratio": "^0.4.2",
 		"@tailwindcss/forms": "^0.5.9",
 		"@tailwindcss/typography": "^0.5.15",
 		"@testing-library/jest-dom": "^6.6.3",

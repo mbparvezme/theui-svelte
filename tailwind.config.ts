@@ -1,14 +1,10 @@
-import aspectRatio from '@tailwindcss/aspect-ratio';
-import forms from '@tailwindcss/forms';
-import typography from '@tailwindcss/typography';
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'
+import preset from "./src/lib/preset.cjs"
 
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
-  presets: [require("./src/lib/preset.cjs")],
+  presets: [preset],
   theme: {
     extend: {}
-  },
-
-  plugins: [typography, forms, aspectRatio]
-} satisfies Config;
+  }
+} satisfies Config

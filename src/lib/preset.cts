@@ -1,6 +1,5 @@
 import type { Config } from 'tailwindcss';
 
-import aspectRatio from '@tailwindcss/aspect-ratio';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
 
@@ -53,7 +52,6 @@ export default {
   plugins: [
     typography,
     forms,
-    aspectRatio,
     plugin(({ addBase }) => {
       addBase({
         ':root': {
