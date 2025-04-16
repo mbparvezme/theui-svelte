@@ -92,15 +92,15 @@ export default {
         "&:not(:last-child)",
       ]);
     }),
-    plugin(({ addComponents }) => {
-      addComponents({
-        ".sticky,[class$=sticky]": {
-          zIndex: "20",
-        },
-        ".fixed,[class$=fixed]": {
-          zIndex: "30",
-        },
-      });
-    }),
+    // plugin(({ addComponents }) => {
+    //   addComponents({
+    //     ".sticky,[class$=sticky]": {
+    //       zIndex: "20",
+    //     },
+    //     ".fixed,[class$=fixed]": {
+    //       zIndex: "30",
+    //     },
+    //   });
+    // }),
   ],
 } satisfies Config;
