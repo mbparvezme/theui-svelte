@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { Container} from "$lib"
+  import twShades from "tw-color-shades";
+  console.log(twShades('#E8E838'))
 </script>
 
-<Container class="py-0 flex justify-center items-center h-screen text-xl">
-  <a href="/p">Test</a>
-  <p>Read the <a href="https://theui.dev" target="_blank" class="underline decoration-dotted decoration-2 underline-offset-2">documentation</a>!</p>
-</Container>
+<h1>Welcome to your library project</h1>
+<p>Create your package using @sveltejs/package and preview/showcase your work with SvelteKit</p>
+<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
