@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {Accordion, AccordionItem} from "$lib";
+  import {Accordion, AccordionItem, Alert} from "$lib";
 </script>
 
 <div class="p-16">
@@ -8,5 +8,7 @@
       A
     </AccordionItem>
   </Accordion>
+
+  <Alert dismissible>I'm error (default) alert!</Alert>
 </div>
 <!-- <button onclick={() => toggleTheme()}>Theme</button> -->
