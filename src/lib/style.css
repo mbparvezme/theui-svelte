@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant edge-child (& :first-child, & :last-child);

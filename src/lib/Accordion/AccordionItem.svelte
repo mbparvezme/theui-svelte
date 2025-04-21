@@ -82,7 +82,7 @@
     }
   })
 
-  const titleClass = {
+  const titleClass: Record<'default'|'flush', Record<keyof ACCORDION_SIZE, string>> = {
     default: {
       compact: "p-3",
       default: "p-4",
@@ -95,7 +95,7 @@
     }
   }
 
-  const contentClass = {
+  const contentClass: Record<'default'|'flush', Record<keyof ACCORDION_SIZE, string>> = {
     default: {
       compact: "p-3",
       default: "p-4",
@@ -120,7 +120,7 @@
   }
 
   const getTitleClasses = () => {
-    let cls = `theui-accordion-title flex items-center w-full ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
+    let cls = `theui-accordion-title flex items-center w-full cursor-pointer ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
     if(isFlush){
       cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary-500 " : "border-b border-gray-300 dark:border-gray-700 ";
     }else{
@@ -146,7 +146,7 @@
 </div>
 
 {#snippet accordionHeading()}
-  <button class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active')} class:accordion-active={ST_ACTIVE_ACCORDIONS.value.includes(id)} onclick={()=>toggle()}>
+  <button class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active')} class:accordion-active={ST_ACTIVE_ACCORDIONS.value.includes(id)} onclick={()=>toggle()} type="button">
     {#if typeof title === "string"}
       {@html title}
     {:else}
