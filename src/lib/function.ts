@@ -477,7 +477,7 @@ export const messageTheme = {
     error: "bg-error-500 text-error-50 dark:bg-error-600",
     info: "bg-info-600 text-info-50 dark:bg-info-700",
     success: "bg-success-600 text-success-50 dark:bg-success-700",
-    warning: "bg-warning-300 dark:bg-warning-600 text-warning-900 dark:text-warning-50",
+    warning: "bg-warning-300 dark:bg-warning-600 text-warning-900",
   },
   light: {
     brand: "bg-brand-primary-100 text-brand-primary-800",

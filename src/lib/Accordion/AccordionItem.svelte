@@ -109,22 +109,21 @@
   }
 
   const getContainerClasses = () => {
-    let cls = `theui-accordion ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
+    let cls = `theui-accordion border-gray-300 dark:border-gray-700 not-edge-child:rounded-none! ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
     if(isFlush){
       cls += "border-b ";
     }else{
-      cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded, "top", "first")} ${roundedClass(rounded, "bottom", "last")}` : `border ${roundedClass(rounded)}`}`;
+      cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded)} ` : `border ${roundedClass(rounded)}`}`;
     }
-    cls += " border-gray-300 dark:border-gray-700 overflow-hidden ";
     return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openContainerClasses) : twMerge(cls, containerClasses);
   }
 
   const getTitleClasses = () => {
-    let cls = `theui-accordion-title flex items-center w-full cursor-pointer ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
+    let cls = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand ${roundedClass(rounded, "top")} ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
     if(isFlush){
-      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary-500 " : "border-b border-gray-300 dark:border-gray-700 ";
+      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary " : "border-b border-gray-300 dark:border-gray-700 ";
     }else{
-      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary-300 dark:bg-brand-primary-700" : " ";
+      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary dark:bg-brand-primary-600" : " ";
     }
     return twMerge(cls, ST_ACTIVE_ACCORDIONS.value.includes(id) ? openTitleClasses : titleClasses);
   }
@@ -135,7 +134,7 @@
 </script>
 
 <div class={getContainerClasses()}>
-  <div id='{id}-heading' class='accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
+  <div id='{id}-heading' class='theui-accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
     {@render accordionHeading()}
   </div>
   <div {id} class="accordion-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!ST_ACTIVE_ACCORDIONS.value.includes(id)} class:open={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-labelledby='{id}-heading' aria-hidden={!ST_ACTIVE_ACCORDIONS.value.includes(id)}>
@@ -146,7 +145,7 @@
 </div>
 
 {#snippet accordionHeading()}
-  <button class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active')} class:accordion-active={ST_ACTIVE_ACCORDIONS.value.includes(id)} onclick={()=>toggle()} type="button">
+  <button id='{id}-heading' class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active text-on-brand-primary')} onclick={()=>toggle()} aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id} type="button">
     {#if typeof title === "string"}
       {@html title}
     {:else}
