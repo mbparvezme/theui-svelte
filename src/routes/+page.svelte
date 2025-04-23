@@ -1,5 +1,10 @@
 <script lang="ts">
-  import {Accordion, AccordionItem, Alert, DarkMode, Badge, Breadcrumb, Button, Card, Chips, Collapse} from "$lib";
+  import {Accordion, AccordionItem, Alert, DarkMode, Badge, Breadcrumb, Button, Card, Chips, Collapse, Drawer, ListGroup, ListItem} from "$lib";
+  import {Navbar, NavBrand, NavLinkGroup, NavDropdown, NavLink, NavCollapse, Notification, notify} from "$lib";
+  import {Modal} from "$lib";
+
+	import Dropdown from "$lib/Dropdown/Dropdown.svelte";
+	import DropdownItem from "$lib/Dropdown/DropdownItem.svelte";
 	import type { BREADCRUMB_DATA } from "$lib/types.js";
 	// import twShades from "tw-color-shades";
   // console.log("error: ", twShades("#E53935"))
@@ -13,10 +18,45 @@
     { text: "Company" }
   ]
 </script>
+<Notification />
+<Navbar>
+  <NavBrand href="#">BRAND</NavBrand>
+  <NavCollapse>
+    <NavLinkGroup>
+      <NavLink href="#" text="Link 1" />
+      <NavLink href="#" text="Link 2" />
+      <NavLink href="#" text="Link 3" />
+      <NavDropdown label="Dropdown">
+        <NavLink href="#" text="Dropdown Link 1" />
+        <NavLink href="#" text="Dropdown Link 2" />
+        <NavLink href="#" text="Dropdown Link 3" />
+      </NavDropdown>
+    </NavLinkGroup>
+  </NavCollapse>
+</Navbar>
 
 <DarkMode />
 
+<Button
+  onclick={
+    () => notify("Hello world!")
+  }
+>Notify</Button>
+
 <div class="p-16">
+  <Drawer label="Trigger Drawer" position="top">Hello</Drawer>
+  <Modal label="Modal Button">
+    Hello Modal!
+  </Modal>
+  <br/>
+  <br/>
+  <Dropdown label="Dropdown Trigger" align="start">
+    <DropdownItem>Hello</DropdownItem>
+    <DropdownItem>Hello</DropdownItem>
+    <DropdownItem>Hello</DropdownItem>
+  </Dropdown>
+  <br/>
+  <br/>
   <Accordion>
     <AccordionItem title="Hello">
       A
@@ -24,7 +64,14 @@
   </Accordion>
   <br/>
   <br/>
-  <Chips>Example Chips</Chips>
+  <ListGroup>
+    <ListItem>First Item</ListItem>
+    <ListItem>Second Item</ListItem>
+    <ListItem>Third Item</ListItem>
+  </ListGroup>
+  <br/>
+  <br/>
+  <Chips imageUrl="https://randomuser.me/api/portraits/men/0.jpg">Example Chips</Chips>
   <br/>
   <br/>
   <Collapse ariaLabel="COLLAPSE">
@@ -62,4 +109,3 @@
   <br/>
   <br/>
 </div>
-<!-- <button onclick={() => toggleTheme()}>Theme</button> -->

@@ -141,3 +141,16 @@
     @apply outline-none ring-transparent focus:ring-brand-primary-500/50;
   }
 }
+
+.navbar-collapse .nav-link:not(.nav-dropdown-btn){
+  @apply hover:bg-secondary;
+}
+.navbar-collapse.xl-collapse .nav-links > .nav-link{
+  @apply xl:hover:bg-transparent;
+}
+.navbar-collapse.lg-collapse .nav-links > .nav-link{
+  @apply lg:hover:bg-transparent;
+}
+.navbar-collapse.md-collapse .nav-links > .nav-link{
+  @apply md:hover:bg-transparent;
+}
