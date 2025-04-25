@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext, type Snippet } from "svelte"
-	import { labelClasses } from "./form"
+	import { labelClasses } from "./form.ts"
 
   const CTX: any = getContext('FORM') ?? {}
   let {children, ...props} : {children: Snippet, [key : string]: unknown} = $props()

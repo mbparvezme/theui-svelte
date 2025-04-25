@@ -3,7 +3,7 @@
 	import { animationClass, generateToken, roundedClass } from "$lib/function"
 	import { getContext, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
-	import { getToggleSize, groupInputContainerClass } from "./form"
+	import { getToggleSize, groupInputContainerClass } from "./form.ts"
 	import { Label } from "$lib";
 
   interface Props {
