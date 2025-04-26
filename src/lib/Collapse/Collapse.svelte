@@ -69,13 +69,7 @@
 {/if}
 
 {#if children}
-<div {id} class="theui-collapse-body overflow-hidden {animationClass(animationSpeed)}" class:invisible={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
+<div {id} class="theui-collapse-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
   {@render children?.()}
 </div>
 {/if}
-
-<style lang="postcss">
-  .theui-collapse-body.invisible {
-    @apply h-[0];
-  }
-</style>

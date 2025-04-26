@@ -101,7 +101,7 @@
   </div>
 {/if}
 
-<style lang="postcss">
+<style>
   .theui-drawer.open{
     @apply visible opacity-100;
   }

@@ -141,7 +141,7 @@
 	</ul>
 </div>
 
-<style lang="postcss">
+<style>
   .theui-dropdown .backdrop{
     @apply z-[10];
   }

@@ -2,4 +2,4 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-@import "./lib/style.css";
+@import "$lib/style.css";

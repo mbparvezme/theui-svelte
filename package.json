@@ -54,6 +54,8 @@
 			"types": "./dist/types.d.ts",
 			"svelte": "./dist/types.js"
 		},
+		"./style": "./dist/style.css",
+		"./style.css": "./dist/style.css",
 		"./Accordion.svelte": {
 			"types": "./dist/Accordion\\Accordion.svelte.d.ts",
 			"svelte": "./dist/Accordion\\Accordion.svelte"

@@ -2,7 +2,7 @@
   import type { INPUT_CONFIG } from "$lib/types"
   import { getContext, type Snippet } from "svelte"
   import { generateToken } from "$lib/function"
-  import { inputClasses, groupInputContainerClass } from "$lib/Form/form.js"
+  import { inputClasses, groupInputContainerClass } from "$lib/Form/form"
 	import { twMerge } from "tailwind-merge"
   import { Label } from "$lib"
 

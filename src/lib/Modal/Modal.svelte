@@ -138,7 +138,7 @@
   </div>
 {/if}
 
-<style lang="postcss">
+<style>
   .theui-modal:not(.open){
     @apply invisible opacity-0;
   }

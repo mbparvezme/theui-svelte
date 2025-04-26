@@ -117,7 +117,7 @@
   </div>
 </div>
 
-<style lang="postcss">
+<style>
   .rotate-45 > *{
     @apply transform -rotate-45;
   }

@@ -28,7 +28,7 @@
 </ul>
 {/if}
 
-<style lang="postcss">
+<style>
   .theui-notifications.top-start, .theui-notifications.top-center, .theui-notifications.top-end{
     @apply justify-start top-[0];
   }

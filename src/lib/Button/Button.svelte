@@ -123,7 +123,7 @@
 
 </svelte:element>
 
-<style lang="postcss">
+<style>
   button[disabled]:not(.btn-outline){
     @apply opacity-75 pointer-events-none;
   }

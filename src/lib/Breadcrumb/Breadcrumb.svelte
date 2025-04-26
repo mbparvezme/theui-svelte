@@ -43,7 +43,7 @@
   </li>
 {/snippet}
 
-<style lang="postcss">
+<style>
   .theui-breadcrumb .breadcrumb-item:not(:first-child)::before {
     content: var(--breadcrumb-separator);
   }

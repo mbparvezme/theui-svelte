@@ -193,7 +193,7 @@
   </div>
 </div>
 
-<style lang="postcss">
+<style>
   .theui-nav-dropdown-container.hide .nav-dropdown{
     @apply invisible;
   }
