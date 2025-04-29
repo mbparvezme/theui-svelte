@@ -18,31 +18,31 @@
 }
 
 @theme {
-  --color-brand-primary-50 : rgb(253, 236, 235);
-  --color-brand-primary-100: rgb(251, 216, 216);
-  --color-brand-primary-200: rgb(246, 178, 176);
-  --color-brand-primary-300: rgb(242, 139, 137);
-  --color-brand-primary-400: rgb(237, 101, 97);
-  --color-brand-primary-500: rgb(233, 62, 58);
-  --color-brand-primary-600: rgb(186, 50, 46);
-  --color-brand-primary-700: rgb(140, 37, 35);
-  --color-brand-primary-800: rgb(93, 25, 23);
-  --color-brand-primary-900: rgb(47, 12, 12);
-  --color-brand-primary-950: rgb(23, 6, 6);
+  --color-brand-primary-50 : oklch(0.95 0.2364 270.95);
+  --color-brand-primary-100: oklch(0.9 0.2364 270.95);
+  --color-brand-primary-200: oklch(0.8 0.2364 270.95);
+  --color-brand-primary-300: oklch(0.7 0.2364 270.95);
+  --color-brand-primary-400: oklch(0.6 0.2364 270.95);
+  --color-brand-primary-500: oklch(0.5 0.2364 270.95);
+  --color-brand-primary-600: oklch(0.4 0.2364 270.95);
+  --color-brand-primary-700: oklch(0.3 0.2364 270.95);
+  --color-brand-primary-800: oklch(0.2 0.2364 270.95);
+  --color-brand-primary-900: oklch(0.1 0.2364 270.95);
+  --color-brand-primary-950: oklch(0.05 0.2364 270.95);
 
   --text-color-on-brand-primary: #FFFFFF;
 
-  --color-brand-secondary-50: rgb(253, 253, 235);
-  --color-brand-secondary-100: rgb(250, 250, 215);
-  --color-brand-secondary-200: rgb(246, 246, 175);
-  --color-brand-secondary-300: rgb(241, 241, 136);
-  --color-brand-secondary-400: rgb(237, 237, 96);
-  --color-brand-secondary-500: rgb(232, 232, 56);
-  --color-brand-secondary-600: rgb(186, 186, 45);
-  --color-brand-secondary-700: rgb(139, 139, 34);
-  --color-brand-secondary-800: rgb(93, 93, 22);
-  --color-brand-secondary-900: rgb(46, 46, 11);
-  --color-brand-secondary-950: rgb(23, 23, 6);
+  --color-brand-secondary-50 : oklch(1 0.1094 35.42);
+  --color-brand-secondary-100: oklch(1 0.1594 35.42);
+  --color-brand-secondary-200: oklch(0.94 0.1594 35.42);
+  --color-brand-secondary-300: oklch(0.86 0.1594 35.42);
+  --color-brand-secondary-400: oklch(0.78 0.1594 35.42);
+  --color-brand-secondary-500: oklch(0.7 0.1594 35.42);
+  --color-brand-secondary-600: oklch(0.62 0.1594 35.42);
+  --color-brand-secondary-700: oklch(0.52 0.1594 35.42);
+  --color-brand-secondary-800: oklch(0.42 0.1594 35.42);
+  --color-brand-secondary-900: oklch(0.32 0.1594 35.42);
+  --color-brand-secondary-950: oklch(0.22 0.1594 35.42);
   --text-color-on-brand-secondary: #2E2105;
 
   --color-error-50 : rgb(252, 235, 235);
@@ -124,12 +124,6 @@
 @layer base {
   body {
     @apply bg-primary text-default;
-  }
-  .sticky,[class$=sticky] {
-    z-index: 20;
-  }
-  .fixed,[class$=fixed] {
-    z-index: 30;
   }
   .theui-ring-black{
     @apply outline-none focus:outline-none ring-transparent focus:ring-black/50 dark:focus:ring-black/70;
