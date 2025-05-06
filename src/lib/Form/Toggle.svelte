@@ -36,7 +36,7 @@
     xl: "h-7 w-12 after:w-5 after:h-5 px-1 checked:after:translate-x-5"
   }
 
-  let classes: string = `border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 dark:checked:bg-brand-primary-500 appearance-none relative flex items-center text-brand-primary-500 focus:!ring-gray-500 checked:focus:!ring-brand-primary-500 ${toggleSizes[size]} rtl:checked:after:-translate-x-full ${roundedClass(rounded)} ${animationClass(animationSpeed)} after:bg-white checked:bg-none ${roundedClass(rounded, "all", "after")} ${animationClass(animationSpeed, "all", "after")}`
+  let classes: string = `border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 appearance-none relative flex items-center text-brand-primary-500 ring-transparent focus:ring-brand-primary-500 ring-offset-1 ${toggleSizes[size]} rtl:checked:after:-translate-x-full ${roundedClass(rounded)} ${animationClass(animationSpeed)} after:bg-white checked:bg-none ${roundedClass(rounded, "all", "after")} ${animationClass(animationSpeed, "all", "after")}`
 
   let isActive: boolean = $state(!!props?.checked)
   const id: string = props?.id as string ?? generateToken()

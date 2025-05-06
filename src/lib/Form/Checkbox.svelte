@@ -35,12 +35,7 @@
   class:flex-row-reverse={props?.reverse}
   class:justify-end={props?.reverse}
 >
-  <input {id} {...props} class="{inputClasses(C, props, "checkbox")} checked:bg-blue-500 checked:border-blue-500
-    relative
-    before:content-[''] before:absolute before:left-1/2 before:top-1/2 
-    before:-translate-x-1/2 before:-translate-y-1/2
-    before:w-3 before:h-3 before:bg-transparent
-    checked:before:bg-[url('data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTYgMTYiIGZpbGw9IndoaXRlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMi4yMDcgNC43OTNhMSAxIDAgMDEwIDEuNDE0bC01IDVhMSAxIDAgMDEtMS40MTQgMGwtMi0yYTEgMSAwIDAxMS40MTQtMS40MTRMNi41IDkuMDg2bDQuMjkzLTQuMjkzYTEgMSAwIDAxMS40MTQgMHoiLz48L3N2Zz4=')]" type="checkbox" aria-required={props?.required as boolean|undefined} aria-disabled={props?.disabled as boolean|undefined} aria-checked={isChecked} bind:checked={isChecked}>
+  <input {id} {...props} class={inputClasses(C, props, "checkbox")} type="checkbox" aria-required={props?.required as boolean|undefined} aria-disabled={props?.disabled as boolean|undefined} aria-checked={isChecked} bind:checked={isChecked}>
   {#if children}
     <Label for={id} class="cursor-pointer {labelClasses??""}">
       {@render children()}

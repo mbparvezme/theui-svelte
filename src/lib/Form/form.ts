@@ -23,14 +23,12 @@ export const theuiInputClass: {
   }
 }
 
-
 export const labelSizeClass: { [size in INPUT_SIZE]: string } = {
   sm: "px-1 start-2",
   md: "px-2 start-3",
   lg: "px-3 start-4",
   xl: "px-4 start-5"
 }
-
 
 export const inputTypeSizeClasses: {
   [key in 'default' | 'select' | 'file' | 'group']: key extends 'default' | 'select'
@@ -77,6 +75,13 @@ export const inputTypeSizeClasses: {
     lg: "h-6 w-6",
     xl: "h-7 w-7"
   },
+}
+
+const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
+  sm: "h-4 w-6 after:w-3 after:h-3 px-0.5 checked:after:translate-x-2",
+  md: "h-5 w-8 after:w-3 after:h-3 px-1 checked:after:translate-x-3",
+  lg: "h-6 w-10 after:w-4 after:h-4 px-1 checked:after:translate-x-4",
+  xl: "h-7 w-12 after:w-5 after:h-5 px-1 checked:after:translate-x-5"
 }
 
 
@@ -126,8 +131,8 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
   const baseClass = `theui-input ${theuiInputClass['type'][type]} ${theuiInputClass['size'][config?.size || "md"]}`
   if (config?.reset) return twMerge(baseClass, attr?.class as string)
 
-  const commonClasses = `appearance-none ${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
-  const groupClasses = `focus:ring-brand-primary-500 cursor-pointer ${animationClass(config?.animationSpeed)}`
+  const commonClasses = `outline-hidden ${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
+  const groupClasses = `bg-gray-100 dark:bg-gray-800 cursor-pointer checked:bg-brand-primary-500 ${animationClass(config?.animationSpeed)}`
 
   const typeSpecificClasses: Record<INPUT_CATEGORY, () => string> = {
     text: () => defaultInputClasses(config),
@@ -194,12 +199,12 @@ const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): 
  * @returns A string representing theme-specific classes.
  */
 const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string => {
+  const borderTheme = "border-gray-300 dark:border-gray-600 focus:border-brand-primary-500 ring-transparent focus:ring-brand-primary-500 ring-offset-0"
   const themes: Record<string, string> = {
-    bordered: `border border-gray-300 dark:border-gray-300/50 bg-transparent focus:ring-1 focus:ring-brand-primary-500 ring-offset-1 focus:border-brand-primary-500 ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`,
+    bordered: `border bg-transparent ${borderTheme}`,
     flat: type !== "file"
-      ? `border-0 border-b-2 border-gray-300 focus:border-brand-primary-500 dark:border-gray-700 bg-transparent focus:ring-0
-        ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`
-      : "[type='file']:focus:outline-none focus:ring-0 focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500"
+      ? `border-0 border-b-2 ${borderTheme}`
+      : `[type='file']:focus:ring-0 ${borderTheme}`
   }
 
   const themeClasses = themes[config.variant ?? "bordered"]
@@ -216,7 +221,7 @@ const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string =>
  * @returns A string of base classes for styling the input element.
  */
 const defaultInputClasses = (config: INPUT_CONFIG): string =>
-  `outline-transparent ring-transparent block w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
+  `block w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
   } ${animationClass(config?.animationSpeed)}`
 
 
@@ -227,7 +232,7 @@ const defaultInputClasses = (config: INPUT_CONFIG): string =>
  * @returns A string of base classes for styling the Style element.
  */
 const defaultSelectClasses = (config: INPUT_CONFIG): string =>
-  `outline-transparent ring-transparent block min-w-[10em] w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
+  `block min-w-[10em] w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
   } ${animationClass(config?.animationSpeed)}`
 
 
@@ -252,8 +257,8 @@ const attributesClasses = (attr: Record<string, unknown> = {}): string =>
  * @returns A string containing file input-specific classes.
  */
 const fileInputClasses = (config: INPUT_CONFIG): string =>
-  `file:me-4 file:bg-secondary file:cursor-pointer file:text-gray-600 dark:file:text-gray-400 cursor-pointer focus:outline-none file:border-0 focus-within:ring-brand-primary-500 focus-within:ring-1 ${roundedClass(config?.rounded, "all", "fileButton")
+  `file:me-4 file:bg-secondary file:cursor-pointer file:text-gray-600 dark:file:text-gray-400 ${roundedClass(config?.rounded, "all", "fileButton")
   }${roundedClass(config?.rounded)}`;
 
 
-// export const getToggleSize = (size: INPUT_SIZE): string => toggleSizes[size]
+export const getToggleSize = (size: INPUT_SIZE): string => toggleSizes[size]
