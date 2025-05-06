@@ -23,14 +23,12 @@ export const theuiInputClass: {
   }
 }
 
-
 export const labelSizeClass: { [size in INPUT_SIZE]: string } = {
   sm: "px-1 start-2",
   md: "px-2 start-3",
   lg: "px-3 start-4",
   xl: "px-4 start-5"
 }
-
 
 export const inputTypeSizeClasses: {
   [key in 'default' | 'select' | 'file' | 'group']: key extends 'default' | 'select'
@@ -77,6 +75,13 @@ export const inputTypeSizeClasses: {
     lg: "h-6 w-6",
     xl: "h-7 w-7"
   },
+}
+
+const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
+  sm: "h-4 w-6 after:w-3 after:h-3 px-0.5 checked:after:translate-x-2",
+  md: "h-5 w-8 after:w-3 after:h-3 px-1 checked:after:translate-x-3",
+  lg: "h-6 w-10 after:w-4 after:h-4 px-1 checked:after:translate-x-4",
+  xl: "h-7 w-12 after:w-5 after:h-5 px-1 checked:after:translate-x-5"
 }
 
 
@@ -126,8 +131,8 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
   const baseClass = `theui-input ${theuiInputClass['type'][type]} ${theuiInputClass['size'][config?.size || "md"]}`
   if (config?.reset) return twMerge(baseClass, attr?.class as string)
 
-  const commonClasses = `appearance-none ${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
-  const groupClasses = `focus:ring-brand-primary-500 cursor-pointer ${animationClass(config?.animationSpeed)}`
+  const commonClasses = `${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
+  const groupClasses = `bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 focus-within:ring-brand-primary-500 !ring-offset-primary cursor-pointer accent-pink-500 ${animationClass(config?.animationSpeed)}`
 
   const typeSpecificClasses: Record<INPUT_CATEGORY, () => string> = {
     text: () => defaultInputClasses(config),
@@ -195,7 +200,8 @@ const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): 
  */
 const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string => {
   const themes: Record<string, string> = {
-    bordered: `border border-gray-300 dark:border-gray-300/50 bg-transparent focus:ring-1 focus:ring-brand-primary-500 ring-offset-1 focus:border-brand-primary-500 ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`,
+    bordered: `border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500
+              ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`,
     flat: type !== "file"
       ? `border-0 border-b-2 border-gray-300 focus:border-brand-primary-500 dark:border-gray-700 bg-transparent focus:ring-0
         ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`
@@ -256,4 +262,4 @@ const fileInputClasses = (config: INPUT_CONFIG): string =>
   }${roundedClass(config?.rounded)}`;
 
 
-// export const getToggleSize = (size: INPUT_SIZE): string => toggleSizes[size]
+export const getToggleSize = (size: INPUT_SIZE): string => toggleSizes[size]

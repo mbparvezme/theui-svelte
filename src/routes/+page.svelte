@@ -9,7 +9,7 @@
 	import DropdownItem from "$lib/Dropdown/DropdownItem.svelte";
 	import type { BREADCRUMB_DATA } from "$lib/types.js";
 	import twShades from "tw-color-shades";
-  console.log("W: ", twShades("#FFC107"))
+  // console.log("W: ", twShades("#FFC107"))
   // console.log("info: ", twShades("#29B6F6"))
   // console.log("success: ", twShades("#00C853"))
   // console.log("warning: ", twShades("#FFC107"))

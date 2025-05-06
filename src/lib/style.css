@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@plugin '@tailwindcss/forms';
+/* @plugin '@tailwindcss/forms'; */
 @plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -18,7 +18,7 @@
 }
 
 @theme {
-  --color-brand-primary-50 : oklch(1 0.2083 26.76);
+  --color-brand-primary-50 : oklch(0.99 0.2083 26.76);
   --color-brand-primary-100: oklch(0.92 0.2083 26.76);
   --color-brand-primary-200: oklch(0.84 0.2083 26.76);
   --color-brand-primary-300: oklch(0.76 0.2083 26.76);

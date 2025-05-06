@@ -7,7 +7,6 @@
   ]
 </script>
 
-
 <Container>
   <Form>
     <Checkbox name="terms">I agree to the terms and conditions</Checkbox>

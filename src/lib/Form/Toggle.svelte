@@ -3,7 +3,7 @@
 	import { animationClass, generateToken, roundedClass } from "$lib/function"
 	import { getContext, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
-	import { getToggleSize, groupInputContainerClass } from "$lib/Form/form"
+	import { groupInputContainerClass } from "$lib/Form/form"
 	import { Label } from "$lib";
 
   interface Props {
@@ -29,7 +29,14 @@
     ...props
   }: Props & INPUT_CONFIG = $props()
 
-  let classes: string = `border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 dark:checked:bg-brand-primary-500 appearance-none relative flex items-center text-brand-primary-500 focus:!ring-gray-500 checked:focus:!ring-brand-primary-500 ${getToggleSize(size)} rtl:checked:after:-translate-x-full ${roundedClass(rounded)} ${animationClass(animationSpeed)} after:bg-white checked:bg-none ${roundedClass(rounded, "all", "after")} ${animationClass(animationSpeed, "all", "after")}`
+  const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
+    sm: "h-4 w-6 after:w-3 after:h-3 px-0.5 checked:after:translate-x-2",
+    md: "h-5 w-8 after:w-3 after:h-3 px-1 checked:after:translate-x-3",
+    lg: "h-6 w-10 after:w-4 after:h-4 px-1 checked:after:translate-x-4",
+    xl: "h-7 w-12 after:w-5 after:h-5 px-1 checked:after:translate-x-5"
+  }
+
+  let classes: string = `border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 dark:checked:bg-brand-primary-500 appearance-none relative flex items-center text-brand-primary-500 focus:!ring-gray-500 checked:focus:!ring-brand-primary-500 ${toggleSizes[size]} rtl:checked:after:-translate-x-full ${roundedClass(rounded)} ${animationClass(animationSpeed)} after:bg-white checked:bg-none ${roundedClass(rounded, "all", "after")} ${animationClass(animationSpeed, "all", "after")}`
 
   let isActive: boolean = $state(!!props?.checked)
   const id: string = props?.id as string ?? generateToken()
