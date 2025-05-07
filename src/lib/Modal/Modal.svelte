@@ -112,16 +112,15 @@
     {/if}
 
     <div class={twMerge(modalBodyCls(), (size !== "full" ? roundedClass(rounded) : ""), modalBodyClasses)} role="dialog" aria-modal="true" aria-hidden={!open}>
-
-      {#if header}
-        <div id="{id}-heading" class={twMerge("modal-header flex justify-between w-full gap-8 items-start border-b border-black/10 dark:border-tertiary pb-4 mb-8", modalHeaderClasses)}>
+      {#if header || closeButton}
+        <div id="{id}-heading" class={twMerge("modal-header flex justify-between w-full gap-8 items-start", header && "border-b border-black/10 dark:border-tertiary pb-4 mb-8", modalHeaderClasses)}>
           {@render header?.()}
           {#if closeButton!==false}
-            <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity" onclick={()=>toggle()}/>
+            <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity ms-auto" onclick={()=>toggle()}/>
           {/if}
         </div>
-      {:else if closeButton!==false}
-        <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-2 right-2" onclick={()=>toggle()}/>
+      <!-- {:else if closeButton!==false}
+        <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-2 end-2 ms-auto" onclick={()=>toggle()}/> -->
       {/if}
 
       <div class="{id}-modal-body w-full">
@@ -138,7 +137,7 @@
   </div>
 {/if}
 
-<style>
+<style lang="postcss">
   .theui-modal:not(.open){
     @apply invisible opacity-0;
   }
