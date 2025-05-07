@@ -137,7 +137,10 @@
         break
       
       case 'mouseleave':
-      case 'blur':
+        if (eventType !== 'click') hideTooltip()
+        break
+
+        case 'blur':
         if (e instanceof MouseEvent || e instanceof FocusEvent) {
           if (!e.relatedTarget || !element.contains(e.relatedTarget as Node)) {
             hideTooltip()

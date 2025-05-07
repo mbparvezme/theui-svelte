@@ -77,7 +77,7 @@
 
   let positionClass = {top : "modal-top mb-auto", center : "modal-center my-auto", bottom : "modal-bottom mt-auto"}
   let modalCls = $derived(() => `theui-modal z-50 flex fixed inset-0 visible opacity-100 ${animationClass(animationSpeed)}`)
-  let modalBodyCls = $derived(() => `modal-content flex flex-col p-8 relative mx-auto bg-white dark:bg-secondary ${sizes[size]} ${positionClass[position]} ${animationClass(animationSpeed)} ${((animationSpeed && animation) ? animation : "")}`)
+  let modalBodyCls = $derived(() => `modal-body flex flex-col p-8 relative mx-auto bg-white dark:bg-secondary ${sizes[size]} ${positionClass[position]} ${animationClass(animationSpeed)} ${((animationSpeed && animation) ? animation : "")}`)
 </script>
 
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
@@ -119,11 +119,9 @@
             <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity ms-auto" onclick={()=>toggle()}/>
           {/if}
         </div>
-      <!-- {:else if closeButton!==false}
-        <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-2 end-2 ms-auto" onclick={()=>toggle()}/> -->
       {/if}
 
-      <div class="{id}-modal-body w-full">
+      <div class="modal-content w-full">
         {@render children()}
       </div>
 
@@ -138,11 +136,12 @@
 {/if}
 
 <style lang="postcss">
+  @reference "../style.css";
   .theui-modal:not(.open){
     @apply invisible opacity-0;
   }
-  .theui-modal .modal-content:not(.modal-full){
-    @apply p-[8];
+  .theui-modal .modal-body:not(.modal-full){
+    @apply p-8;
   }
   .theui-modal.theui-animate .backdrop{
     @apply opacity-0;
@@ -150,22 +149,22 @@
   .theui-modal.open .backdrop{
     @apply opacity-50 dark:opacity-75;
   }
-  .theui-modal.theui-animate .modal-content.slide-down{
-    @apply transform -translate-y-[8];
+  .theui-modal.theui-animate .modal-body.slide-down{
+    @apply transform -translate-y-8;
   }
-  .theui-modal.theui-animate .modal-content.slide-up{
-    @apply transform translate-y-[8];
+  .theui-modal.theui-animate .modal-body.slide-up{
+    @apply transform translate-y-8;
   }
-  .theui-modal.theui-animate .modal-content.zoom-in{
+  .theui-modal.theui-animate .modal-body.zoom-in{
     @apply transform scale-90;
   }
-  .theui-modal.theui-animate .modal-content.zoom-out{
+  .theui-modal.theui-animate .modal-body.zoom-out{
     @apply transform scale-110;
   }
-  .theui-modal.theui-animate.open .modal-content.slide-down, .theui-modal.theui-animate.open .modal-content.slide-up{
-    @apply translate-y-[0];
+  .theui-modal.theui-animate.open .modal-body.slide-down, .theui-modal.theui-animate.open .modal-body.slide-up{
+    @apply translate-y-0;
   }
-  .theui-modal.theui-animate.open .modal-content.zoom-in, .theui-modal.theui-animate.open .modal-content.zoom-out{
+  .theui-modal.theui-animate.open .modal-body.zoom-in, .theui-modal.theui-animate.open .modal-body.zoom-out{
     @apply scale-100;
   }
 </style>

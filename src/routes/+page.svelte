@@ -81,6 +81,7 @@
   <br/>
   <br/>
   <Button data-tooltip="I'm tooltip!">Open tooltip</Button>
+  <Button data-tooltip="I'm tooltip on click!" data-tooltip-event="click">Tooltip on click</Button>
   <Tabs>
     {#snippet tabs()}
       <Tab>Tab 1</Tab>

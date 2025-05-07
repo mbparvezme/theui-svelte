@@ -203,8 +203,8 @@ const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string =>
   const themes: Record<string, string> = {
     bordered: `border bg-transparent ${borderTheme}`,
     flat: type !== "file"
-      ? `border-0 border-b-2 ${borderTheme}`
-      : `[type='file']:focus:ring-0 ${borderTheme}`
+      ? `bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-600 focus:border-brand-primary-500 ring-transparent`
+      : `bg-transparent [type='file']:focus:ring-0 border-gray-300 dark:border-gray-600 focus:border-brand-primary-500 ring-transparent`
   }
 
   const themeClasses = themes[config.variant ?? "bordered"]
