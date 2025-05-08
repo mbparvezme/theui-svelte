@@ -4,7 +4,7 @@
 	import { getContext, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
 	import { groupInputContainerClass } from "$lib/Form/form"
-	import { Label } from "$lib";
+	import { Label } from "$lib"
 
   interface Props {
     children: Snippet,
@@ -38,7 +38,7 @@
 
   let classes: string = `border-0 bg-gray-300 dark:bg-gray-600 checked:bg-brand-primary-500 appearance-none relative flex items-center text-brand-primary-500 ring-transparent focus:ring-brand-primary-500 ring-offset-1 ${toggleSizes[size]} rtl:checked:after:-translate-x-full ${roundedClass(rounded)} ${animationClass(animationSpeed)} after:bg-white checked:bg-none ${roundedClass(rounded, "all", "after")} ${animationClass(animationSpeed, "all", "after")}`
 
-  let isActive: boolean = $state(!!props?.checked)
+  let isActive: boolean = $state(!!!props?.checked)
   const id: string = props?.id as string ?? generateToken()
   let C:INPUT_CONFIG & {type: "group"} = {animationSpeed, labelClasses, rounded, size, type: "group"}
 </script>
@@ -51,7 +51,7 @@
 	  <input {id} {...props} {value} type="radio" class="{twMerge(classes, props?.class as string)} cursor-pointer" role="switch" aria-checked={value === props?.value} bind:group={value} />
   {/if}
   {#if children}
-    <Label for={id} class="cursor-pointer font-bold {labelClasses??""}">
+    <Label for={id} class="cursor-pointer {labelClasses??""}">
       {@render children()}
     </Label>
   {/if}
