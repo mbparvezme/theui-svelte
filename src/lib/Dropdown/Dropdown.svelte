@@ -158,22 +158,22 @@
 	}
 	/* Dropdown animations */
 	.theui-dropdown .dropdown-content.slide-down{
-		@apply -translate-y-[2];
+		@apply -translate-y-2;
 	}
 	.theui-dropdown .dropdown-content.slide-up{
-		@apply translate-y-[2];
+		@apply translate-y-2;
 	}
 	.theui-dropdown.open .dropdown-content.slide-down, .theui-dropdown.open .dropdown-content.slide-up{
-		@apply translate-y-[0];
+		@apply translate-y-0;
 	}
 	.theui-dropdown .dropdown-content.slide-left{
-		@apply translate-x-[2];
+		@apply translate-x-2;
 	}
 	.theui-dropdown .dropdown-content.slide-right{
-		@apply -translate-x-[2];
+		@apply -translate-x-2;
 	}
 	.theui-dropdown.open .dropdown-content.slide-left, .theui-dropdown.open .dropdown-content.slide-right{
-		@apply translate-x-[0];
+		@apply translate-x-0;
 	}
 	.theui-dropdown .dropdown-content.zoom-in{
 		@apply scale-75;

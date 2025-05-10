@@ -202,7 +202,7 @@
     @apply opacity-0;
   }
   .theui-nav-dropdown-container.hide .nav-dropdown.slide{
-    @apply opacity-0 translate-y-[8];
+    @apply opacity-0 translate-y-8;
   }
   .theui-nav-dropdown-container.hide .nav-dropdown.zoom{
     @apply opacity-0 scale-75;
@@ -214,7 +214,7 @@
     @apply visible block opacity-100;
   }
   .theui-nav-dropdown-container:not(.hide) .nav-dropdown.fade, .theui-nav-dropdown-container:not(.hide) .nav-dropdown.slide{
-    @apply translate-y-[0];
+    @apply translate-y-0;
   }
   .theui-nav-dropdown-container:not(.hide) .nav-dropdown.zoom{
     @apply scale-100;

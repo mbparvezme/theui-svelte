@@ -477,7 +477,7 @@ export const messageTheme = {
     error: "bg-error-500 text-error-50 dark:bg-error-600",
     info: "bg-info-600 text-info-50 dark:bg-info-700",
     success: "bg-success-600 text-success-50 dark:bg-success-700",
-    warning: "bg-warning-300 dark:bg-warning-600 text-warning-900",
+    warning: "bg-warning-300 dark:bg-warning-700 text-warning-950 dark:text-warning-50",
   },
   light: {
     brand: "bg-brand-primary-100 text-brand-primary-800",
@@ -642,7 +642,7 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
  * @returns A string of merged classes for the backdrop.
  */
 export const backdropClasses = (backdrop: string | boolean): string => {
-  const defaultClasses = "backdrop fixed inset-0 bg-black z-[-1] opacity-50 dark:opacity-75"
+  const defaultClasses = "backdrop fixed inset-0 bg-black/50 z-[-1] dark:bg-black/75"
   const customClasses = typeof backdrop === "string" ? backdrop : ""
   return twMerge(defaultClasses, customClasses)
 }

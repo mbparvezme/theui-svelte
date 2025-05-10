@@ -61,7 +61,21 @@
 
 
 <div class="p-16">
+
+  <Alert>I'm error (default) alert!</Alert>
+  <Alert type="info">I'm info alert!</Alert>
+  <Alert type="success">I'm success alert!</Alert>
+  <Alert type="warning">I'm warning alert!</Alert>
+
   <Button onclick={() => notify("Hello world!")}>Notify</Button>
+<br>
+<br>
+<Button theme="light" color="brand">Brand</Button>
+<Button theme="light" color="error">Error</Button>
+<Button theme="light" color="info">Info</Button>
+<Button theme="light" color="success">Success</Button>
+<Button theme="light" color="warning">Warning</Button>
+  <br>
   <br>
   <Popover trigger="my-popover" title="Popover Title" position="right" gap={24}>
     Popover - am amazing component for the displaying additional content.
