@@ -113,7 +113,7 @@
 
     <div class={twMerge(modalBodyCls(), (size !== "full" ? roundedClass(rounded) : ""), modalBodyClasses)} role="dialog" aria-modal="true" aria-hidden={!open}>
       {#if header || closeButton}
-        <div id="{id}-heading" class={twMerge("modal-header flex justify-between w-full gap-8 items-start", header && "border-b border-black/10 dark:border-tertiary pb-4 mb-8", modalHeaderClasses)}>
+        <div id="{id}-heading" class={twMerge("modal-header flex justify-between w-full gap-8 items-start", header && "border-b border-black/10 dark:border-black/50 pb-4 mb-8", modalHeaderClasses)}>
           {@render header?.()}
           {#if closeButton!==false}
             <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity ms-auto" onclick={()=>toggle()}/>
@@ -126,7 +126,7 @@
       </div>
 
       {#if footer}
-        <div class={twMerge("modal-footer border-t border-black/10 dark:border-tertiary pt-4 mt-8", modalFooterClasses)}>
+        <div class={twMerge("modal-footer border-t border-black/10 dark:border-black/50 pt-4 mt-8", modalFooterClasses)}>
           {@render footer?.()}
         </div>
       {/if}
