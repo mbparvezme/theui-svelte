@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount, tick } from "svelte"
+  import { onMount, tick } from "svelte"
   import { fade, type FadeParams } from 'svelte/transition'
   import { browser } from '$app/environment'
   import { computePosition, flip, shift, offset, arrow, type Placement } from "@floating-ui/dom"
@@ -45,7 +45,7 @@
 
   // Derived classes
   let customClasses = $derived(twMerge(
-    "pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-800 text-alt dark:text-default",
+    "pointer-events-none w-max whitespace-nowrap text-sm text-center px-3 py-2 bg-alt dark:bg-gray-700 text-alt dark:text-default",
     props?.class as string,
     triggerStyle
   ))
@@ -127,8 +127,8 @@
     const eventType = element.dataset.tooltipEvent || triggerEvent
 
     switch (e.type) {
-      case 'mouseenter':
-      case 'focus':
+      case 'pointerenter':
+      case 'focusin':
         if (eventType !== 'click') showTooltip(element)
         break
       
@@ -136,11 +136,11 @@
         if (eventType === 'click') showTooltip(element)
         break
       
-      case 'mouseleave':
+      case 'pointerleave':
         if (eventType !== 'click') hideTooltip()
         break
 
-        case 'blur':
+        case 'focusout':
         if (e instanceof MouseEvent || e instanceof FocusEvent) {
           if (!e.relatedTarget || !element.contains(e.relatedTarget as Node)) {
             hideTooltip()
@@ -154,7 +154,7 @@
     if (!browser) return
 
     // Add event listeners with capture to catch events during propagation
-    const events = ['mouseenter', 'mouseleave', 'focus', 'blur', 'click']
+    const events = ['pointerenter', 'pointerleave', 'focusin', 'focusout', 'click']
     events.forEach(event => {
       document.addEventListener(event, handleTooltipEvent, true)
     })
