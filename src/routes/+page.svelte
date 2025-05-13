@@ -1,12 +1,10 @@
 <script lang="ts">
-  import {Accordion, AccordionItem, Alert, DarkMode, Badge, Breadcrumb, Button, Card, Chips, Collapse, Drawer, ListGroup, ListItem} from "$lib";
+  import {Accordion, AccordionItem, Alert, DarkMode, Badge, Breadcrumb, Button, Card, Chips, Collapse, Drawer, ListGroup, ListItem, Dropdown, DropdownItem} from "$lib";
   import {Navbar, NavBrand, NavLinkGroup, NavDropdown, NavLink, NavCollapse, Notification, notify} from "$lib";
   import {Modal, Pagination, Popover, Popup, Progress, Tabs, Tab, TabPanel} from "$lib";
   import { Table, THead, TBody, TR, TH, TD } from "$lib";
   import {Slider, Slide, Svg} from "$lib";
 
-	import Dropdown from "$lib/Dropdown/Dropdown.svelte";
-	import DropdownItem from "$lib/Dropdown/DropdownItem.svelte";
 	import type { BREADCRUMB_DATA } from "$lib/types.js";
 	import twShades from "tw-color-shades";
   // console.log("W: ", twShades("#FFC107"))
@@ -53,28 +51,39 @@
   </NavCollapse>
 </Navbar>
 
-<!-- <Popup trigger="onExit">
-  Hello! I'm popup!
-</Popup> -->
-
 <DarkMode />
 
-
 <div class="p-16">
+  <br>
+  <br>
+  <Button onclick={() => notify("Hello world!")}>Default Notify error</Button>
+  <Button onclick={() => notify("Hello world!", "info")}>Default Notify info</Button>
+  <Button onclick={() => notify("Hello world!", "success")}>Default Notify success</Button>
+  <Button onclick={() => notify("Hello world!", "warning")}>Default Notify warning</Button>
+<Dropdown label="Dropdown">
+  <DropdownItem url="/">Link</DropdownItem>
+  <DropdownItem url="/" active={true}>Active Link</DropdownItem>
+  <DropdownItem url="/">Link</DropdownItem>
+</Dropdown>
+  <br>
+  <Button onclick={() => notify("Hello world!", "error", {theme: "light"})}>Light Notify error</Button>
+  <Button onclick={() => notify("Hello world!", "info", {theme: "light"})}>Light Notify info</Button>
+  <Button onclick={() => notify("Hello world!", "success", {theme: "light"})}>Light Notify success</Button>
+  <Button onclick={() => notify("Hello world!", "warning", {theme: "light"})}>Light Notify warning</Button>
+  <br>
+  <Button onclick={() => notify("Hello world!", "error", {theme: "light", variant: "borderTop"})}>Light border-top Notify error</Button>
+  <Button onclick={() => notify("Hello world!", "info", {theme: "light", variant: "borderTop"})}>Light border-top Notify info</Button>
+  <Button onclick={() => notify("Hello world!", "success", {theme: "light", variant: "borderTop"})}>Light border-top Notify success</Button>
+  <Button onclick={() => notify("Hello world!", "warning", {theme: "light", variant: "borderTop"})}>Light border-top Notify warning</Button>
 
-  <Alert>I'm error (default) alert!</Alert>
-  <Alert type="info">I'm info alert!</Alert>
-  <Alert type="success">I'm success alert!</Alert>
-  <Alert type="warning">I'm warning alert!</Alert>
+  <br>
+  <br>
 
-  <Button onclick={() => notify("Hello world!")}>Notify</Button>
-<br>
-<br>
-<Button theme="light" color="brand">Brand</Button>
-<Button theme="light" color="error">Error</Button>
-<Button theme="light" color="info">Info</Button>
-<Button theme="light" color="success">Success</Button>
-<Button theme="light" color="warning">Warning</Button>
+  <Button theme="light" color="brand">Brand</Button>
+  <Button theme="light" color="error">Error</Button>
+  <Button theme="light" color="info">Info</Button>
+  <Button theme="light" color="success">Success</Button>
+  <Button theme="light" color="warning">Warning</Button>
   <br>
   <br>
   <Popover trigger="my-popover" title="Popover Title" position="right" gap={24}>

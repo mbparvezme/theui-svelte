@@ -9,7 +9,7 @@
 		children ?: Snippet,
 		rounded ?: ROUNDED,
 		type ?: 'error' | 'info' | 'success' | 'warning',
-		theme ? : 'default'|'light',
+		theme ? : 'default'|'soft',
 		variant ?: 'card' | 'borderTop'| 'borderBottom'| 'borderStart',
     [key: string]: unknown // dismissible, icon
 	}

@@ -473,49 +473,49 @@ const shadowClasses: { [size in Exclude<SHADOW, "none">]: string } = {
 
 export const messageTheme = {
   default: {
-    brand: "bg-brand-primary-500 text-on-brand-primary-500",
-    error: "bg-error-500 text-error-50 dark:bg-error-600",
-    info: "bg-info-600 text-info-50 dark:bg-info-700",
-    success: "bg-success-600 text-success-50 dark:bg-success-700",
-    warning: "bg-warning-300 dark:bg-warning-700 text-warning-950 dark:text-warning-50",
+    brand: "bg-brand-primary-500 dark:bg-brand-primary-500/60 text-on-brand-primary/90",
+    error: "bg-error-600 dark:bg-error-500/60 text-error-50 dark:text-error-50/90",
+    info: "bg-info-500 dark:bg-info-500/60 text-info-50 dark:text-info-50/90",
+    success: "bg-success-500 dark:bg-success-500/60 text-success-50 dark:text-success-50/90",
+    warning: "bg-warning-300 dark:bg-warning-300/60 text-warning-950 dark:text-warning-50/80",
   },
-  light: {
-    brand: "bg-brand-primary-100 text-brand-primary-800",
-    error: "bg-error-100 text-error-900 dark:bg-error-800 dark:text-error-200",
-    info: "bg-info-100 text-info-900 dark:bg-info-900 dark:text-info-200",
-    success: "bg-success-100 text-success-900 dark:bg-success-900 dark:text-success-200",
-    warning: "bg-warning-100 text-warning-900 dark:bg-warning-900 dark:text-warning-200",
+  soft: {
+    brand: "bg-brand-primary-100 text-brand-primary-950 dark:bg-brand-primary-950 text-brand-primary-950 dark:text-on-brand-primary/90",
+    error: "bg-error-100 text-error-950 dark:bg-error-950 dark:text-error-50/90",
+    info: "bg-info-100 text-info-950 dark:bg-info-950 dark:text-info-50/90",
+    success: "bg-success-100 text-success-950 dark:bg-success-950 dark:text-success-50/90",
+    warning: "bg-warning-100 text-warning-950 dark:bg-warning-950 dark:text-warning-50/90",
   },
   gradient: {
-    brand: "bg-gradient-to-r from-brand-primary-300 via-brand-primary-400 to-brand-primary-500 text-on-brand-primary-500",
-    error: "bg-gradient-to-r from-error-400 via-error-500 to-error-600",
-    info: "bg-gradient-to-r from-info-400 via-info-500 to-info-600",
-    success: "bg-gradient-to-r from-success-400 via-success-500 to-success-600",
-    warning: "bg-gradient-to-r from-warning-300 via-warning-400 to-warning-600",
+    brand: "bg-gradient-to-r from-brand-primary-500 via-brand-primary-700 to-brand-primary-600 dark:from-brand-primary-500/50 dark:via-brand-primary-600/80 dark:to-brand-primary-500/60 text-on-brand-primary",
+    error: "bg-gradient-to-r from-error-500 via-error-600 to-warning-500 dark:from-error-900 dark:via-error-600/60 dark:to-warning-700 text-error-50",
+    info: "bg-gradient-to-r from-info-500 via-info-600 to-success-500 dark:from-info-500/50 dark:via-info-600/70 dark:to-success-500/50 text-info-50",
+    success: "bg-gradient-to-r from-success-500 via-success-600 to-info-500 dark:from-success-500/50 dark:via-info-600/70 dark:to-success-500/50 text-success-50",
+    warning: "bg-gradient-to-r from-warning-300 via-warning-500 to-error-400 dark:from-warning-300/50 dark:via-warning-500/70 dark:to-error-500/50",
   }
 }
 
 export const messageBarTheme = {
   default: {
-    brand: "border-brand-primary-200 dark:border-brand-primary-800",
-    error: "border-error-200 dark:border-error-800",
-    info: "border-info-200 dark:border-info-800",
-    success: "border-success-200 dark:border-success-800",
-    warning: "border-warning-500 dark:border-warning-700",
+    brand: "border-brand-primary-400 dark:border-brand-primary-200/50",
+    error: "border-error-300 dark:border-error-200/50",
+    info: "border-info-300 dark:border-info-200/50",
+    success: "border-success-300 dark:border-success-200/50",
+    warning: "border-warning-500 dark:border-warning-200/50",
   },
-  light: {
-    brand: "border-brand-primary-300 dark:border-brand-primary-700",
-    error: "border-error-300 dark:border-error-700",
-    info: "border-info-300 dark:border-info-800",
-    success: "border-success-300 dark:border-success-800",
-    warning: "border-warning-500 dark:border-warning-800",
+  soft: {
+    brand: "border-brand-primary-300 dark:border-brand-primary-200/50",
+    error: "border-error-300 dark:border-error-500/50",
+    info: "border-info-300 dark:border-info-500/50",
+    success: "border-success-300 dark:border-success-500/50",
+    warning: "border-warning-500 dark:border-warning-500/50",
   },
   gradient: {
-    brand: "border-brand-primary-300 dark:border-brand-primary-700",
-    error: "border-error-300 dark:border-error-700",
-    info: "border-info-300 dark:border-info-800",
-    success: "border-success-300 dark:border-success-800",
-    warning: "border-warning-500 dark:border-warning-800",
+    brand: "border-brand-primary-400 dark:border-brand-primary-700",
+    error: "border-error-300 dark:border-error-200/50",
+    info: "border-info-300 dark:border-info-200/50",
+    success: "border-success-300 dark:border-success-200/50",
+    warning: "border-warning-500 dark:border-warning-200/50",
   },
 }
 
@@ -626,9 +626,9 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
 
   const variantClasses: Record<string, string> = {
     card: roundedClass(config?.rounded || "md"),
-    barTop: `${roundedClass(config?.rounded || "md", "bottom")} ${messageBarTheme[theme][type]} border-t-4`,
-    barBottom: `${roundedClass(config?.rounded || "md", "top")} ${messageBarTheme[theme][type]} border-b-4`,
-    barStart: `${roundedClass(config?.rounded || "md")} ${messageBarTheme[theme][type]} border-s-4`,
+    borderTop: `${roundedClass(config?.rounded || "md", "bottom")} ${messageBarTheme[theme][type]} border-t-4`,
+    borderBottom: `${roundedClass(config?.rounded || "md", "top")} ${messageBarTheme[theme][type]} border-b-4`,
+    borderStart: `${roundedClass(config?.rounded || "md")} ${messageBarTheme[theme][type]} border-s-4`,
   }
 
   return twMerge(baseClass, theme !== "gradient" ? variantClasses[config?.variant || "card"] : "", props.class as string)

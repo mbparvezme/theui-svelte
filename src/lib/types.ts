@@ -110,8 +110,8 @@ export type NOTIFY_CONFIG = {
   removeAfter?: number;
   removeOnClick?: boolean;
   rounded?: ROUNDED;
-  theme ?: "default" | "light" | "gradient"
-  variant?: "card" | "barTop" | "barBottom" | "barStart";
+  theme ?: "default" | "soft" | "gradient"
+  variant?: "card" | "borderTop" | "borderBottom" | "borderStart";
 };
 
 export type TABLE_CONFIG = {
