@@ -24,7 +24,7 @@
       on: "flex-col basis-full absolute left-0 right-0 top-full order-last lg:order-none shadow-lg px-8 py-4",
       off: "flex-row items-center relative overflow-visible"
     }
-    return config.mobileNavOn ? `${navMobileStatusClasses["on"]} ${responsiveClassesByBreakPoints[config.mobileNavOn as MOBILE_NAV_ON] ?? ""}` : navMobileStatusClasses["off"]
+    return config.navBreakpoint ? `${navMobileStatusClasses["on"]} ${responsiveClassesByBreakPoints[config.navBreakpoint as MOBILE_NAV_ON] ?? ""}` : navMobileStatusClasses["off"]
   }
 
   let collapseClasses = `theui-navbar-collapse flex-grow z-[1] flex ${responsiveClasses()}${roundedClass(config?.rounded, "bottom")} ${twMerge("max-h-[80vh] bg-primary", config.navCollapseClasses)}`
@@ -40,19 +40,19 @@
     }
   }
 
-  let getClass = `nav-toggle w-12 h-12 ms-auto flex items-center justify-center ${hiddenClasses[config.mobileNavOn as MOBILE_NAV_ON] ?? "hidden"}`
+  let getClass = `nav-toggle w-12 h-12 ms-auto flex items-center justify-center cursor-pointer ${hiddenClasses[config.navBreakpoint as MOBILE_NAV_ON] ?? "hidden"}`
 </script>
 
 <div
   class={collapseClasses}
-  class:flex={!config.mobileNavOn || ST_MOBILE_NAV.value.includes(id)}
-  class:hidden={config.mobileNavOn != false && !ST_MOBILE_NAV.value.includes(id)}
-  class:overflow-hidden={config.mobileNavOn != false && !ST_MOBILE_NAV.value.includes(id)}
-  class:overflow-auto={config.mobileNavOn != false && ST_MOBILE_NAV.value.includes(id)}
+  class:flex={!config.navBreakpoint || ST_MOBILE_NAV.value.includes(id)}
+  class:hidden={config.navBreakpoint != false && !ST_MOBILE_NAV.value.includes(id)}
+  class:overflow-hidden={config.navBreakpoint != false && !ST_MOBILE_NAV.value.includes(id)}
+  class:overflow-auto={config.navBreakpoint != false && ST_MOBILE_NAV.value.includes(id)}
   >
     {@render children()}
   </div>
-  <button type="button" onclick={()=>toggle()} class={getClass} aria-label="Toggle nav bar">
+  <button type="button" onclick={()=>toggle()} class={getClass} aria-label="Toggle navigation">
     {#if toggleIcon}
       {@render toggleIcon()}
     {:else}

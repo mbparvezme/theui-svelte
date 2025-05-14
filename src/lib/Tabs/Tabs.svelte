@@ -8,7 +8,7 @@
     tabs : Snippet,
     children : Snippet,
     variant ?: 'tabs' | 'pills',
-    animate ?: ANIMATE_SPEED,
+    animationSpeed ?: ANIMATE_SPEED,
     border ?: boolean|string,
     tabContainerClasses ?: string,
     tabClasses ?: string,
@@ -22,7 +22,7 @@
     tabs,
     children,
     variant = "pills",
-    animate = "normal",
+    animationSpeed = "normal",
     border = true,
     tabContainerClasses = "",
     tabClasses = "",
@@ -34,7 +34,7 @@
 
   let classes = {
     active : {
-      tabs : "border-0 border-b-2 border-brand-primary-500 text-brand-primary-500",
+      tabs : "border-0 border-b-2 border-brand-primary-500 text-brand-primary",
       pills : "bg-brand-primary-500 text-white",
     },
     inactive : {
@@ -49,7 +49,7 @@
     tabActiveClasses : twMerge(classes["active"][variant], tabActiveClasses),
 		tabClasses : twMerge(classes["inactive"][variant], tabClasses),
 		tabPanelClasses,
-		animate,
+		animationSpeed,
 		border,
 		variant,
     TABS: ST_TABS

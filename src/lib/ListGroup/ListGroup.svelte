@@ -6,7 +6,7 @@
 
   interface Props {
 		children: Snippet,
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
 		rounded?: ROUNDED,
 		variant?: 'bordered' | 'flat',
     itemClasses?: string,
@@ -16,7 +16,7 @@
 
   let {
     children,
-    animate = "normal",
+    animationSpeed = "normal",
     rounded = "md",
     variant = "bordered",
     itemClasses = "",
@@ -26,7 +26,7 @@
 
   let groupClasses = `overflow-hidden divide-y divide-gray-300 dark:divide-gray-700 ${variant == "bordered" ? "border border-gray-300 dark:border-gray-700" : ""}${roundedClass(variant=="flat"?"none":rounded)}`
 
-  setContext("LISTGROUP", {animate, variant, itemClasses, size})
+  setContext("LISTGROUP", {animationSpeed, variant, itemClasses, size})
 </script>
 
 {#if children}

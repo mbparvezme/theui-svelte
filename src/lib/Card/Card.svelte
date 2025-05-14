@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from "svelte"
-	import type { ROUNDED, ROUNDED_SIDES, SHADOW } from "$lib/types"
+	import type { ROUNDED, ROUNDED_SIDES, SHADOW, CARD_IMAGE_TYPE } from "$lib/types"
 	import { backdropClasses, roundedClass, shadowClass, generateToken } from "$lib/function"
 	import { twMerge } from "tailwind-merge"
 
@@ -9,8 +9,8 @@
     title?: Snippet | string,
     rounded?: ROUNDED,
     shadow?: SHADOW,
-    topImage?: Snippet | {class?: string, src?: string, alt?: string, [key: string]: unknown}
-    bottomImage?: Snippet | {class?: string, src?: string, alt?: string, [key: string]: unknown}
+    topImage?: Snippet | CARD_IMAGE_TYPE
+    bottomImage?: Snippet | CARD_IMAGE_TYPE
     contentClasses?: string,
     titleClasses?: string,
     imageOverlay?: boolean | string,

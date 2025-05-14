@@ -7,9 +7,8 @@
 
   interface Props {
     children ?: Snippet,
-    id ?: string,
     label ?: string | Snippet,
-    animate ?: ANIMATE_SPEED,
+    animationSpeed ?: ANIMATE_SPEED,
     backdrop ?: boolean|string,
     position ?: 'top' | 'end' | 'bottom' | 'start',
     staticBackdrop ?: boolean,
@@ -20,9 +19,8 @@
 
   let {
     children,
-    id = generateToken(),
     label,
-    animate = "fast",
+    animationSpeed = "fast",
     backdrop = true,
     position = "start",
     staticBackdrop = false,
@@ -31,22 +29,35 @@
     ...props
   } : Props = $props()
 
-  let active: boolean = $state(false)
+  const id = props?.id as string ?? generateToken()
 
-  let toggle = (id: string) => {
-    active = !active
-    document.getElementById(id)?.classList.toggle("open")
+  let openDrawer = (el: HTMLElement) => {
+    el.classList.add('open')
+    document.getElementById(`drawer-trigger-${id}`)?.setAttribute("aria-expanded", "false")
+    document.getElementById(`{id}-drawer`)?.setAttribute("aria-hidden", "true")
+  }
+  
+  let closeDrawer = (el: HTMLElement) => {
+    el.classList.remove('open')
+    document.getElementById(`drawer-trigger-${id}`)?.setAttribute("aria-expanded", "true")
+    document.getElementById(`{id}-drawer`)?.setAttribute("aria-hidden", "false")
+  }
+
+  let toggle = () => {
+    let el = document.getElementById(id) as HTMLElement
+    el.classList.contains('open') ? closeDrawer(el) : openDrawer(el)
   }
 
   let handleKeyboardEsc = (e: KeyboardEvent) => {
-    if (document.getElementById(id)?.classList.contains("open") && e.key === "Escape") {
-      toggle(id);
+    let el = document.getElementById(id) as HTMLElement
+    if (el.classList.contains("open") && e.key === "Escape") {
+      closeDrawer(el);
     }
   }
 
   let handleKeyboardEnter = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      toggle(id);
+      toggle();
     }
   }
 
@@ -72,30 +83,30 @@
     return sizes[props?.fullscreen ? "fullscreen" : position] || sizes["start"]
   }
 
-  let getClass = twMerge(`drawer-body fixed bg-white ${sizeCls()} dark:bg-secondary${animationClass(animate)}`, (props?.class ?? "") as string)
+  let getClass = twMerge(`drawer-body fixed bg-white ${sizeCls()} dark:bg-secondary${animationClass(animationSpeed)}`, (props?.class ?? "") as string)
 </script>
 
 <svelte:body onkeydown={(e)=>handleKeyboardEsc(e)}></svelte:body>
 
 {#if label}
   {#if typeof label == "string"}
-    <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} {ariaLabel} onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}>{@html label}</Button>
+    <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded="false" {ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}>{@html label}</Button>
   {:else}
-    <span id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded={active} aria-label={ariaLabel} role="button" onclick={()=>toggle(id)} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} tabindex="0">
+    <span id={`drawer-trigger-${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded="false" aria-label={ariaLabel} role="button" onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} tabindex="0">
       {@render label?.()}
     </span>
   {/if}
 {/if}
 
 {#if children}
-  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animate)} {positionCls()}" role="complementary" class:animate={animate}>
+  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animationSpeed)} {positionCls()}" role="complementary" class:animate={animationSpeed}>
 
     {#if backdrop && !props?.fullscreen}
-      <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle(id)}></div>
+      <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle()}></div>
     {/if}
 
-    <div id="{id}-drawer" class={getClass} aria-labelledby={`drawer-trigger-${id}`} aria-hidden={!active}>
-      <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-4 end-4 p-1" onclick={()=>toggle(id)}/>
+    <div id="{id}-drawer" class={getClass} aria-labelledby={`drawer-trigger-${id}`} aria-hidden="true">
+      <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-4 end-4 p-1" onclick={()=>toggle()}/>
       {@render children()}
     </div>
 
@@ -103,6 +114,7 @@
 {/if}
 
 <style lang="postcss">
+  @reference "../style.css";
   .theui-drawer.open{
     @apply visible opacity-100;
   }

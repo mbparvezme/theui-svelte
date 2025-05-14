@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
+  import type { ACCORDION_SIZE, ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { getContext, onMount, type Snippet } from "svelte"
   import { twMerge } from "tailwind-merge"
   import { generateToken, roundedClass, animationClass } from "$lib/function"
@@ -8,16 +8,15 @@
   interface Props {
     children?: Snippet,
     title?: string|Snippet,
-    id?: string,
+    size?: ACCORDION_SIZE,
     animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
-    size?: "compact" | "default" | "large",
     containerClasses?: string,
     openContainerClasses?: string,
     titleClasses?: string,
     openTitleClasses?: string,
     contentClasses?: string,
-    [key: string] : unknown // open, flush
+    [key: string] : unknown   // open, flush
 	}
 
   const CTX: any = getContext("ACCORDION") || {}
@@ -25,20 +24,21 @@
   let {
     children,
     title,
-    id = generateToken(),
-    animationSpeed = "fast",
-    rounded = "md",
-    size = CTX?.size ?? "default",
-    containerClasses = "",
-    contentClasses = "",
-    titleClasses = "",
-    openContainerClasses = "",
-    openContentClasses = "",
-    openTitleClasses = "",
+    animationSpeed        = CTX?.animationSpeed ?? "fast",
+    size                  = CTX?.size ?? "default",
+    rounded               = CTX?.rounded ?? "md",
+    containerClasses      = CTX?.containerClasses ?? "",
+    openContainerClasses  = CTX?.openContainerClasses ?? "",
+    titleClasses          = CTX?.titleClasses ?? "",
+    openTitleClasses      = CTX?.openTitleClasses ?? "",
+    contentClasses        = CTX?.contentClasses ?? "",
     ...props
   } : Props = $props()
+  
+  const id = props?.id as string ?? generateToken()
+  const isFlush = props?.flush || CTX?.flush
 
-  let toggle = () => {
+  const toggle = () => {
     const accordion = document.getElementById(id)
     if (!accordion) return
 
@@ -82,7 +82,7 @@
     }
   })
 
-  let titleClass = {
+  const titleClass: Record<'default'|'flush', Record<keyof ACCORDION_SIZE, string>> = {
     default: {
       compact: "p-3",
       default: "p-4",
@@ -95,7 +95,7 @@
     }
   }
 
-  let contentClass = {
+  const contentClass: Record<'default'|'flush', Record<keyof ACCORDION_SIZE, string>> = {
     default: {
       compact: "p-3",
       default: "p-4",
@@ -108,36 +108,33 @@
     }
   }
 
-  let isFlush = props?.flush || CTX?.flush
-
-  let getContainerClasses = () => {
-    let cls = `theui-accordion ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
+  const getContainerClasses = () => {
+    let cls = `theui-accordion border-gray-300 dark:border-gray-700 not-edge-child:rounded-none! ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
     if(isFlush){
       cls += "border-b ";
     }else{
-      cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded, "top", "first")} ${roundedClass(rounded, "bottom", "last")}` : `border ${roundedClass(rounded)}`}`;
+      cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded)} ` : `border ${roundedClass(rounded)}`}`;
     }
-    cls += " border-gray-300 dark:border-gray-700 overflow-hidden ";
     return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openContainerClasses) : twMerge(cls, containerClasses);
   }
 
-  let getTitleClasses = () => {
-    let cls = `theui-accordion-title flex items-center w-full ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
+  const getTitleClasses = () => {
+    let cls = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand ${roundedClass(rounded, "top")} ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
     if(isFlush){
-      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary-500 " : "border-b border-gray-300 dark:border-gray-700 ";
+      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary " : "border-b border-gray-300 dark:border-gray-700 ";
     }else{
-      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary-300 dark:bg-brand-primary-700" : " ";
+      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary dark:bg-brand-primary-600" : " ";
     }
     return twMerge(cls, ST_ACTIVE_ACCORDIONS.value.includes(id) ? openTitleClasses : titleClasses);
   }
 
-  let getContentClasses = () => {
+  const getContentClasses = () => {
     return twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
   }
 </script>
 
 <div class={getContainerClasses()}>
-  <div id='{id}-heading' class='accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
+  <div id='{id}-heading' class='theui-accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
     {@render accordionHeading()}
   </div>
   <div {id} class="accordion-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!ST_ACTIVE_ACCORDIONS.value.includes(id)} class:open={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-labelledby='{id}-heading' aria-hidden={!ST_ACTIVE_ACCORDIONS.value.includes(id)}>
@@ -148,7 +145,7 @@
 </div>
 
 {#snippet accordionHeading()}
-  <button class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active')} class:accordion-active={ST_ACTIVE_ACCORDIONS.value.includes(id)} onclick={()=>toggle()}>
+  <button id='{id}-heading' class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active text-on-brand-primary')} onclick={()=>toggle()} aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id} type="button">
     {#if typeof title === "string"}
       {@html title}
     {:else}

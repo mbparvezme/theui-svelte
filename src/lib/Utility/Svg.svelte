@@ -6,7 +6,7 @@
     children ?: Snippet,
     size ?: number,
     viewBox ?: string,
-    focusable ?: "true"|"false",
+    focusable ?: boolean,
     [key: string]: unknown // dismissible, icon
 	}
 
@@ -14,7 +14,7 @@
     children,
     size = 1,
     viewBox = "0 0 16 16",
-    focusable = "true",
+    focusable = false,
 	  ...props // dismissible, icon
   } : Props = $props()
 
@@ -25,9 +25,10 @@
 <svg
   width="{size}rem" height="{size}rem"
   {viewBox}
-  {focusable}
+  focusable={String(focusable)}
+  aria-hidden="{!focusable}"
   {...props}
-  class={twMerge(cls, (props?.class || "") as string)}
+  class={twMerge(cls, props?.class as string)}
   class:stroke-icon={props?.stroke}
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"

@@ -2,58 +2,43 @@
   import type { INPUT_CONFIG } from "$lib/types"
   import { getContext, type Snippet } from "svelte"
 	import { generateToken } from "$lib/function"
-	import { inputContainerClass, inputClasses } from "./form"
-  import { HelperText } from "$lib"
+	import { inputClasses, groupInputContainerClass } from "$lib/Form/form"
+	import { twMerge } from "tailwind-merge"
+  import { Label } from "$lib"
 
   interface Props {
-    helperText?: string | Snippet | undefined,
-    id?: string,
-    label: string|Snippet,
-    name: string,
-    value?: string | number | null | undefined | boolean,
+    children?: Snippet,
+    value?: unknown,
+    wrapperClasses?: string,
     [key: string]: unknown
   }
 
-  const CTX: any = getContext('FORM') ?? {}
+  const CTX_FORM: any = getContext('FORM') ?? {}
+  const CTX_FSET: any = getContext('FIELDSET') ?? {}
 
   let {
-    helperText = undefined,
-    label,
-    name,
-    id = generateToken(),
+    children,
     value = null,
-    animate = CTX?.animate ?? "normal",
-    labelClasses  = CTX?.labelClasses ?? "",
-    rounded = CTX?.rounded ?? "md",
-    size = CTX?.size ?? "md",
-    reset = CTX?.reset ?? false,
-    variant = CTX?.variant ?? "bordered",
+    size = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
+    animationSpeed = CTX_FSET?.animationSpeed ?? CTX_FORM?.animationSpeed ?? "normal",
+    reset = CTX_FSET?.reset ?? CTX_FORM?.reset ?? false,
+    labelClasses  = CTX_FSET?.labelClasses ?? CTX_FORM?.labelClasses ?? "",
+    wrapperClasses = "",
     ...props
   }: Props & INPUT_CONFIG = $props()
-
-  let C:INPUT_CONFIG & {id: string, type: "group"} = {animate, labelClasses, rounded, size, variant, reset, id, type: "group"}
+  
+  const id: string = props?.id as string ?? generateToken()
+  let C:INPUT_CONFIG & {type: "group"} = {animationSpeed, labelClasses, size, reset, type: "group"}
 </script>
 
-<label for={id}
-  class="inline-flex gap-x-4 {inputContainerClass(C, {props}, "group")}"
+<div class={twMerge(groupInputContainerClass(C, {props}), wrapperClasses)}
   class:flex-row-reverse={props?.reverse}
   class:justify-end={props?.reverse}
-  class:items-center={C?.size!="lg"}
-  class:items-start={C?.size=="lg"}>
-  <input class={inputClasses(C, props, "checkbox")} class:sr-only={props?.custom} {...props} {id} {name} type="radio" bind:group={value}>
-  {#if typeof label == "string"}
-    {@html label}
+>
+  <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio" aria-disabled={props?.disabled as boolean|undefined} bind:group={value} aria-checked={value === props?.value}>
+  {#if children}
+    <Label for={id} class="cursor-pointer {labelClasses??""}">
+      {@render children()}
+    </Label>
   {/if}
-  {#if typeof label == "function"}
-    {@render label?.()}
-  {/if}
-</label>
-
-{#if helperText}
-  {#if typeof helperText == "string"}
-    <HelperText text={helperText} />
-  {/if}
-  {#if typeof helperText == "function"}
-    {@render helperText?.()}
-  {/if}
-{/if}
+</div>

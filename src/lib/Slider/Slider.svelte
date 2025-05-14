@@ -1,51 +1,54 @@
 <script lang="ts">
 	import { setContext, type Snippet, onMount } from "svelte"
-  import { ST_SLIDER } from "$lib/state.svelte"
 	import { Slider } from "./slider"
 	import { twMerge } from "tailwind-merge"
   import { Svg } from "$lib"
 
   interface Props {
+    // Slider Config
+    autoPlay?: boolean,
+    stopOnHover?: boolean,
+    slideDuration?: number,
+    transitionDuration?: number,
+    activeSlide?: number,
+    indicatorClasses?: string,
+    indicatorActiveClasses?: string,
+
+    // Only Props
     children: Snippet,
     prevButton?: Snippet,
     nextButton?: Snippet,
     controls?: boolean,
     indicator?: boolean,
-    autoPlay?: boolean,
-    stopOnHover?: boolean,
-    slideDuration?: number,
-    transitionDuration?: number,
     timer?: boolean,
-    activeSlide?: number,
-
     slideClasses?: string,
     controlButtonClasses?: string,
     indicatorContainerClasses?: string,
-    indicatorClasses?: string,
-    indicatorActiveClasses?: string,
     timerClasses?: string,
 
     [key: string] : unknown
   }
 
   let {
+    // Option's default values
+    autoPlay = true,
+    stopOnHover = true,
+    slideDuration = 5000,
+    transitionDuration = 750,
+    activeSlide = 1,
+    indicatorClasses = "",
+    indicatorActiveClasses = "",
+
+    // Props default values
     children,
     prevButton,
     nextButton,
     controls = true,
     indicator = true,
-    autoPlay = true,
-    stopOnHover = true,
-    slideDuration = 5000,
-    transitionDuration = 750,
     timer = true,
-    activeSlide = 1,
-
     slideClasses = "",
     controlButtonClasses = "",
     indicatorContainerClasses = "",
-    indicatorClasses = "",
-    indicatorActiveClasses = "",
     timerClasses = "",
     ...props
   } : Props = $props()
@@ -58,17 +61,17 @@
     activeSlide,
     indicatorClasses,
     indicatorActiveClasses
-  });
+  })
 
   onMount(() => {
-    if (!ST_SLIDER.slides?.length) {
-      console.error("ST_SLIDER.slides is not defined or empty.")
+    if (!obj.SLIDERS[obj.id].slides?.length) {
+      console.error("Slides is not defined or empty.")
       return
     }
     obj.createIndicator()
     obj.cloneSlides()
-    if (!ST_SLIDER.activeSlide) {
-      ST_SLIDER.activeSlide = ST_SLIDER.slides[activeSlide]
+    if (!obj.SLIDERS[obj.id].activeSlide) {
+      obj.SLIDERS[obj.id].activeSlide = obj.SLIDERS[obj.id].slides[activeSlide]
     }
     obj.updateActiveIndicator(activeSlide-1)
     obj.updateTrackPosition()
@@ -78,18 +81,17 @@
     }
   })
 
-  setContext('SLIDER', {...ST_SLIDER, slideClasses})
+  setContext('SLIDER', {...obj.SLIDERS[obj.id], slideClasses})
 </script>
 
 {#if children}
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div id={obj.id} class="slider relative overflow-hidden w-full" onmouseenter={()=>obj.handleMouseEnter()} onmouseleave={()=>obj.handleMouseLeave()} role="region" aria-label="Image Slider" aria-live="polite">
   <div id={`${obj.id}-items`} class="slides flex {props?.class}">
     {@render children()}
   </div>
 
   {#if controls}
-  <button id="{obj.id}-prev" class="prev-slide-button {obj.getButtonClasses(controlButtonClasses, "prev")}" onclick={()=>obj.changeSlide("prev")} aria-label="Previous Slide">
+  <button id="{obj.id}-prev" class="prev-slide-button cursor-pointer {obj.getButtonClasses(controlButtonClasses, "prev")}" onclick={()=>obj.changeSlide("prev")} aria-label="Previous Slide">
     {#if prevButton}
       {@render prevButton()}
     {:else}
@@ -98,7 +100,7 @@
       </Svg>
     {/if}
   </button>
-  <button id="{obj.id}-next" class="next-slide-button {obj.getButtonClasses(controlButtonClasses, "next")}" onclick={()=>obj.changeSlide("next")} aria-label="Next Slide">
+  <button id="{obj.id}-next" class="next-slide-button cursor-pointer {obj.getButtonClasses(controlButtonClasses, "next")}" onclick={()=>obj.changeSlide("next")} aria-label="Next Slide">
     {#if nextButton}
       {@render nextButton()}
     {:else}
@@ -110,7 +112,7 @@
   {/if}
 
   {#if timer}
-  <div id="{obj.id}-timer" class="slide-timer absolute {twMerge("top-0 start-0 h-1 bg-gray-500 mix-blend-difference opacity-70", timerClasses)}"></div>
+    <div id="{obj.id}-timer" class="slide-timer absolute {twMerge("top-0 start-0 h-1 bg-gray-500 mix-blend-difference opacity-70", timerClasses)}"></div>
   {/if}
 
   {#if indicator}

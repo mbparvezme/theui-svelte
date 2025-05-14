@@ -5,57 +5,71 @@
 
   interface Props {
     children: Snippet,
-    title ?: Snippet,
-    content ?: string,
-    animation ?: ANIMATE_SPEED,
-    id ?: string,
+    trigger ?: Snippet,
+    animationSpeed ?: ANIMATE_SPEED,
     ariaLabel ?: string,
     isOpen ?: boolean
   }
 
   let {
     children,
-    title,
-    content,
-    animation = "fast",
-    id = generateToken(),
+    trigger,
+    animationSpeed = "fast",
     ariaLabel = "",
     isOpen = false,
   } : Props = $props();
+  
+  const id = generateToken()
+  let element: HTMLElement|null = $state(null)
 
-  let classes = animationClass(animation)
-  let toggleCollapse = (id: string): void => {}
+  const openCollapse = () => {
+    if(animationSpeed){
+      (element as HTMLElement).style.height = (element as HTMLElement).scrollHeight + "px"
+    }
+    isOpen = true
+  }
 
-  onMount(() => {
-    toggleCollapse = (id: string) => {
-      let element = document.getElementById(id)!;
-      if(element?.classList.contains('collapse-open')){
-        isOpen = false;
-        if(animation) element.style.height = "0";
-      }else{
-        isOpen = true;
-        if(animation) element.style.height = element.scrollHeight + "px";
+  const hideCollapse = () => {
+    if(animationSpeed) (element as HTMLElement).style.height = "0"
+    isOpen = false
+    console.log(isOpen)
+  }
+
+  let toggleCollapse = (): void => {
+    if(isOpen){
+      hideCollapse()
+    }else{
+      openCollapse()
+    }
+  }
+
+  let handleKeyboard = (e: KeyboardEvent) => {
+    e.preventDefault()
+    if(isOpen) {
+      if (e.code === "Escape" || e.code === "Space" || e.code === "Enter") {
+        hideCollapse()
       }
     }
-  })
+    else{
+      if(e.code === "Enter" || e.code === "Space") {
+        openCollapse()
+      }
+    }
+  }
+
+  onMount(() => { element = document.getElementById(id)! })
 </script>
 
-{#if title}
-<!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
-<span  class="theui-collapse-title select-none" class:collapse-active-title={isOpen} role="button" tabindex="0"
-  onclick={()=>toggleCollapse(id)} aria-controls={id} aria-expanded={isOpen} aria-label={ariaLabel} aria-describedby={id} id="{id}Collapse">
-  {@render title()}
+{#if trigger}
+<span  class="theui-collapse-trigger select-none" class:collapse-active-title={isOpen} role="button" tabindex="0"
+  onclick={()=>toggleCollapse()} onkeydown={(e: KeyboardEvent)=>handleKeyboard(e)}
+  aria-controls={id} aria-expanded={isOpen} aria-label={ariaLabel} aria-describedby={id} id="{id}Collapse">
+  {@render trigger()}
 </span>
 {/if}
 
 {#if children}
-<div {id} class="theui-collapse-body overflow-hidden {classes}" class:invisible={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
+<div {id} class="theui-collapse-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
   {@render children?.()}
 </div>
 {/if}
-
-<style lang="postcss">
-  .theui-collapse-body.invisible {
-    @apply h-0;
-  }
-</style>

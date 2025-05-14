@@ -1,34 +1,36 @@
 <script lang="ts">
   import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
-  import { fly } from 'svelte/transition'
+  import { fly } from "svelte/transition"
   import { setContext, type Snippet } from "svelte"
   import { animationClass, generateToken, roundedClass } from "$lib/function"
   import { twMerge } from "tailwind-merge"
-  import { QabItem } from "$lib"
-  import Svg from "$lib/Utility/Svg.svelte";
+  import { QabItem, Svg } from "$lib"
 
   interface Props {
     children?: Snippet,
-    animate?: ANIMATE_SPEED,
     icon?: Snippet,
-    ariaLabel ?: string,
-    href?: string,
-    rounded?: ROUNDED,
-    size?: 'sm' | 'md' | 'lg' | 'xl',
-    theme ?: 'default' | 'light' | 'gradient'
-    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     align?: 'start' | 'end',
-    triggerEvent?: 'click' | 'hover',
-    iconClasses?: string,
+    size?: 'sm' | 'md' | 'lg' | 'xl',
     direction?: 'horizontal' | 'vertical',
+    triggerEvent?: 'click' | 'hover',
+
+    href?: string,
+    animationSpeed?: ANIMATE_SPEED,
+    rounded?: ROUNDED,
+
+    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    theme ?: 'default' | 'light' | 'gradient'
+    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    
+    ariaLabel ?: string,
+    iconClasses?: string,
     [key: string] : unknown
   }
 
   let {
     children,
     icon,
-    animate = "normal",
+    animationSpeed = "normal",
     align = "end",
     size = "md",
     rounded = "full",
@@ -59,12 +61,12 @@
 
   let animObj = {
     horizontal: {
-      end: {x: 16, duration: animSpeed[animate]},
-      start: {x: -16, duration: animSpeed[animate]},
+      end: {x: 16, duration: animSpeed[animationSpeed]},
+      start: {x: -16, duration: animSpeed[animationSpeed]},
     },
     vertical: {
-      end: {y: 16, duration: animSpeed[animate]},
-      start: {y: 16, duration: animSpeed[animate]},
+      end: {y: 16, duration: animSpeed[animationSpeed]},
+      start: {y: 16, duration: animSpeed[animationSpeed]},
     }
   }
 
@@ -107,7 +109,7 @@
   let qabSize  = {sm: "w-12 h-12", md: "w-14 h-14", lg: "w-16 h-16", xl: "w-20 h-20"}
   
   let propClass = props?.class as string
-  let mainButtonClasses = `theui-qab-trigger ${twMerge(`static flex items-center justify-center shadow-2xl ${qabSize[size]}${roundedClass(rounded)}${animationClass(animate)}`, propClass)}`
+  let mainButtonClasses = `theui-qab-trigger ${twMerge(`static flex items-center justify-center shadow-2xl ${qabSize[size]}${roundedClass(rounded)}${animationClass(animationSpeed)}`, propClass)}`
 
 	let handleClick = $derived(() => {
     if(triggerEvent == "click"){

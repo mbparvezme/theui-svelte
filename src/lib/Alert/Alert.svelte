@@ -9,9 +9,8 @@
 		children ?: Snippet,
 		rounded ?: ROUNDED,
 		type ?: 'error' | 'info' | 'success' | 'warning',
-		theme ? : 'default'|'light',
+		theme ? : 'default'|'soft',
 		variant ?: 'card' | 'borderTop'| 'borderBottom'| 'borderStart',
-		id ?: string,
     [key: string]: unknown // dismissible, icon
 	}
 
@@ -21,11 +20,11 @@
 		type = "error",
 		theme = "default",
 		variant = "card",
-		id = generateToken(),
 		...props
 	} : Props = $props()
-
+	
 	let nodeRef: HTMLDivElement
+	const id = generateToken()
 
 	let getClass = () => {
 		let baseClass = `theui-alert flex items-center p-4 mb-4 gap-4 text-sm font-medium dark:font-normal ${messageTheme[theme][type]}`

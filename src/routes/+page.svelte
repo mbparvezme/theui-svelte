@@ -1,8 +1,64 @@
 <script lang="ts">
-  import { Container} from "$lib"
+  import {Accordion, AccordionItem, Drawer, DarkMode, Slider, Slide} from "$lib";
 </script>
 
-<Container class="py-0 flex justify-center items-center h-screen text-xl">
-  <a href="/p">Test</a>
-  <p>Read the <a href="https://theui.dev" target="_blank" class="underline decoration-dotted decoration-2 underline-offset-2">documentation</a>!</p>
-</Container>
+<DarkMode />
+
+<div class="p-16">
+  <Accordion>
+    <AccordionItem title="Hello A">
+      A
+    </AccordionItem>
+    <AccordionItem title="Hello B">
+      B
+    </AccordionItem>
+  </Accordion>
+  <br>
+  <br>
+  <br>
+  <Drawer label="testDrawer">Hello</Drawer>
+  <Drawer id="testDrawer">
+    {#snippet label()}
+      Hello test
+    {/snippet}
+  </Drawer>
+  <Drawer id="testDrawer">Hello Test</Drawer>
+  <br>
+  <br>
+  <br>
+  <Slider>
+    <Slide src="https://placehold.co/1600x700/73C7C7/white?text=Slide 1" alt="Image slide demo image" />
+    <Slide src="https://placehold.co/1600x700/B5828C/white?text=Slide 2" alt="Image slide demo image" />
+    <Slide src="https://placehold.co/1600x700/889E73/white?text=Slide 3" alt="Image slide demo image" />
+  </Slider>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+  <br/>
+</div>

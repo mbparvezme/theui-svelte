@@ -118,6 +118,7 @@
 </div>
 
 <style lang="postcss">
+  @reference "../style.css";
   .rotate-45 > *{
     @apply transform -rotate-45;
   }

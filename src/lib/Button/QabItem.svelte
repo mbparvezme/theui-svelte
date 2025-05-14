@@ -8,25 +8,25 @@
 
   interface Props {
     children?:Snippet,
-    animate?: ANIMATE_SPEED,
-    href?: string,
     size?: 'sm' | 'md' | 'lg' | 'xl',
+
+    href?: string,
+    animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
-    iconClasses?: string,
-
-    theme ?: 'default' | 'light' | 'gradient',
+    
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    theme ?: 'default' | 'light' | 'gradient',
     gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-
+    
     ariaLabel ?: string,
-
+    iconClasses?: string,
     [key: string]: unknown
   }
 
   let CTX: any = getContext('QAB') as any
   let {
     children,
-    animate = "normal",
+    animationSpeed = "normal",
     href = undefined,
     size = CTX?.size ?? "md",
     rounded = CTX?.rounded ?? "full",
@@ -44,7 +44,7 @@
   const id: string = `${generateToken()}-qab-btn`
   const qabItemSize  = {sm: "w-10 h-10", md: "w-12 h-12", lg: "w-14 h-14", xl: "w-16 h-16"}
   const qabTheme = () => QABTheme(theme, theme === "gradient" ? gradientColor : color)
-  let qabItemClasses = twMerge(`flex items-center justify-center shadow-2xl ${qabItemSize[size]} ${qabTheme()} ${roundedClass(rounded)}${animationClass(animate)}`, (props?.mainButton ? CTX.mainButtonClasses : ""), props?.class as string)
+  let qabItemClasses = twMerge(`flex items-center justify-center shadow-2xl ${qabItemSize[size]} ${qabTheme()} ${roundedClass(rounded)}${animationClass(animationSpeed)}`, (props?.mainButton ? CTX.mainButtonClasses : ""), props?.class as string)
 </script>
 
 <svelte:element

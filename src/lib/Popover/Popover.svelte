@@ -14,7 +14,7 @@
     position?: Placement,
     triggerEvent?: 'click'|'hover',
     gap?: number,
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
     shadow?: SHADOW,
     closeOnClick?: boolean,
@@ -30,7 +30,7 @@
     gap = 8,
     position = "top",
     triggerEvent = "click",
-    animate = "normal",
+    animationSpeed = "normal",
     rounded = "md",
     shadow = "lg",
     closeOnClick = true,
@@ -39,7 +39,7 @@
     ...props
   }: Props = $props()
 
-  const animationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
+  const popoverAnimationSpeed: Record<ANIMATE_SPEED, number> = {slower: 700, slow: 500, normal: 300, fast: 200, faster: 100, none: 0}
 
   let triggerElement: HTMLElement|null = $state(null)
   let popover: HTMLElement|null = $state(null)
@@ -165,12 +165,12 @@
 <svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if show}
-<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration: animationSpeed[animate]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
+<div id={trigger + "-popover"} bind:this={popover} transition:fade={{duration:popoverAnimationSpeed[animationSpeed]}} class="theui-popover absolute {twMerge(popoverClasses, props?.class as string)}" aria-live="polite" aria-expanded="{show}">
   {#if title}
     {#if typeof title === "function"}
       <div class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@render title?.()}</div>
     {:else}
-      <h4 class={twMerge("px-4 pt-4 pb-2 mb-2 font-bold border-b border-inherit", titleClasses)}>{@html title}</h4>
+      <h4 class={twMerge("px-4 pt-4 pb-1 mb-1 font-bold border-b border-inherit", titleClasses)}>{@html title}</h4>
     {/if}
   {/if}  
   <div class={twMerge("px-4 pb-4", bodyClasses)}>

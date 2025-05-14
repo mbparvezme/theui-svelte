@@ -20,8 +20,8 @@
 
   let itemClass = (t: Props['type']) => {
     const typeClasses: Record<Exclude<Props['type'], undefined>, string> = {
-      link: active ? CTX.activeItemClasses : CTX.itemClasses,
-      button: active ? CTX.activeItemClasses : CTX.itemClasses,
+      link: active ? twMerge(CTX.itemClasses, CTX.activeItemClasses) : CTX.itemClasses,
+      button: active ? twMerge(CTX.itemClasses, CTX.activeItemClasses) : CTX.itemClasses,
       header: CTX.headerClass,
       divider: CTX.dividerClass,
     }

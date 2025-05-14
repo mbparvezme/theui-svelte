@@ -1,5 +1,4 @@
 import { generateToken } from "$lib/function";
-import { ST_SLIDER } from "$lib/state.svelte";
 import { twMerge } from "tailwind-merge";
 
 export interface SliderConfig {
@@ -18,8 +17,18 @@ export class Slider {
   id: string = generateToken();
   isTransitioning: boolean = false; // To track if a transition is in progress
 
+  SLIDERS: Record<string, {
+    slides: HTMLElement[],
+    activeSlide: HTMLElement | null,
+    previousSlide: string | null,
+    nextSlide: string | null
+  }> = {};
+
   private indicatorClasses: string =
-    "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none";
+    "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none rounded-sm";
+  private remainingTime: number = 0;
+  private isHovered: boolean = false;
+  private pendingTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(config: Partial<SliderConfig>) {
     const defaultConfig: SliderConfig = {
@@ -32,6 +41,12 @@ export class Slider {
       indicatorActiveClasses: "",
     };
     this.config = { ...defaultConfig, ...config };
+    this.SLIDERS[this.id] = {
+      slides: [],
+      activeSlide: null,
+      previousSlide: null,
+      nextSlide: null
+    }
   }
 
   cloneSlides() {
@@ -51,28 +66,30 @@ export class Slider {
 
     itemsContainer.appendChild(firstClone);
     itemsContainer.insertBefore(lastClone, firstSlide);
-    ST_SLIDER.slides = [lastClone, ...(slides as HTMLElement[]), firstClone];
+    this.SLIDERS[this.id].slides = [lastClone, ...(slides as HTMLElement[]), firstClone];
   }
 
+  // Update the changeSlide function to ensure indicator stays in sync
   changeSlide(updateType: "next" | "prev") {
-    if (this.isTransitioning) return; // Prevent multiple transitions
+    if (this.isTransitioning) return;
     this.isTransitioning = true;
 
     const newIndex = this.calculateNextSlideIndex(updateType);
-    this.updateActiveIndicator(this.calculateNextIndicatorIndex(newIndex));
-    ST_SLIDER.activeSlide = ST_SLIDER.slides[newIndex];
+    const indicatorIndex = this.calculateNextIndicatorIndex(newIndex);
+    this.updateActiveIndicator(indicatorIndex);
+    this.SLIDERS[this.id].activeSlide = this.SLIDERS[this.id].slides[newIndex];
     this.slideTransition();
 
-    if (this.config.autoPlay) {
+    if (this.config.autoPlay && !this.isHovered) {
       this.startTimerAnimation();
     }
   }
 
   slideTransition() {
     const track = document.getElementById(`${this.id}-items`);
-    const slides = ST_SLIDER.slides;
+    const slides = this.SLIDERS[this.id].slides;
     const totalSlides = slides.length;
-    const slideIndex = slides.indexOf(ST_SLIDER.activeSlide as HTMLElement);
+    const slideIndex = slides.indexOf(this.SLIDERS[this.id].activeSlide as HTMLElement);
 
     if (track) {
       const translateValue = -slideIndex * track.clientWidth;
@@ -81,10 +98,10 @@ export class Slider {
 
       this.addTransitionListener(track, () => {
         if (slideIndex === 0) {
-          ST_SLIDER.activeSlide = slides[totalSlides - 2];
+          this.SLIDERS[this.id].activeSlide = slides[totalSlides - 2];
           this.updateTrackPosition();
         } else if (slideIndex === totalSlides - 1) {
-          ST_SLIDER.activeSlide = slides[1];
+          this.SLIDERS[this.id].activeSlide = slides[1];
           this.updateTrackPosition();
         }
         this.isTransitioning = false; // Reset transitioning flag
@@ -101,9 +118,9 @@ export class Slider {
   }
 
   calculateNextSlideIndex(updateType: "next" | "prev") {
-    const totalSlides = ST_SLIDER.slides.length;
-    const currentSlideIndex = ST_SLIDER.slides.indexOf(
-      ST_SLIDER.activeSlide as HTMLElement
+    const totalSlides = this.SLIDERS[this.id].slides.length;
+    const currentSlideIndex = this.SLIDERS[this.id].slides.indexOf(
+      this.SLIDERS[this.id].activeSlide as HTMLElement
     );
     return updateType === "next"
       ? (currentSlideIndex + 1) % totalSlides
@@ -111,18 +128,18 @@ export class Slider {
   }
 
   calculateNextIndicatorIndex(newIndex: number) {
-    const totalSlides = ST_SLIDER.slides.length - 2;
+    const totalSlides = this.SLIDERS[this.id].slides.length - 2;
     return newIndex === 0
       ? totalSlides - 1
-      : newIndex === ST_SLIDER.slides.length - 1
+      : newIndex === this.SLIDERS[this.id].slides.length - 1
         ? 0
         : newIndex - 1;
   }
 
   updateTrackPosition() {
     const track = document.getElementById(`${this.id}-items`);
-    const slides = ST_SLIDER.slides;
-    const slideIndex = slides.indexOf(ST_SLIDER.activeSlide as HTMLElement);
+    const slides = this.SLIDERS[this.id].slides;
+    const slideIndex = slides.indexOf(this.SLIDERS[this.id].activeSlide as HTMLElement);
     if (track) {
       const translateValue = -slideIndex * track.clientWidth;
       track.style.transform = `translateX(${translateValue}px)`;
@@ -132,16 +149,70 @@ export class Slider {
 
   handleMouseEnter() {
     if (this.config.stopOnHover && this.config.autoPlay) {
+      // Clear any pending timeout first
+      if (this.pendingTimeout) {
+        clearTimeout(this.pendingTimeout);
+        this.pendingTimeout = null;
+      }
+
+      this.isHovered = true;
       this.stopAutoPlay();
       this.stopTimerAnimation();
+
+      // Calculate remaining time based on current progress
+      const timerElement = document.getElementById(`${this.id}-timer`);
+      if (timerElement) {
+        const computedWidth = parseFloat(window.getComputedStyle(timerElement).width);
+        const containerWidth = parseFloat(window.getComputedStyle(timerElement.parentElement!).width);
+        this.remainingTime = this.config.slideDuration - (computedWidth / containerWidth * this.config.slideDuration);
+      }
     }
   }
 
   handleMouseLeave() {
     if (this.config.stopOnHover && this.config.autoPlay) {
-      this.startAutoPlay();
-      this.startTimerAnimation();
+      this.isHovered = false;
+      this.startAutoPlayWithRemainingTime();
+      this.startTimerAnimationWithRemainingTime();
     }
+  }
+
+  private startAutoPlayWithRemainingTime() {
+    this.stopAutoPlay();
+
+    // Clear any existing timeout first
+    if (this.pendingTimeout) {
+      clearTimeout(this.pendingTimeout);
+    }
+
+    // Store the new timeout reference
+    this.pendingTimeout = setTimeout(() => {
+      if (!this.isHovered) {
+        this.changeSlide("next");
+        this.startAutoPlay(); // Resume normal intervals
+      }
+      this.pendingTimeout = null;
+    }, this.remainingTime);
+  }
+
+  private startTimerAnimationWithRemainingTime() {
+    const timerElement = document.getElementById(`${this.id}-timer`);
+    if (!timerElement) return;
+
+    // Calculate the starting width based on remaining time
+    const progress = 1 - (this.remainingTime / this.config.slideDuration);
+    const startingWidth = `${progress * 100}%`;
+
+    timerElement.style.transition = "none";
+    timerElement.style.width = startingWidth;
+
+    void timerElement.offsetWidth; // Force reflow
+
+    timerElement.style.transition = `width ${this.remainingTime}ms linear`;
+    timerElement.style.width = "100%";
+
+    // Reset remaining time for next cycle
+    this.remainingTime = 0;
   }
 
   startAutoPlay() {
@@ -185,7 +256,7 @@ export class Slider {
   changeSlideByIndicator(index: number) {
     if (this.isTransitioning) return; // Prevent multiple transitions
     this.updateActiveIndicator(index);
-    ST_SLIDER.activeSlide = ST_SLIDER.slides[index + 1];
+    this.SLIDERS[this.id].activeSlide = this.SLIDERS[this.id].slides[index + 1];
     this.slideTransition();
   }
 
@@ -240,12 +311,12 @@ export class Slider {
   getIndicatorContainerClasses(classes: string) {
     return twMerge("bottom-0 inset-x-0 flex justify-center gap-2 mb-4", classes);
   }
-}
 
-export const getSlideClasses = (slideClasses: string, classes: string) => {
-  return twMerge(
-    "relative flex-shrink-0 w-full min-h-48 flex items-center justify-center",
-    slideClasses,
-    classes
-  );
-};
+  destroy() {
+    this.stopAutoPlay();
+    this.stopTimerAnimation();
+    if (this.pendingTimeout) {
+      clearTimeout(this.pendingTimeout);
+    }
+  }
+}

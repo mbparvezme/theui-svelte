@@ -10,7 +10,7 @@
   interface Props {
     children?: Snippet,
     align?: 'start' | 'end'
-    animate?: ANIMATE_SPEED,
+    animationSpeed?: ANIMATE_SPEED,
     animation?: DROPDOWN_ANIMATION_TYPE,
     backdrop?: boolean | string,
     closeOnBlur?: boolean,
@@ -32,7 +32,7 @@
   let{
     children,
     align = "end",
-    animate = "fast",
+    animationSpeed = "fast",
     animation = "slide-up",
     backdrop = false,
     closeOnBlur = true,
@@ -47,7 +47,7 @@
     dropdownEvent = 'click',
     label,
     rounded = "md",
-    width = "auto",
+    width = "md",
 		...props
   } : Props = $props()
 
@@ -101,10 +101,10 @@
 		}
 	})
 
-	const getContainerClasses = () => twMerge(`theui-dropdown relative inline-block ${animationClass(animate)}`, containerClasses)
+	const getContainerClasses = () => twMerge(`theui-dropdown relative inline-block ${animationClass(animationSpeed)}`, containerClasses)
 
   const getDropdownClasses = () => {
-    return twMerge(`${animation} dropdown-content absolute list-none z-[11] bg-white dark:bg-secondary text-base shadow-lg py-1 text-nowrap ${sizeClasses()} ${align === "end" ? "start-auto end-0" : ""}${animationClass(animate)}${roundedClass(rounded)}`, dropdownClasses)
+    return twMerge(`${animation} dropdown-content absolute list-none z-[11] bg-white dark:bg-secondary text-base shadow-lg py-1 text-nowrap ${sizeClasses()} ${align === "end" ? "start-auto end-0" : ""}${animationClass(animationSpeed)}${roundedClass(rounded)}`, dropdownClasses)
   }
 
 	let config: {
@@ -113,7 +113,7 @@
 		dividerClass: string,
 		headerClass: string
   } = {
-    itemClasses: twMerge("flex text-wrap w-full items-center gap-4 py-3 px-4 bg-transparent hover:bg-gray-500/10 text-default", itemClasses),
+    itemClasses: twMerge("flex text-wrap w-full items-center gap-4 py-3 px-4 bg-transparent hover:bg-gray-500/10 text-default cursor-pointer", itemClasses),
     activeItemClasses: twMerge("flex items-center gap-4 py-3 px-4 bg-gray-500/10", activeItemClasses),
     dividerClass: twMerge("border-b pb-2 mb-2 border-gray-300 dark:border-gray-700", dividerClasses),
     headerClass: twMerge("flex items-center gap-4 p-4 font-bold text-sm opacity-50 uppercase", headerClasses)
@@ -123,7 +123,6 @@
 
 <svelte:window onclick={(e: MouseEvent)=>handleBlur(e)} />
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div {id} {...props} class={getContainerClasses()} class:open={isOpen} onmouseenter={(e: MouseEvent)=>handleMouse(e)} onmouseleave={(e: MouseEvent)=>handleMouse(e)} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboard(e)} aria-labelledby={`${id}-trigger`}>
   {#if typeof label == "string"}
     <Button id={`${id}-trigger`} ariaLabel={label + " dropdown"} aria-controls={`${id}-dropdown`} aria-expanded={isOpen} aria-haspopup="menu" class={buttonClasses}>{label}</Button>
@@ -143,8 +142,9 @@
 </div>
 
 <style lang="postcss">
+  @reference "../style.css";
   .theui-dropdown .backdrop{
-    @apply z-10;
+    @apply z-[10];
   }
   .dropdown-content{
     @apply z-[11];
@@ -156,27 +156,6 @@
 	.theui-dropdown.open .dropdown-content,.theui-dropdown.open .backdrop{
 		@apply visible opacity-100;
 	}
-
-	/* Dropdown sizes */
-	/* .dropdown-sm .dropdown-content{
-		@apply w-48;
-	}
-	.dropdown-md .dropdown-content{
-		@apply w-64;
-	}
-	.dropdown-lg .dropdown-content{
-		@apply w-80;
-	}
-	.dropdown-full .dropdown-content{
-		@apply w-full start-0 end-0;
-	}
-	.dropdown-custom .dropdown-content{
-		@apply w-[var(--dropdown-width)] start-0 end-0;
-	}
-	.dropdown-end .dropdown-content{
-		@apply start-auto end-0;
-	} */
-
 	/* Dropdown animations */
 	.theui-dropdown .dropdown-content.slide-down{
 		@apply -translate-y-2;

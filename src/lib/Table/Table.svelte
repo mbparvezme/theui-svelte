@@ -6,21 +6,21 @@
   import { THead, TBody } from "$lib"
 
   interface Props {
-    children      ?: Snippet,
-    headers       ?: string[] | Record<string, unknown>,
-    data          ?: TABLE_ROW,
-    keys          ?: string[],
-    border        ?: 'x' | 'y' | 'both' | 'none',
-    borderColor   ?: string,
-    space         ?: 'compact' | 'default' | 'comfortable',
-    stripe        ?: "even" | "odd" | ClassNameValue,
-    hover         ?: true | ClassNameValue,
-    trHeadClasses ?: string,
-    trClasses     ?: string,
-    tdClasses     ?: string,
-    animate       ?: ANIMATE_SPEED,
-    id            ?: string,
-    [key: string] : unknown
+    children        ?: Snippet,
+    headers         ?: string[] | Record<string, unknown>,
+    data            ?: TABLE_ROW,
+    keys            ?: string[],
+    border          ?: 'x' | 'y' | 'both' | 'none',
+    borderColor     ?: string,
+    space           ?: 'compact' | 'default' | 'comfortable',
+    stripe          ?: "even" | "odd" | ClassNameValue,
+    hover           ?: true | ClassNameValue,
+    trHeadClasses   ?: string,
+    trClasses       ?: string,
+    tdClasses       ?: string,
+    animationSpeed  ?: ANIMATE_SPEED,
+    id              ?: string,
+    [key: string]   : unknown
   }
 
   let {
@@ -36,7 +36,7 @@
     trHeadClasses = "",
     trClasses = "",
     tdClasses = "",
-    animate = "normal",
+    animationSpeed = "normal",
     id = generateToken(),
     ...props
   } : Props = $props()
@@ -45,8 +45,8 @@
 
   let rowClasses = () => {
     const borderClasses = border === "both" || border === "y" ? `border-y ${borderColor}` : borderColor || "";
-    const hoverClasses = hover === true ? `${animationClass(animate)} hover:bg-gray-200 dark:hover:bg-gray-800`
-      : (typeof hover === "string" ? `${hover}${animationClass(animate)}` : "");
+    const hoverClasses = hover === true ? `${animationClass(animationSpeed)} hover:bg-gray-200 dark:hover:bg-gray-800`
+      : (typeof hover === "string" ? `${hover}${animationClass(animationSpeed)}` : "");
     stripeClasses =
       stripe === "even" ? `even:bg-gray-100 dark:even:bg-gray-900 ${borderColor}` :
       stripe === "odd" ? `odd:bg-gray-100 dark:odd:bg-gray-900 ${borderColor}` :
@@ -58,12 +58,12 @@
     let trClasses = rowClasses().replace("border-y ", "")
       .replace("hover:bg-gray-200 dark:hover:bg-gray-800", "")
       .replace(stripeClasses, "")
-      .replace(new RegExp(animationClass(animate).replace(/\s+/g, '\\s+'), 'g'), "")
+      .replace(new RegExp(animationClass(animationSpeed).replace(/\s+/g, '\\s+'), 'g'), "")
     return twMerge(trClasses, trHeadClasses)
   }
 
   setContext('TABLE', {
-    animate,
+    animationSpeed,
     border,
     borderColor,
     hover,

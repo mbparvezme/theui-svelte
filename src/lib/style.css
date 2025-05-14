@@ -1,0 +1,175 @@
+@import "tailwindcss";
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant edge-child (& :first-child, & :last-child);
+@custom-variant not-edge-child (& :not(:first-child,:last-child));
+
+:root{
+  --light1: #FFFDFD;
+  --light2: #F5F3F3;
+  --light3: #EBE9E9;
+  --dark1: #16161D;
+  --dark1: #1E1E26;
+  --dark1: #26262F;
+  --text-muted-on-light: #636369;
+  --text-muted-on-dark: #A1A1AA;
+}
+
+@theme {
+  /* --color-brand-primary-50 : oklch(0.97 0.0152 12.42);
+  --color-brand-primary-100: oklch(0.94 0.0298 12.58);
+  --color-brand-primary-200: oklch(0.89 0.0535 11.01);
+  --color-brand-primary-300: oklch(0.81 0.1036 12.12);
+  --color-brand-primary-400: oklch(0.72 0.1642 13.87);
+  --color-brand-primary-500: oklch(0.62 0.2276 19.57);
+  --color-brand-primary-600: oklch(0.58 0.2180 17.89);
+  --color-brand-primary-700: oklch(0.51 0.1952 17.24);
+  --color-brand-primary-800: oklch(0.45 0.1684 13.59);
+  --color-brand-primary-900: oklch(0.41 0.1468 10.14);
+  --color-brand-primary-950: oklch(0.27 0.0989 11.14);
+  --text-color-on-brand-primary: #FFFFFF;
+
+  --color-brand-secondary-50 : oklch(0.98 0.0243 171);
+  --color-brand-secondary-100: oklch(0.96 0.0573 167.2);
+  --color-brand-secondary-200: oklch(0.92 0.099 168.25);
+  --color-brand-secondary-300: oklch(0.87 0.1398 169.13);
+  --color-brand-secondary-400: oklch(0.81 0.1596 167.5);
+  --color-brand-secondary-500: oklch(0.75 0.154259 167.0121);
+  --color-brand-secondary-600: oklch(0.64 0.129563 167.7787);
+  --color-brand-secondary-700: oklch(0.54 0.1064 170.91);
+  --color-brand-secondary-800: oklch(0.46 0.087754 173.2514);
+  --color-brand-secondary-900: oklch(0.4 0.0761 174.27);
+  --color-brand-secondary-950: oklch(0.28 0.0509 178.01);
+  --text-color-on-brand-secondary: #2E2105; */
+
+  --color-brand-primary-50 : var(--color-rose-50);
+  --color-brand-primary-100: var(--color-rose-100);
+  --color-brand-primary-200: var(--color-rose-200);
+  --color-brand-primary-300: var(--color-rose-300);
+  --color-brand-primary-400: var(--color-rose-400);
+  --color-brand-primary-500: var(--color-rose-500);
+  --color-brand-primary-600: var(--color-rose-600);
+  --color-brand-primary-700: var(--color-rose-700);
+  --color-brand-primary-800: var(--color-rose-800);
+  --color-brand-primary-900: var(--color-rose-900);
+  --color-brand-primary-950: var(--color-rose-950);
+  --text-color-on-brand-primary: #FFFFFF;
+
+  --color-brand-secondary-50 : var(--color-emerald-50);
+  --color-brand-secondary-100: var(--color-emerald-100);
+  --color-brand-secondary-200: var(--color-emerald-200);
+  --color-brand-secondary-300: var(--color-emerald-300);
+  --color-brand-secondary-400: var(--color-emerald-400);
+  --color-brand-secondary-500: var(--color-emerald-500);
+  --color-brand-secondary-600: var(--color-emerald-600);
+  --color-brand-secondary-700: var(--color-emerald-700);
+  --color-brand-secondary-800: var(--color-emerald-800);
+  --color-brand-secondary-900: var(--color-emerald-900);
+  --color-brand-secondary-950: var(--color-emerald-950);
+  --text-color-on-brand-secondary: var(--color-emerald-50);
+
+  --color-error-50 : var(--color-red-50);
+  --color-error-100: var(--color-red-100);
+  --color-error-200: var(--color-red-200);
+  --color-error-300: var(--color-red-300);
+  --color-error-400: var(--color-red-400);
+  --color-error-500: var(--color-red-500);
+  --color-error-600: var(--color-red-600);
+  --color-error-700: var(--color-red-700);
+  --color-error-800: var(--color-red-800);
+  --color-error-900: var(--color-red-900);
+  --color-error-950: var(--color-red-950);
+
+  --color-info-50 : var(--color-sky-50);
+  --color-info-100: var(--color-sky-100);
+  --color-info-200: var(--color-sky-200);
+  --color-info-300: var(--color-sky-300);
+  --color-info-400: var(--color-sky-400);
+  --color-info-500: var(--color-sky-500);
+  --color-info-600: var(--color-sky-600);
+  --color-info-700: var(--color-sky-700);
+  --color-info-800: var(--color-sky-800);
+  --color-info-900: var(--color-sky-900);
+  --color-info-950: var(--color-sky-950);
+
+  --color-success-50 : var(--color-green-50);
+  --color-success-100: var(--color-green-100);
+  --color-success-200: var(--color-green-200);
+  --color-success-300: var(--color-green-300);
+  --color-success-400: var(--color-green-400);
+  --color-success-500: var(--color-green-500);
+  --color-success-600: var(--color-green-600);
+  --color-success-700: var(--color-green-700);
+  --color-success-800: var(--color-green-800);
+  --color-success-900: var(--color-green-900);
+  --color-success-950: var(--color-green-950);
+
+  --color-warning-50 : var(--color-yellow-50);
+  --color-warning-100: var(--color-yellow-100);
+  --color-warning-200: var(--color-yellow-200);
+  --color-warning-300: var(--color-yellow-300);
+  --color-warning-400: var(--color-yellow-400);
+  --color-warning-500: var(--color-yellow-500);
+  --color-warning-600: var(--color-yellow-600);
+  --color-warning-700: var(--color-yellow-700);
+  --color-warning-800: var(--color-yellow-800);
+  --color-warning-900: var(--color-yellow-900);
+  --color-warning-950: var(--color-yellow-950);
+
+  --text-color-default: #16161D;
+  --text-color-muted: #636369;
+  --text-color-alt: #FFFDFD;
+
+  --background-color-primary: #FFFDFD;
+  --background-color-secondary: #F5F3F3;
+  --background-color-tertiary: #EBE9E9;
+  --background-color-alt: #16161D;
+
+  --breakpoint-nn: 20rem;
+  --breakpoint-xs: 30rem;
+
+  --max-width: 1280px
+}
+
+@layer base {
+  .dark {
+    --text-color-default: #F5F3F3;
+    --text-color-muted: #A1A1AA;
+    --text-color-alt: #16161D;
+
+    --background-color-primary: #16161D;
+    --background-color-secondary: #1E1E26;
+    --background-color-tertiary: #26262F;
+    --background-color-alt: #F5F3F3;
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-primary text-default;
+  }
+  .theui-ring-black{
+    @apply outline-none focus:outline-none ring-transparent focus:ring-black/50 dark:focus:ring-black/70;
+  }
+  .theui-ring-white{
+    @apply outline-none ring-transparent focus:ring-white/50;
+  }
+  .theui-ring-brand{
+    @apply outline-none ring-transparent focus:ring-brand-primary-500/50;
+  }
+}
+
+.navbar-collapse .nav-link:not(.nav-dropdown-btn){
+  @apply hover:bg-secondary;
+}
+.navbar-collapse.xl-collapse .nav-links > .nav-link{
+  @apply xl:hover:bg-transparent;
+}
+.navbar-collapse.lg-collapse .nav-links > .nav-link{
+  @apply lg:hover:bg-transparent;
+}
+.navbar-collapse.md-collapse .nav-links > .nav-link{
+  @apply md:hover:bg-transparent;
+}

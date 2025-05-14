@@ -31,35 +31,49 @@ export const labelSizeClass: { [size in INPUT_SIZE]: string } = {
 }
 
 export const inputTypeSizeClasses: {
-  [key in 'default' | 'file' | 'group']: key extends 'default'
+  [key in 'default' | 'select' | 'file' | 'group']: key extends 'default' | 'select'
   ? { [type in 'flat' | 'nonFlat']: { [size in INPUT_SIZE]: string } }
   : { [size in INPUT_SIZE]: string };
 } = {
   default: {
     flat: {
-      sm: "px-0 py-2 text-sm",
-      md: "px-0 py-3",
-      lg: "px-0 py-4 text-xl",
-      xl: "px-0 py-5 text-2xl",
+      sm: "px-0 py-1 text-sm",
+      md: "px-0 py-2",
+      lg: "px-0 py-3 text-lg",
+      xl: "px-0 py-4 text-xl"
     },
     nonFlat: {
-      sm: "px-3 py-2 text-sm",
-      md: "px-4 py-3",
-      lg: "px-5 py-4 text-xl",
-      xl: "px-6 py-5 text-2xl",
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-5 py-3 text-lg",
+      xl: "px-6 py-4 text-xl"
+    }
+  },
+  select: {
+    flat: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-5 py-3 text-lg",
+      xl: "px-6 py-4 text-xl"
+    },
+    nonFlat: {
+      sm: "px-3 py-1 text-sm",
+      md: "px-4 py-2",
+      lg: "px-5 py-3 text-lg",
+      xl: "px-6 py-4 text-xl"
     }
   },
   file: {
-    sm: "file:px-4 file:py-2 file:text-sm",
-    md: "file:px-6 file:py-3",
-    lg: "file:px-6 file:py-4 file:text-xl",
-    xl: "file:px-8 file:py-5 file:text-2xl",
+    sm: "file:px-4 file:py-1 file:text-sm",
+    md: "file:px-6 file:py-2",
+    lg: "file:px-6 file:py-3 file:text-lg",
+    xl: "file:px-8 file:py-4 file:text-xl"
   },
   group: {
     sm: "h-3 w-3",
     md: "h-4 w-4",
     lg: "h-6 w-6",
-    xl: "h-8 w-8",
+    xl: "h-7 w-7"
   },
 }
 
@@ -81,13 +95,27 @@ const toggleSizes: Record<Exclude<INPUT_CONFIG['size'], undefined>, string> = {
  */
 export const inputContainerClass = (
   config: INPUT_CONFIG,
-  attr: Record<string, unknown> = {},
-  type: 'default' | 'group' = "default"
+  isFile: boolean = false
 ): string => {
-  const customClass = type === "group" ?
-    `cursor-pointer ${attr?.disabled && `cursor-not-allowed opacity-50 select-none ${attr?.readonly && "pointer-events-none"}`}` :
-    `flex flex-col ${config?.variant != "flat" ? "gap-2" : ""}`
-  return `theui-input-container ${config?.reset ? "" : twMerge(customClass, attr.class as string)}`
+  const customClass = `flex flex-col ${config?.variant != "flat" || isFile ? "gap-2" : ""}`
+  return `theui-input-container ${config?.reset ? "" : customClass}`
+}
+
+
+/**
+ * Generates the base class for an input container based on configuration, attributes, and input type.
+ *
+ * @param config - Configuration object (e.g., size, variant, reset state).
+ * @param attr - Additional attributes (e.g., `disabled`, `readonly`, `class`).
+ * @param type - Input type (`default` for text/select, `group` for radio/checkbox). Default is `default`.
+ * @returns A string with the computed class names for the input container.
+ */
+export const groupInputContainerClass = (
+  config: INPUT_CONFIG,
+  attr: Record<string, unknown> = {},
+): string => {
+  if(config?.reset) return "theui-input-container"
+  return `theui-input-container flex gap-2 items-center ${attr?.disabled || attr?.readonly ? "cursor-not-allowed opacity-50 select-none pointer-events-none" : ""}`
 }
 
 
@@ -101,14 +129,14 @@ export const inputContainerClass = (
  */
 export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown> = {}, type: INPUT_CATEGORY = "text"): string => {
   const baseClass = `theui-input ${theuiInputClass['type'][type]} ${theuiInputClass['size'][config?.size || "md"]}`
-  if (config?.reset) return baseClass
+  if (config?.reset) return twMerge(baseClass, attr?.class as string)
 
-  const commonClasses = `${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
-  const groupClasses = "bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-200/20 text-brand-primary-500 focus-within:ring-brand-primary-500 !ring-offset-primary"
+  const commonClasses = `outline-hidden ${inputSizeClasses(config, type)} ${commonInputTheme(config, type)}${attributesClasses(attr)}`
+  const groupClasses = `bg-gray-100 dark:bg-gray-800 cursor-pointer checked:bg-brand-primary-500 ${animationClass(config?.animationSpeed)}`
 
   const typeSpecificClasses: Record<INPUT_CATEGORY, () => string> = {
     text: () => defaultInputClasses(config),
-    select: () => defaultInputClasses(config),
+    select: () => defaultSelectClasses(config),
     file: () => fileInputClasses(config),
     checkbox: () => groupClasses,
     radio: () => groupClasses,
@@ -126,9 +154,9 @@ export const inputClasses = (config: INPUT_CONFIG, attr: Record<string, unknown>
  * @returns A string containing the computed classes for the label element.
  */
 export const labelClasses = (config: INPUT_CONFIG & { type: INPUT_CATEGORY }, attr: Record<string, unknown> = {}): string => {
-  const baseClasses = `font-medium inline-flex text-sm`
+  const baseClasses = `font-medium flex flex-col text-base text-gray-700 dark:text-gray-300`
   const floatingLabelClasses = config?.floatingLabel
-    ? `peer-placeholder-shown:text-base transform cursor-text absolute top-0 peer-placeholder-shown:top-1/2 peer-focus:top-0 -translate-y-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:-translate-y-1/2 peer-placeholder-shown:text-gray-500 peer-focus:text-xs text-xs peer-focus:text-default ${animationClass(config?.animate)}
+    ? `peer-placeholder-shown:text-base transform cursor-text absolute top-0 peer-placeholder-shown:top-1/2 peer-focus:top-0 -translate-y-1/2 peer-placeholder-shown:-translate-y-1/2 peer-focus:-translate-y-1/2 peer-placeholder-shown:text-gray-500 peer-focus:text-xs text-xs peer-focus:text-default ${animationClass(config?.animationSpeed)}
       ${config?.variant !== "flat" ? labelSizeClass[config?.size as INPUT_SIZE] : "start-0"}
       ${config?.variant === "bordered" ? "bg-primary" : ""}`
     : ""
@@ -148,12 +176,18 @@ export const labelClasses = (config: INPUT_CONFIG & { type: INPUT_CATEGORY }, at
  * @returns A string representing the appropriate size classes for the input.
  */
 const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): string => {
-  const inputType = ["radio", "checkbox"].includes(type) ? "group" : type === "file" ? "file" : "default"
+  const inputType = ["radio", "checkbox"].includes(type) ? "group" : type === "file" ? "file" : type === "select" ? "select" : "default"
   const sizeKey = config.size ?? "md"
+
+  // if (config?.inputType && config?.inputType == "color"){
+    
+  // }
 
   return inputType === "default"
     ? inputTypeSizeClasses.default[config.variant === "flat" ? "flat" : "nonFlat"][sizeKey]
-    : inputTypeSizeClasses[inputType as "file" | "group"][sizeKey]
+    : inputType === "select"
+      ? inputTypeSizeClasses.select[config.variant === "flat" ? "flat" : "nonFlat"][sizeKey]
+      : inputTypeSizeClasses[inputType as "file" | "group"][sizeKey]
 }
 
 
@@ -165,12 +199,12 @@ const inputSizeClasses = (config: INPUT_CONFIG, type: INPUT_CATEGORY = "text"): 
  * @returns A string representing theme-specific classes.
  */
 const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string => {
+  const borderTheme = "border-gray-300 dark:border-gray-600 focus:border-brand-primary-500 ring-transparent focus:ring-brand-primary-500 ring-offset-0"
   const themes: Record<string, string> = {
-    bordered: `border border-gray-300 dark:border-gray-700 bg-transparent focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500 ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`,
-    // filled: "border-0 focus:ring-1 focus:ring-brand-primary-500 focus:border-brand-primary-500 bg-gray-100 dark:bg-gray-900",
+    bordered: `border bg-transparent ${borderTheme}`,
     flat: type !== "file"
-      ? `border-0 border-b-2 border-gray-300 focus:border-brand-primary-500 dark:border-gray-700 bg-transparent focus:ring-0 ${type === "select" ? "dark:bg-primary" : "bg-transparent"}`
-      : "border-0 [type='file']:focus:outline-none ring-0 [type='file']:focus:outline-none focus:ring-0",
+      ? `bg-transparent border-0 border-b-2 border-gray-300 dark:border-gray-600 focus:border-brand-primary-500 ring-transparent`
+      : `bg-transparent [type='file']:focus:ring-0 border-gray-300 dark:border-gray-600 focus:border-brand-primary-500 ring-transparent`
   }
 
   const themeClasses = themes[config.variant ?? "bordered"]
@@ -187,8 +221,19 @@ const commonInputTheme = (config: INPUT_CONFIG, type: INPUT_CATEGORY): string =>
  * @returns A string of base classes for styling the input element.
  */
 const defaultInputClasses = (config: INPUT_CONFIG): string =>
-  `outline-transparent ring-transparent block w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
-  } ${animationClass(config?.animate)}`
+  `block w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
+  } ${animationClass(config?.animationSpeed)}`
+
+
+/**
+ * Generates default classes for an input element, including animation and optional floating label styling.
+ * 
+ * @param config - Configuration object determining animation and floating label behavior.
+ * @returns A string of base classes for styling the Style element.
+ */
+const defaultSelectClasses = (config: INPUT_CONFIG): string =>
+  `block min-w-[10em] w-full ${config?.floatingLabel ? "peer placeholder-transparent" : ""
+  } ${animationClass(config?.animationSpeed)}`
 
 
 /**
@@ -199,9 +244,9 @@ const defaultInputClasses = (config: INPUT_CONFIG): string =>
  */
 const attributesClasses = (attr: Record<string, unknown> = {}): string =>
   attr?.disabled
-    ? " disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 disabled:select-none"
+    ? " disabled:bg-gray-100 dark:disabled:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-75 disabled:select-none"
     : attr?.readonly
-      ? " read-only:bg-gray-100 dark:read-only:bg-gray-800 read-only:pointer-events-none read-only:opacity-50"
+      ? " read-only:bg-gray-100 dark:read-only:bg-gray-800 read-only:pointer-events-none read-only:opacity-75"
       : "";
 
 
@@ -212,9 +257,8 @@ const attributesClasses = (attr: Record<string, unknown> = {}): string =>
  * @returns A string containing file input-specific classes.
  */
 const fileInputClasses = (config: INPUT_CONFIG): string =>
-  `file:mr-4 file:bg-secondary file:cursor-pointer cursor-pointer file:border-0 ${roundedClass(config?.rounded, "all", "fileButton")
+  `file:me-4 file:bg-secondary file:cursor-pointer file:text-gray-600 dark:file:text-gray-400 ${roundedClass(config?.rounded, "all", "fileButton")
   }${roundedClass(config?.rounded)}`;
-
 
 
 export const getToggleSize = (size: INPUT_SIZE): string => toggleSizes[size]

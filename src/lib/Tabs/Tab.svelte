@@ -14,7 +14,7 @@
     CTX.TABS.selectedPanel = CTX.TABS.panels[i]
   }
 
-  let getClass = $derived(`${(CTX.variant == "pills" ? "theui-tab-pill" : "theui-tab")} px-8 py-3 text-center font-medium ${roundedClass("md", (CTX.variant == "tabs" ? "top" : (CTX.border ? "top" : "all")))} ${animationClass(CTX.animate)}`)
+  let getClass = $derived(`${(CTX.variant == "pills" ? "theui-tab-pill" : "theui-tab")} px-8 py-3 text-center font-medium cursor-pointer ${roundedClass("md", (CTX.variant == "tabs" ? "top" : (CTX.border ? "top" : "all")))} ${animationClass(CTX.animationSpeed)}`)
 </script>
 
 <button
