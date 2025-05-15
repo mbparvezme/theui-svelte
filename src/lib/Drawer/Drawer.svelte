@@ -14,7 +14,7 @@
     staticBackdrop ?: boolean,
     buttonClasses?: string,
     ariaLabel ?: string,
-    isOpen: boolean,
+    open: boolean,
     [key: string]: unknown
   }
 
@@ -27,17 +27,18 @@
     staticBackdrop = false,
     buttonClasses = "",
     ariaLabel = "Drawer component",
-    isOpen = $bindable(false),
+    open = $bindable(false),
     ...props
   } : Props = $props()
 
   const id = generateToken()
 
-  let toggle = () => isOpen = !isOpen
+  let toggle = () => open = !open
 
   let handleKeyboardEsc = (e: KeyboardEvent) => {
-    if (isOpen && e.key === "Escape") {
-      isOpen = false
+    if (open && e.key === "Escape") {
+      e.preventDefault()
+      open = false
     }
   }
 
@@ -55,6 +56,14 @@
     start: "drawer-start"
   }[position ?? "start"]
 
+  const sizeClasses: string = {
+    top: "w-full min-h-[160px] inset-x-0 top-0",
+    end: "w-full sm:w-96 inset-y-0 end-0",
+    bottom: "w-full min-h-[160px] inset-x-0 bottom-0",
+    start: "w-full sm:w-96 inset-y-0 start-0",
+    fullscreen: "inset-0",
+  }[props?.fullscreen ? "fullscreen" : (position ?? "start")]
+
   const transformClasses: string = {
     top: "-translate-y-full",
     end: "translate-x-full rtl:-translate-x-full",
@@ -69,18 +78,12 @@
     start: "translate-x-0",
   }[position ?? "start"]
 
-  const sizeClasses: string = {
-    top: "w-full min-h-[160px] inset-x-0 top-0",
-    end: "w-full sm:w-96 inset-y-0 end-0",
-    bottom: "w-full min-h-[160px] inset-x-0 bottom-0",
-    start: "w-full sm:w-96 inset-y-0 start-0",
-    fullscreen: "inset-0",
-  }[props?.fullscreen ? "fullscreen" : (position ?? "start")]
+  const containerClasses: string = `theui-drawer fixed inset-0 z-40 group ${positionClasses}${animationClass(animationSpeed)}`
 
   const drawerClass: string = $derived(
     twMerge(
       `fixed bg-white dark:bg-secondary z-40 transition-transform duration-200 ${transformClasses} ${sizeClasses}${animationClass(animationSpeed)}`,
-      isOpen && openTransformClasses,
+      open && openTransformClasses,
       props?.class as string
     )
   )
@@ -90,22 +93,22 @@
 
 {#if label}
   {#if typeof label == "string"}
-    <Button id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={isOpen} {ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)}>{@html label}</Button>
+    <Button id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={open} {ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)}>{@html label}</Button>
   {:else}
-    <span id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={isOpen} aria-label={ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
+    <span id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={open} aria-label={ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
       {@render label?.()}
     </span>
   {/if}
 {/if}
 
 {#if children}
-  <div {id} class="theui-drawer fixed inset-0 z-40 group {positionClasses}{animationClass(animationSpeed)}" class:invisible={!isOpen} class:opacity-0={!isOpen} role="complementary">
+  <div {id} class={containerClasses} class:invisible={!open} class:opacity-0={!open} role="complementary">
 
     {#if backdrop && !props?.fullscreen}
       <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle()}></div>
     {/if}
 
-    <div id="drawer{id}" class={drawerClass} aria-labelledby={`theui-drawer-trigger${id}`} aria-hidden={!isOpen}>
+    <div id="drawer{id}" class={drawerClass} aria-labelledby={`theui-drawer-trigger${id}`} aria-hidden={!open}>
       <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-4 end-4 p-1" onclick={()=>toggle()}/>
       {@render children()}
     </div>

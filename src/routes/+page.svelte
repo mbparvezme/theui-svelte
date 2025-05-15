@@ -1,7 +1,7 @@
 <script lang="ts">
   import {Accordion, AccordionItem, Drawer, DarkMode, Slider, Slide, Button} from "$lib";
 
-  import { Breadcrumb, ButtonGroup } from "$lib";
+  import { Breadcrumb, ButtonGroup,Modal } from "$lib";
 
   let breadcrumbData= [
     { text: "Home", url: "/" },
@@ -56,6 +56,10 @@ let toggle: boolean = $state(false)
   <br/>
   <br/>
   <br/>
+  <Button onclick={()=>{toggle=!toggle}}>Toggle modal</Button>
+  <Modal bind:open={toggle} header="I am title">
+    Hello Modal!
+  </Modal>
   <br/>
   <br/>
   <br/>
