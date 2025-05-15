@@ -16,13 +16,8 @@
   <br>
   <br>
   <br>
-  <Drawer label="testDrawer">Hello</Drawer>
-  <Drawer id="testDrawer">
-    {#snippet label()}
-      Hello test
-    {/snippet}
-  </Drawer>
-  <Drawer id="testDrawer">Hello Test</Drawer>
+  <Drawer label="testDrawer" position="top">Hello</Drawer>
+  <Drawer id="testDrawer" label="hi"  position="bottom">Hello Test</Drawer>
   <br>
   <br>
   <br>
