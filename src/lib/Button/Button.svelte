@@ -75,7 +75,7 @@
   }
 
   let getButtonClass = () => {
-    let baseClasses = `${(href ? "theui-link" : "theui-button")} inline-flex gap-2 cursor-pointer focus:ring-4 focus:outline-none ${sizeClasses[square ? "square" : "default"][size]} ${animationClass(animationSpeed)} ${utilityClasses()}`
+    let baseClasses = `${(href ? "theui-link" : "theui-button")} inline-flex gap-2 cursor-pointer focus:ring-4 focus:outline-none ${sizeClasses[square ? "square" : "default"][size]} ${animationClass(animationSpeed)} ${utilityClasses()} ${props?.disabled ? "opacity-50 pointer-events-none shadow-none" : ''}`
 
     if(outline){
       return `${baseClasses} ${buttonTheme(CTX, "outline", color)}`
@@ -122,16 +122,3 @@
   {/if}
 
 </svelte:element>
-
-<style lang="postcss">
-  @reference "../style.css";
-  button[disabled]:not(.btn-outline){
-    @apply opacity-75 pointer-events-none;
-  }
-  button[disabled].btn-outline{
-    @apply opacity-50 pointer-events-none;
-  }
-  :global(.theui-btn-group:not(:first-child, :last-child)){
-    @apply !rounded-none;
-  }
-</style>

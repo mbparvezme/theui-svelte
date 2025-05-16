@@ -32,9 +32,13 @@
   </ol>
 </nav>
 
-<!-- Component Snippet -->
 {#snippet breadcrumbLink(item: BREADCRUMB_DATA, i: number)}
-  <li class="breadcrumb-item {getLinkCls(item.url)}" class:before:px-2={i!=0} class:active={!item.url}>
+  <li
+    class="breadcrumb-item {getLinkCls(item.url)}"
+    class:before:px-2={i!=0}
+    class:before:content-[var(--breadcrumb-separator)]={i!=0}
+    class:active={!item.url}
+  >
     {#if !item.url}
       <span aria-current="page">{item.text}</span>
     {:else}
@@ -42,9 +46,3 @@
     {/if}
   </li>
 {/snippet}
-
-<style>
-  .theui-breadcrumb .breadcrumb-item:not(:first-child)::before {
-    content: var(--breadcrumb-separator);
-  }
-</style>

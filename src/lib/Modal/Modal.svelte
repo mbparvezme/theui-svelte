@@ -10,7 +10,6 @@
     children?: Snippet,
     header?: Snippet,
     footer?: Snippet,
-    id?: string,
     animationSpeed?: ANIMATE_SPEED,
     animation?: 'slide-down' | 'slide-up' | 'fade' | 'zoom-in' | 'zoom-out',
     backdrop?: boolean|string,
@@ -33,7 +32,6 @@
     children,
     header,
     footer,
-    id = generateToken() + "Modal",
     animationSpeed = "fast",
     animation = "fade",
     backdrop = true,
@@ -48,8 +46,10 @@
     buttonClasses = "",
     size = "md",
     staticBackdrop = false,
-    open = false,
+    open = $bindable(false),
   } : Props = $props()
+
+  const id = generateToken()
 
   let toggle = ( closeButton = true ) => {
     open = !(document.getElementById(id)?.classList.contains('open') && (closeButton || (!closeButton && !staticBackdrop)))
@@ -84,22 +84,23 @@
 
 {#if label}
   {#if typeof label == "string"}
-    <Button id={`${id}-modal-button`}
+    <Button id={`theui-modal-trigger${id}`}
     aria-controls={id}
     aria-expanded={open}
     aria-haspopup="dialog"
-    aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
+    aria-labelledby={header ? `$theui-modal-heading{id}` : `theui-modal-trigger${id}`}
     aria-describedby={`${id}-modal-body`}
     onclick={()=>toggle()}
     class={buttonClasses}>{label}</Button>
   {:else}
-    <span id={`${id}-modal-button`}
+    <span id={`theui-modal-trigger${id}`}
       aria-controls={id}
       aria-expanded={open}
       aria-haspopup="dialog"
-      aria-labelledby={header ? `${id}-heading` : `${id}-modal-button`}
+      aria-labelledby={header ? `$theui-modal-heading{id}` : `theui-modal-trigger${id}`}
       aria-describedby={`${id}-modal-body`}
-      onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
+      onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0"
+      class={buttonClasses}>
       {@render label?.()}
     </span>
   {/if}
@@ -113,7 +114,7 @@
 
     <div class={twMerge(modalBodyCls(), (size !== "full" ? roundedClass(rounded) : ""), modalBodyClasses)} role="dialog" aria-modal="true" aria-hidden={!open}>
       {#if header || closeButton}
-        <div id="{id}-heading" class={twMerge("modal-header flex justify-between w-full gap-8 items-start", header && "border-b border-black/10 dark:border-black/50 pb-4 mb-8", modalHeaderClasses)}>
+        <div id="theui-modal-heading{id}" class={twMerge("theui-modal-header flex justify-between w-full gap-8 items-start", header && "border-b border-black/10 dark:border-black/50 pb-4 mb-8", modalHeaderClasses)}>
           {@render header?.()}
           {#if closeButton!==false}
             <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity ms-auto" onclick={()=>toggle()}/>
@@ -121,12 +122,12 @@
         </div>
       {/if}
 
-      <div class="modal-content w-full">
+      <div class="theui-modal-content w-full">
         {@render children()}
       </div>
 
       {#if footer}
-        <div class={twMerge("modal-footer border-t border-black/10 dark:border-black/50 pt-4 mt-8", modalFooterClasses)}>
+        <div class={twMerge("theui-modal-footer border-t border-black/10 dark:border-black/50 pt-4 mt-8", modalFooterClasses)}>
           {@render footer?.()}
         </div>
       {/if}
