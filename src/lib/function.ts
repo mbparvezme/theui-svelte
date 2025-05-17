@@ -641,8 +641,8 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
  * @param backdrop - A string for custom classes or a boolean for default styling.
  * @returns A string of merged classes for the backdrop.
  */
-export const backdropClasses = (backdrop: string | boolean): string => {
+export const backdropClasses = (backdrop: string | boolean, zIndex?: string): string => {
   const defaultClasses = "backdrop fixed inset-0 bg-black/50 z-[-1] dark:bg-black/75"
   const customClasses = typeof backdrop === "string" ? backdrop : ""
-  return twMerge(defaultClasses, customClasses)
+  return twMerge(defaultClasses, customClasses, zIndex)
 }

@@ -35,7 +35,20 @@
   config.dropdownLinkClasses = twMerge(config.dropdownLinkClasses, dropdownLinkClasses)
 
   let id: string = generateToken()
-  let activeState: boolean = $state(false)
+  let open: boolean = $state(false)
+
+  const transformClasses: string = {
+    "slide": "transform translate-y-8",
+    "fade": "",
+    "zoom": "transform scale-75",
+  }[animation ?? "fade"]
+
+  const openTransformClasses: string = {
+    "slide": "transform translate-y-0",
+    "fade": "",
+    "zoom": "transform scale-100",
+  }[animation ?? "fade"]
+
 
   let menuWidthClasses: Record<MOBILE_NAV_ON | 'nonRes', Record<MOBILE_NAV_ON | 'full', string>> = {
     sm: {
@@ -110,37 +123,32 @@
   ${config?.responsive ? resCls() : nonResCls} ${dropdownTopPositionClasses[config.height as MOBILE_NAV_ON]}
   ${roundedClass(config?.rounded, "bottom")}${animationClass(config.animationSpeed)}`
 
-  const showMenu = (dropdown: HTMLElement) =>{
-    dropdown?.classList.remove("hide")
-    activeState = true
-  }
-
-  const hideMenu = (dropdown: HTMLElement|null) =>{
-    dropdown?.classList.add("hide")
-    activeState = false
+  const showMenu = () => {
+    let activeDd = document.querySelectorAll(".theui-nav-dropdown-container:not(.hide)")
+    activeDd.forEach(elm => elm.classList.add("hide"))
+    open = true
   }
 
   let toggle = () => {
     if(dropdownEvent !== "hover"){
-      let dd = document.getElementById(id)
-      if(dd?.classList.contains("hide")){
-        let activeDd = document.querySelectorAll(".theui-nav-dropdown-container:not(.hide)")
-        activeDd.forEach(elm => elm.classList.add("hide"))
-        showMenu(dd)
-      }else{
-        hideMenu(dd)
+      if(!open){
+        showMenu()
+        return
       }
+      open = false
     }
   }
 
   let handleMouse = (e: Event) => {
     if(dropdownEvent === "hover"){
       e.preventDefault()
-      let dd = document.getElementById(id)
+      // let dd = document.getElementById(id)
       if (e.type === "mouseenter" || e.type === "focus") {
-        dd?.classList.remove("hide")
+        // dd?.classList.remove("hide")
+        showMenu()
       } else if (e.type === "mouseleave") {
-        dd?.classList.add("hide")
+        // dd?.classList.add("hide")
+        open = false
       }
     }
 	}
@@ -148,18 +156,20 @@
   let handleKeyboard = (e: KeyboardEvent) => {
     if(e.code == "Escape" || e.code == "ArrowUp"){
       e.preventDefault()
-      document.getElementById(id)?.classList.add("hide")
+      // document.getElementById(id)?.classList.add("hide")
+      open = false
     }
     if(e.code == "ArrowDown"){
       e.preventDefault()
-      document.getElementById(id)?.classList.remove("hide")
+      // document.getElementById(id)?.classList.remove("hide")
+      showMenu()
     }
-    return
 	}
 
   let handleBlur = (e: Event) => {
     if((e.target as HTMLElement).closest("#"+id+":not(.hide)") === null){
-      document.getElementById(id)?.classList.add("hide")
+      // document.getElementById(id)?.classList.add("hide")
+      showMenu()
     }
     return
   }
@@ -168,7 +178,7 @@
 <svelte:window on:click={(e)=>handleBlur(e)}/>
 
 <div {id} {...props} class="theui-nav-dropdown-container hide z-[1]" class:relative={width != "full"} tabindex="-1" onmouseenter={(e)=>handleMouse(e)} onmouseleave={(e)=>handleMouse(e)} onblur={(e)=>handleBlur(e)}>
-  <button class="theui-nav-dropdown-btn gap-x-1 w-full justify-between flex items-center cursor-pointer {config.linkClasses}" onkeydown={(e)=>handleKeyboard(e)} onclick={()=>toggle()} onfocus={handleMouse} aria-haspopup="true" aria-expanded={activeState?"true":"false"} type="button">
+  <button class="theui-nav-dropdown-btn gap-x-1 w-full justify-between flex items-center cursor-pointer {config.linkClasses}" onkeydown={(e)=>handleKeyboard(e)} onclick={()=>toggle()} onfocus={handleMouse} aria-haspopup="true" aria-expanded={open?"true":"false"} type="button">
     {#if label}
       {#if typeof label == "function"}
         {@render label()}
@@ -186,21 +196,24 @@
     {/if}
   </button>
 
+  <!-- class:fade={animation=="fade"}
+  class:slide={animation=="slide"}
+  class:zoom={animation=="zoom"} -->
   <div  class="theui-nav-dropdown {twMerge(dropdownClasses, props?.class as string)}"
-        class:fade={animation=="fade"} class:slide={animation=="slide"}
-        class:zoom={animation=="zoom"} onclick={()=>toggle()} onkeydown={(e)=>handleKeyboard(e)} role="menu" tabindex="0">
+        class:invisible={!open} class:opacity-0={!open}
+        onclick={()=>toggle()} onkeydown={(e)=>handleKeyboard(e)} role="menu" tabindex="0">
     {@render children?.()}
   </div>
 </div>
 
 <style lang="postcss">
   @reference "../style.css";
-  .theui-nav-dropdown-container.hide .nav-dropdown{
+  /* .theui-nav-dropdown-container.hide .nav-dropdown{
     @apply invisible;
   }
   .theui-nav-dropdown-container.hide .nav-dropdown.fade{
     @apply opacity-0;
-  }
+  } */
   .theui-nav-dropdown-container.hide .nav-dropdown.slide{
     @apply opacity-0 translate-y-8;
   }
