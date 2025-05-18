@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext, type Snippet } from "svelte"
+  import { getContext, onMount, type Snippet } from "svelte"
 	import type { MOBILE_NAV_ON, RESPONSIVE_NAV_ON } from "$lib/types"
   import { twMerge } from "tailwind-merge"
   import { animationClass, roundedClass, generateToken } from "$lib/function"
@@ -12,10 +12,10 @@
     label: string|Snippet,
     align?: 'start'|'end',
     width?: MOBILE_NAV_ON | 'full',
-    dropdownEvent?: 'hover' | 'click',
+    triggerEvent?: 'hover' | 'click',
     animation?: 'fade'|'slide'|'zoom',
     arrowIcon?: Snippet|boolean,
-    dropdownLinkClasses?: string,
+    linkClasses?: string,
     [key: string]: unknown
   }
 
@@ -24,33 +24,22 @@
     label,
     align = "start",
     width = "sm",
-    dropdownEvent = config.dropdownEvent,
+    triggerEvent = config.triggerEvent,
     animation = "fade",
     arrowIcon = true,
-    dropdownLinkClasses,
+    linkClasses,
     ...props
   } : Props = $props()
 
   config.isDropdown = true
-  config.dropdownLinkClasses = twMerge(config.dropdownLinkClasses, dropdownLinkClasses)
+  config.linkClasses = twMerge(config.linkClasses, linkClasses)
+  let dropdownContainer: HTMLElement
+  let dropdownMenu: HTMLElement
 
-  let id: string = generateToken()
+  const id: string = generateToken()
   let open: boolean = $state(false)
 
-  const transformClasses: string = {
-    "slide": "transform translate-y-8",
-    "fade": "",
-    "zoom": "transform scale-75",
-  }[animation ?? "fade"]
-
-  const openTransformClasses: string = {
-    "slide": "transform translate-y-0",
-    "fade": "",
-    "zoom": "transform scale-100",
-  }[animation ?? "fade"]
-
-
-  let menuWidthClasses: Record<MOBILE_NAV_ON | 'nonRes', Record<MOBILE_NAV_ON | 'full', string>> = {
+  const menuWidthClasses: Record<MOBILE_NAV_ON | 'nonRes', Record<MOBILE_NAV_ON | 'full', string>> = {
     sm: {
       sm: "md:w-48",
       md: "md:w-60",
@@ -88,24 +77,32 @@
     }
   }
 
-  let nonResCls = `absolute pl-0 flex shadow-xl block w-80 max-h-[80vh] ${menuWidthClasses["nonRes"][width]}`
+  const topPositionClasses = () => {
+    const heightClassObj: Record<'sm' | 'md' | 'lg' | 'xl', String> = {
+      sm: "top-full",
+      md: "top-full",
+      lg: "top-[calc(100%_+_4px)]",
+      xl: "top-[calc(100%_+_12px)]",
+    }
 
-  let dropdownTopPositionClasses: Record<'sm' | 'md' | 'lg' | 'xl', String> = {
-    sm: "top-full",
-    md: "top-full",
-    lg: "top-[calc(100%_+_4px)]",
-    xl: "top-[calc(100%_+_12px)]",
+    return  typeof config.height === "string" ?
+            config.height in heightClassObj ?
+              heightClassObj[config.height as keyof typeof heightClassObj] :
+              config.height :
+            ""
   }
 
-  let resCls = () => {
-    let collapseClasses: RESPONSIVE_NAV_ON = {
+  const alignmentClasses: string = `${width != "full" ? (align=="end" ? "end-0" : "start-0") : ""}`
+
+  const resCls = () => {
+    const collapseClasses: RESPONSIVE_NAV_ON = {
       sm: "md-collapse md:absolute md:flex md:shadow-xl md:block",
       md: "lg-collapse lg:absolute lg:flex lg:shadow-xl lg:block",
       lg: "xl:absolute xl:flex xl:shadow-xl xl:block",
       xl: "2xl:absolute 2xl:flex 2xl:shadow-xl 2xl:block",
     }
 
-    let dropdownMaxHeight: RESPONSIVE_NAV_ON = {
+    const dropdownMaxHeight: RESPONSIVE_NAV_ON = {
       sm: "md:max-h-[80vh]",
       md: "lg:max-h-[80vh]",
       lg: "xl:max-h-[80vh]",
@@ -118,67 +115,92 @@
             ${menuWidthClasses[config?.navBreakpoint as MOBILE_NAV_ON || "md"][width]}`
   }
 
-  let dropdownClasses = `nav-dropdown flex-col py-2 bg-secondary overflow-y-auto
-  ${width != "full" ? (align=="end" ? "end-0" : "start-0") : ""}
-  ${config?.responsive ? resCls() : nonResCls} ${dropdownTopPositionClasses[config.height as MOBILE_NAV_ON]}
-  ${roundedClass(config?.rounded, "bottom")}${animationClass(config.animationSpeed)}`
+  const memoizedResCls = $derived(resCls())
 
-  const showMenu = () => {
-    let activeDd = document.querySelectorAll(".theui-nav-dropdown-container:not(.hide)")
-    activeDd.forEach(elm => elm.classList.add("hide"))
-    open = true
-  }
+  const nonResCls = `absolute pl-0 flex shadow-xl block w-80 max-h-[80vh] ${menuWidthClasses["nonRes"][width]}`
 
-  let toggle = () => {
-    if(dropdownEvent !== "hover"){
-      if(!open){
-        showMenu()
-        return
-      }
-      open = false
+  const transformClasses: string = {
+    "slide": "transform translate-y-8",
+    "fade": "",
+    "zoom": "transform scale-75",
+  }[animation ?? "fade"]
+
+  const openTransformClasses: string = {
+    "slide": "transform translate-y-0",
+    "fade": "",
+    "zoom": "transform scale-100",
+  }[animation ?? "fade"]
+
+
+  let dropdownClasses = $derived(
+    `nav-dropdown flex-col py-2 bg-primary overflow-y-auto
+    ${config?.responsive ? memoizedResCls : nonResCls}
+    ${topPositionClasses()}
+    ${alignmentClasses}
+    ${roundedClass(config?.rounded)}
+    ${animationClass(config.animationSpeed)}
+    ${config.animationSpeed != "none" ? twMerge(transformClasses, open && openTransformClasses) : ""}`
+  )
+
+  let handleClick = $derived(() => {
+    if(triggerEvent !== "hover"){
+      open = !open
     }
-  }
+  })
 
-  let handleMouse = (e: Event) => {
-    if(dropdownEvent === "hover"){
-      e.preventDefault()
-      // let dd = document.getElementById(id)
-      if (e.type === "mouseenter" || e.type === "focus") {
-        // dd?.classList.remove("hide")
-        showMenu()
-      } else if (e.type === "mouseleave") {
-        // dd?.classList.add("hide")
-        open = false
+  let handleHover = (e: Event) => {
+    if(triggerEvent === "hover"){
+      e.stopPropagation()
+      if (e.type === "mouseenter" || e.type === "focus" || e.type === "touchstart") {
+        open = true
+      } else if (e.type === "mouseleave" || e.type === "touchend") {
+        setTimeout(() => open = false, 200)
       }
     }
 	}
 
   let handleKeyboard = (e: KeyboardEvent) => {
-    if(e.code == "Escape" || e.code == "ArrowUp"){
-      e.preventDefault()
-      // document.getElementById(id)?.classList.add("hide")
-      open = false
+    switch(e.code) {
+      case "Escape":
+      case "ArrowUp":
+        e.preventDefault()
+        open = false
+        break
+      case "ArrowDown":
+        e.preventDefault()
+        if (!open) open = true
+        break
+      case "Enter":
+      case "Space":
+        e.preventDefault()
+        open = !open
+        break
     }
-    if(e.code == "ArrowDown"){
-      e.preventDefault()
-      // document.getElementById(id)?.classList.remove("hide")
-      showMenu()
-    }
-	}
-
-  let handleBlur = (e: Event) => {
-    if((e.target as HTMLElement).closest("#"+id+":not(.hide)") === null){
-      // document.getElementById(id)?.classList.add("hide")
-      showMenu()
-    }
-    return
   }
+
+  onMount(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (open && dropdownContainer && !dropdownContainer.contains(event.target as Node)) {
+        open = false
+      }
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  })
 </script>
 
-<svelte:window on:click={(e)=>handleBlur(e)}/>
-
-<div {id} {...props} class="theui-nav-dropdown-container hide z-[1]" class:relative={width != "full"} tabindex="-1" onmouseenter={(e)=>handleMouse(e)} onmouseleave={(e)=>handleMouse(e)} onblur={(e)=>handleBlur(e)}>
-  <button class="theui-nav-dropdown-btn gap-x-1 w-full justify-between flex items-center cursor-pointer {config.linkClasses}" onkeydown={(e)=>handleKeyboard(e)} onclick={()=>toggle()} onfocus={handleMouse} aria-haspopup="true" aria-expanded={open?"true":"false"} type="button">
+<div  {id} {...props} bind:this={dropdownContainer}
+      class="theui-nav-dropdown-container z-[1]"
+      class:relative={width != "full"}
+      onmouseenter={handleHover}
+      onmouseleave={handleHover}
+      ontouchstart={handleHover}
+      ontouchend={handleHover}
+      onkeydown={handleKeyboard}
+      onclick={handleClick}
+>
+  <button class="theui-nav-dropdown-btn gap-x-1 w-full justify-between flex items-center cursor-pointer {config.linkClasses}"
+    aria-haspopup="true" aria-expanded={open} type="button">
     {#if label}
       {#if typeof label == "function"}
         {@render label()}
@@ -189,47 +211,16 @@
 
     {#if arrowIcon} 
       {#if arrowIcon === true}
-        <Svg stroke={true} viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></Svg>
+        <Svg class="transition-transform duration-200 {open ? 'rotate-180' : ''}" stroke={true} viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></Svg>
       {:else}
         {@render arrowIcon?.()}
       {/if}
     {/if}
   </button>
 
-  <!-- class:fade={animation=="fade"}
-  class:slide={animation=="slide"}
-  class:zoom={animation=="zoom"} -->
-  <div  class="theui-nav-dropdown {twMerge(dropdownClasses, props?.class as string)}"
+  <div  bind:this={dropdownMenu} class="theui-nav-dropdown {twMerge(dropdownClasses, props?.class as string)}"
         class:invisible={!open} class:opacity-0={!open}
-        onclick={()=>toggle()} onkeydown={(e)=>handleKeyboard(e)} role="menu" tabindex="0">
+        role="menu" tabindex="-1">
     {@render children?.()}
   </div>
 </div>
-
-<style lang="postcss">
-  @reference "../style.css";
-  /* .theui-nav-dropdown-container.hide .nav-dropdown{
-    @apply invisible;
-  }
-  .theui-nav-dropdown-container.hide .nav-dropdown.fade{
-    @apply opacity-0;
-  } */
-  .theui-nav-dropdown-container.hide .nav-dropdown.slide{
-    @apply opacity-0 translate-y-8;
-  }
-  .theui-nav-dropdown-container.hide .nav-dropdown.zoom{
-    @apply opacity-0 scale-75;
-  }
-  .theui-nav-dropdown-container:not(.hide){
-    @apply visible block opacity-100;
-  }
-  .theui-nav-dropdown-container:not(.hide) .nav-dropdown{
-    @apply visible block opacity-100;
-  }
-  .theui-nav-dropdown-container:not(.hide) .nav-dropdown.fade, .theui-nav-dropdown-container:not(.hide) .nav-dropdown.slide{
-    @apply translate-y-0;
-  }
-  .theui-nav-dropdown-container:not(.hide) .nav-dropdown.zoom{
-    @apply scale-100;
-  }
-</style>

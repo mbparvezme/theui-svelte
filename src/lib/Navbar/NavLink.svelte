@@ -9,7 +9,7 @@
 
   const { config, id } = getContext('NAV') as any
 
-  let linkCls = () => `nav-link flex items-center ${twMerge(config.linkClasses, active && config.activeLinkClasses, (config?.isDropdown ? config.dropdownLinkClasses : ""), props.class as string)}${roundedClass(config?.rounded)}${animationClass(config?.animationSpeed)}`
+  let linkCls = () => `nav-link flex items-center ${twMerge(config.linkClasses, active && config.activeLinkClasses, (config?.isDropdown ? "hover:bg-secondary dark:hover:bg-tertiary rounded-none " + config.dropdownLinkClasses : ""), props.class as string)}${roundedClass(config?.rounded)}${animationClass(config?.animationSpeed)}`
 
   let closeMobileNav = () => {
     if (ST_MOBILE_NAV.value.includes(id)) {

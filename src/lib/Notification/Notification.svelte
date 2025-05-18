@@ -30,19 +30,26 @@
 
 <style lang="postcss">
   @reference "../style.css";
-  .theui-notifications.top-start, .theui-notifications.top-center, .theui-notifications.top-end{
+  .theui-notifications.top-start,
+  .theui-notifications.top-center,
+  .theui-notifications.top-end{
     @apply justify-start top-[0];
   }
-  .theui-notifications.bottom-start, .theui-notifications.bottom-center, .theui-notifications.bottom-end{
+  .theui-notifications.bottom-start,
+  .theui-notifications.bottom-center,
+  .theui-notifications.bottom-end{
     @apply justify-end bottom-[0];
   }
-  .theui-notifications.bottom-center, .theui-notifications.top-center{
+  .theui-notifications.bottom-center,
+  .theui-notifications.top-center{
     @apply items-center start-[0] end-[0] w-full;
   }
-  .theui-notifications.bottom-end, .theui-notifications.top-end{
+  .theui-notifications.bottom-end,
+  .theui-notifications.top-end{
     @apply items-end end-[0];
   }
-  .theui-notifications.bottom-start, .theui-notifications.top-start{
+  .theui-notifications.bottom-start,
+  .theui-notifications.top-start{
     @apply items-start start-[0];
   }
 </style>

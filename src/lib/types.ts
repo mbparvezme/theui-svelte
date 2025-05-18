@@ -20,7 +20,8 @@ export type SHADOW =
   | "2xl"
   | "inner"
   | "none";
-export type POSITION_TYPES =
+
+  export type POSITION_TYPES =
   | 'top'
   | 'top-start'
   | ' top-end'
@@ -102,7 +103,10 @@ export type Tools = "strike" | "superscript" | "subscript" | "listItem" | "block
 export type NOTIFICATION_TYPE = "error" | "info" | "success" | "warning";
 
 export type RESPONSIVE_NAV_ON = { sm: string; md: string; lg: string; xl: string; }
+
 export type MOBILE_NAV_ON = keyof RESPONSIVE_NAV_ON
+
+export type NAV_HEIGHT_TYPES = 'sm' | 'md' | 'lg' | 'xl'
 
 export type NAV_SCROLL_BEHAVIOR = 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide';
 
