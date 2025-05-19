@@ -1,9 +1,20 @@
 <script lang="ts">
   import { fade, fly } from "svelte/transition"
   import { ST_NOTIFICATIONS, removeNotification } from "$lib/state.svelte"
-  import { notificationClasses, type NOTIFICATION_POSITION } from "$lib/function"
+  import type { NOTIFICATION_POSITION } from "$lib/types"
+  import { notificationClasses } from "$lib/function"
 
   let {position = "top-end", animationSpeed = true} : {position?: NOTIFICATION_POSITION, animationSpeed?: boolean} = $props()
+
+  const positionClasses = {
+    "top-end": "justify-start items-end end-0",
+    "top-center": "justify-start items-center start-0 end-0 w-full",
+    "top-start": "justify-start items-start start-0",
+    "bottom-end": "justify-end items-end end-0",
+    "bottom-center": "justify-end items-center start-0 end-0 w-full",
+    "bottom-start": "justify-end items-start start-0"
+  }[position ?? "top-end"]
+
 </script>
 
 {#if ST_NOTIFICATIONS?.value?.length}

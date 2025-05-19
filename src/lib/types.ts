@@ -100,7 +100,9 @@ export type SELECT_DATA = {disabled?: boolean, text: string, value?: unknown};
 
 export type Tools = "strike" | "superscript" | "subscript" | "listItem" | "blockquote" | "code" | "codeblock" | "link" | "horizontalLine" | "youtube" | "highlighter" | "color" | "redoUndo";
 
-export type NOTIFICATION_TYPE = "error" | "info" | "success" | "warning";
+export type NOTIFICATION_TYPE = "error" | "info" | "success" | "warning"
+
+export type NOTIFICATION_POSITION = "top-end" | "top-center" | "top-start" | "bottom-end" | "bottom-center" | "bottom-start"
 
 export type RESPONSIVE_NAV_ON = { sm: string; md: string; lg: string; xl: string; }
 
@@ -108,7 +110,7 @@ export type MOBILE_NAV_ON = keyof RESPONSIVE_NAV_ON
 
 export type NAV_HEIGHT_TYPES = 'sm' | 'md' | 'lg' | 'xl'
 
-export type NAV_SCROLL_BEHAVIOR = 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide';
+export type NAV_SCROLL_BEHAVIOR = 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide'
 
 export type NOTIFY_CONFIG = {
   removeAfter?: number;

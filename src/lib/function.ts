@@ -1,5 +1,4 @@
 export type ANIMATION_PROPERTY_TYPE = 'color' | 'opacity' | 'shadow' | 'transform' | 'all' | 'fileButton'
-export type NOTIFICATION_POSITION = "top-end" | "top-center" | "top-start" | "bottom-end" | "bottom-center" | "bottom-start"
 
 type RoundClassesType = {
   [type in ROUNDED_ITEM_TYPES]: {
