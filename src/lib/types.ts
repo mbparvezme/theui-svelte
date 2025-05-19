@@ -116,7 +116,8 @@ export type NOTIFY_CONFIG = {
   removeAfter?: number;
   removeOnClick?: boolean;
   rounded?: ROUNDED;
-  theme ?: "default" | "soft" | "gradient"
+  theme?: "default" | "soft" | "gradient";
+  position?: NOTIFICATION_POSITION;
   variant?: "card" | "borderTop" | "borderBottom" | "borderStart";
 };
 

@@ -115,23 +115,23 @@
   const triggerClasses = {
     default: "bg-brand-primary-500 text-on-brand-primary dark:bg-brand-primary-600",
     flush: {
-      active: "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary",
-      notActive: "border-b border-gray-300 dark:border-gray-700"
+      notActive: "border-b border-gray-300 dark:border-gray-700",
+      active: "border-b border-brand-primary-200 dark:border-brand-primary-700 bg-brand-primary-100 dark:bg-brand-primary-900 text-brand-primary-800 dark:text-brand-primary-100",
     }
   }
 
-  const getContainerClasses = () => twMerge(
+  const getContainerClasses = $derived(() => twMerge(
     `theui-accordion border-gray-300 dark:border-gray-700 ${active ? "accordion-active " : ""}
     ${containerBorder} ${containerRounded}`, (active ? openContainerClasses : containerClasses)
-  )
+  ))
 
-  const getTitleClasses = () => {
+  const getTitleClasses = $derived(() => {
     let cls = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand
       ${titleClass[isFlush ? "flush" : "default"][size]}
-      ${roundedClass(rounded, "top")}${animationClass(animationSpeed)}
+      ${isFlush ? "" : roundedClass(rounded, "top")}${animationClass(animationSpeed)}
       ${isFlush ? (active ? triggerClasses.flush.active : triggerClasses.flush.notActive) : (active ? triggerClasses.default : " ")}`
     return twMerge(cls, active ? openTitleClasses : titleClasses);
-  }
+  })
 
   const getContentClasses = () => {
     return twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
@@ -140,7 +140,9 @@
 
 <div class={getContainerClasses()}>
   <div id='theui-accordion-heading{id}' class='theui-accordion-title' aria-controls={id} aria-expanded={active}>
-    {@render accordionHeading()}
+    {#if title}
+      {@render accordionHeading()}
+    {/if}
   </div>
   <div {id} class="theui-accordion-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!active} class:open={active} aria-labelledby='theui-accordion-trigger{id}' aria-hidden={!active}>
     <div id="theui-accordion-content{id}" class={getContentClasses()}>
@@ -150,7 +152,7 @@
 </div>
 
 {#snippet accordionHeading()}
-  <button id="theui-accordion-trigger{id}" class={twMerge(getTitleClasses(), active && 'accordion-active text-on-brand-primary')} onclick={()=>toggle()} aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={active} aria-describedby={id} type="button">
+  <button id="theui-accordion-trigger{id}" class={getTitleClasses()} onclick={()=>toggle()} aria-controls={id} aria-label={`${typeof title === "string" ? title : ""} Accordion`} aria-expanded={active} aria-describedby={id} type="button">
     {#if typeof title === "string"}
       {@html title}
     {:else}

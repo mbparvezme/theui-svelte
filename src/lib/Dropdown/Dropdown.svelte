@@ -94,7 +94,7 @@
 		return validWidthSizes
 	}
 
-  const getContainerClasses: string = twMerge(`theui-dropdown relative inline-block${animationClass(animationSpeed)}`, containerClasses)
+  const getContainerClasses: string = twMerge(`theui-dropdown relative inline-block z-200 ${animationClass(animationSpeed)}`, containerClasses)
 
   let getDropdownClasses = $derived(
     twMerge(
@@ -206,7 +206,7 @@
     </span>
   {/if}
 
-  {#if backdrop}
+  {#if backdrop && open}
     <div class={backdropClasses(backdrop)} onclick={()=>handleClick()} aria-hidden="true"></div>
   {/if}
 

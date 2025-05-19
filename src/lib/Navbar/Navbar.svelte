@@ -109,7 +109,7 @@
   class:navbar-mini={miniNav}
   class:-translate-y-full={hideNav}
   class:fixed={scrollBehavior !== "default"}
-  class="theui-navbar z-[21] {navClass}"
+  class="theui-navbar z-100 {navClass}"
   aria-label={ariaLabel}
 >
   <div class={twMerge(navInnerClass, navInnerClasses)}>

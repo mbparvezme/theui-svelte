@@ -1,5 +1,6 @@
 <script lang="ts">
-  import {Accordion, AccordionItem, Navbar, NavBrand, NavLinkGroup, NavDropdown, NavLink, DarkMode, Progress} from "$lib";
+  import {Accordion, AccordionItem, Navbar, NavBrand, NavLinkGroup, NavDropdown, NavLink, DarkMode, Progress, Button, notify} from "$lib";
+  import { Dropdown, DropdownItem } from "$lib";
 </script>
 
 <DarkMode />
@@ -25,6 +26,14 @@
 
 <br>
 <div class="p-16">
+  <AccordionItem>
+    {#snippet title()}
+      T
+    {/snippet}
+    Con..
+  </AccordionItem>
+
+
   <AccordionItem title="Hello A">
     A
   </AccordionItem>
@@ -39,7 +48,15 @@
   </Accordion>
   <br>
   <br>
+  <Button onclick={() => notify("HI")} position="top-left">Notification</Button>
   <br>
+  <div class="ps-80">
+    <Dropdown label="Dropdown" backdrop={true}>
+      <DropdownItem url="/">Link 1</DropdownItem>
+      <DropdownItem url="/">Link 2</DropdownItem>
+      <DropdownItem url="/">Link 3</DropdownItem>
+    </Dropdown>
+  </div>
   <br>
   <div class="flex">
     <div class="p-16 flex flex-col gap-16 w-1/2">

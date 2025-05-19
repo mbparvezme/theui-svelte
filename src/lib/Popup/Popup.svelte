@@ -32,7 +32,6 @@
   let exitPopup = $state(false)
 
   const showEntryPopup = () => {
-    // Logic for controlling entry popup display based on repeat settings
     if (repeat === false) {
       if (localStorage.getItem("entryPopUp")) return;
       localStorage.setItem("entryPopUp", "true");
@@ -101,11 +100,9 @@
 <svelte:body on:keydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if entryPopup || exitPopup}
-<div {...props} class="theui-popup !z-[80] fixed inset-0 overflow-y-hidden flex items-center justify-center" class:entry-popup={trigger == "onEntry"} class:exit-popup={trigger == "onExit"} role='dialog' aria-hidden={!entryPopup && !exitPopup}>
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  {#if backdrop !== false}
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <div class={backdropClasses(backdrop)} onclick={()=>handleBackdrop()}></div>
+<div {...props} class="theui-popup z-500 fixed inset-0 overflow-y-hidden flex items-center justify-center" class:entry-popup={trigger == "onEntry"} class:exit-popup={trigger == "onExit"} role='dialog' aria-hidden={!entryPopup && !exitPopup}>
+  {#if backdrop && (entryPopup || exitPopup)}
+    <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : handleBackdrop()}></div>
   {/if}
   <div class="popup-content overflow-y-auto relative {twMerge("bg-secondary max-w-3xl max-h-screen p-8", props?.class as string)} {roundedClass(rounded)}">
     

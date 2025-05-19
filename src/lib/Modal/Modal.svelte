@@ -96,7 +96,7 @@
     "zoom-out": "transform scale-100"
   }[animation ?? "fade"]
 
-  const containerCls = twMerge(`theui-modal z-50 flex fixed inset-0 ${animationClass(animationSpeed)}`, containerClasses)
+  const containerCls = twMerge(`theui-modal z-400 flex fixed inset-0 ${animationClass(animationSpeed)}`, containerClasses)
 
   const bodyCls: string = $derived(
     twMerge(
@@ -143,7 +143,7 @@
 
 {#if children}
   <div {id} class={containerCls} class:invisible={!open} class:opacity-0={!open}>
-    {#if backdrop}
+    {#if backdrop && open}
       <div class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle()} aria-hidden="true"></div>
     {/if}
 

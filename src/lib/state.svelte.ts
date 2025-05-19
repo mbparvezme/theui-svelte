@@ -22,7 +22,7 @@ export const notify = (msg: string, type: NOTIFICATION_TYPE = "error", config: N
   const defaultConfig: NOTIFY_CONFIG = { removeOnClick: true, removeAfter: 4000, rounded: "md", theme: "default", variant: "card" };
   const C: NOTIFY_CONFIG & { id: string } = { ...defaultConfig, ...config, id: generateToken() };
 
-  ST_NOTIFICATIONS.value.push({ msg, type, CONFIG: C });
+  ST_NOTIFICATIONS.value.push({ msg, type, CONFIG: C , position: "test" });
 
   if (C.removeAfter !== 0) {
     setTimeout(() => removeNotification(C.id), C.removeAfter);

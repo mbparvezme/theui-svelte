@@ -78,11 +78,11 @@
     start: "translate-x-0",
   }[position ?? "start"]
 
-  const containerClasses: string = `theui-drawer fixed inset-0 z-40 group ${positionClasses}${animationClass(animationSpeed)}`
+  const containerClasses: string = `theui-drawer fixed inset-0 z-300 group ${positionClasses}${animationClass(animationSpeed)}`
 
   const drawerClass: string = $derived(
     twMerge(
-      `fixed bg-white dark:bg-secondary z-40 transition-transform duration-200 ${transformClasses} ${sizeClasses}${animationClass(animationSpeed)}`,
+      `fixed bg-white dark:bg-secondary transition-transform duration-200 ${transformClasses} ${sizeClasses}${animationClass(animationSpeed)}`,
       open && openTransformClasses,
       props?.class as string
     )
@@ -104,7 +104,7 @@
 {#if children}
   <div {id} class={containerClasses} class:invisible={!open} class:opacity-0={!open} role="complementary">
 
-    {#if backdrop && !props?.fullscreen}
+    {#if backdrop && open && !props?.fullscreen}
       <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle()}></div>
     {/if}
 
