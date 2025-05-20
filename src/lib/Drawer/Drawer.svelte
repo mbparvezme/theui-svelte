@@ -6,15 +6,15 @@
 	import { Close, Button } from "$lib"
 
   interface Props {
-    children ?: Snippet,
-    label ?: string | Snippet,
-    animationSpeed ?: ANIMATE_SPEED,
-    backdrop ?: boolean|string,
-    position ?: 'top' | 'end' | 'bottom' | 'start',
-    staticBackdrop ?: boolean,
+    children?: Snippet,
+    label?: string | Snippet,
+    position?: 'top' | 'end' | 'bottom' | 'start',
+    open?: boolean,
+    animationSpeed?: ANIMATE_SPEED,
+    backdrop?: boolean|string,
+    staticBackdrop?: boolean,
     buttonClasses?: string,
-    ariaLabel ?: string,
-    open: boolean,
+    ariaLabel?: string,
     [key: string]: unknown
   }
 
@@ -25,8 +25,8 @@
     backdrop = true,
     position = "start",
     staticBackdrop = false,
-    buttonClasses = "",
-    ariaLabel = "Drawer component",
+    buttonClasses,
+    ariaLabel = "Drawer",
     open = $bindable(false),
     ...props
   } : Props = $props()
@@ -82,7 +82,7 @@
 
   const drawerClass: string = $derived(
     twMerge(
-      `fixed bg-white dark:bg-secondary transition-transform duration-200 ${transformClasses} ${sizeClasses}${animationClass(animationSpeed)}`,
+      `fixed bg-white dark:bg-secondary ${transformClasses} ${sizeClasses}${animationClass(animationSpeed)}`,
       open && openTransformClasses,
       props?.class as string
     )

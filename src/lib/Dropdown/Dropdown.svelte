@@ -9,7 +9,10 @@
 
   interface Props {
     children?: Snippet,
+    label : string|Snippet,
+    width?: 'sm' | 'md' | 'lg' | 'full' | 'auto' | string,
     align?: 'start' | 'end'
+    triggerEvent?: 'hover' | 'click',
     animationSpeed?: ANIMATE_SPEED,
     animation?: DROPDOWN_ANIMATION_TYPE,
     arrowIcon?: Snippet|boolean,
@@ -23,10 +26,7 @@
     dropdownClasses?: string,
 		buttonClasses?: string,
     id?: string,
-    triggerEvent?: 'hover' | 'click',
-    label : string|Snippet,
     rounded?: ROUNDED
-    width?: 'sm' | 'md' | 'lg' | 'full' | 'auto' | string,
 		[key: string]: unknown
   }
 

@@ -7,46 +7,44 @@
 
   interface Props{
     children?: Snippet,
+    label?: Snippet | string,
     header?: Snippet | string,
     footer?: Snippet,
-    label?: Snippet | string,
-    animationSpeed?: ANIMATE_SPEED,
-    animation?: 'slide-down' | 'slide-up' | 'fade' | 'zoom-in' | 'zoom-out',
-    backdrop?: boolean|string,
-    closeButton?: boolean|string,
-    closeOnEsc?: boolean,
-    footerClasses?: string,
-    headerClasses?: string,
-    bodyClasses?: string,
-    containerClasses?: string,
     position?: 'top' | 'center' | 'bottom',
-    rounded?: ROUNDED,
-    buttonClasses?: string,
     size?: 'sm' | 'md' | 'lg' | 'full',
+    animation?: 'slide-down' | 'slide-up' | 'fade' | 'zoom-in' | 'zoom-out',
+    animationSpeed?: ANIMATE_SPEED,
+    backdrop?: boolean|string,
     staticBackdrop?: boolean,
-    open?: boolean
+    closeButton?: boolean|string,
+    rounded?: ROUNDED,
+    open?: boolean,
+    buttonClasses?: string,
+    containerClasses?: string,
+    bodyClasses?: string,
+    headerClasses?: string,
+    footerClasses?: string
   }
 
   let {
     children,
+    label,
     header,
     footer,
-    label = "",
-    animationSpeed = "fast",
-    animation = "fade",
-    backdrop = true,
-    closeButton = true,
-    closeOnEsc = true,
-    footerClasses = "",
-    headerClasses = "",
-    bodyClasses = "",
-    containerClasses = "",
     position = "center",
-    rounded = "md",
-    buttonClasses = "",
     size = "md",
+    animation = "fade",
+    animationSpeed = "fast",
+    backdrop = true,
     staticBackdrop = false,
+    closeButton = true,
+    rounded = "md",
     open = $bindable(false),
+    buttonClasses,
+    containerClasses,
+    bodyClasses,
+    headerClasses,
+    footerClasses,
   } : Props = $props()
 
   const id = generateToken()
@@ -54,7 +52,7 @@
   const toggle = () => open = !open
 
 	const handleKeyboard = (e: KeyboardEvent) => {
-		if (open && (closeOnEsc && e.code === "Escape")) {
+		if (open && e.code === "Escape") {
       e.preventDefault()
       open = false
     }
