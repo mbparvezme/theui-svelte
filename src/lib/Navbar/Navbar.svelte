@@ -39,9 +39,7 @@
     animationSpeed = "fast",
     rounded = "md",
     ariaLabel = "Navigation bar",
-
     dropdownEvent = "click",
-
     navInnerClasses,
     navCollapseClasses,
     scrollShrinkClasses,

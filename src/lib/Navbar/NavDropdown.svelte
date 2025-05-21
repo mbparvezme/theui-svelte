@@ -190,7 +190,7 @@
 </script>
 
 <div  {id} {...props} bind:this={dropdownContainer}
-      class="theui-nav-dropdown-container z-[1]"
+      class="theui-nav-dropdown-container"
       class:relative={width != "full"}
       onmouseenter={handleHover}
       onmouseleave={handleHover}

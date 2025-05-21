@@ -13,7 +13,6 @@
   let {children, toggleIcon} : {children: Snippet, toggleIcon?: Snippet} = $props()
 
   let responsiveClasses = () => {
-    // Determine mobile nav responsive classes
     let responsiveClassesByBreakPoints: RESPONSIVE_NAV_ON = {
       xl : "xl-collapse 2xl:flex-row 2xl:items-center 2xl:basis-auto 2xl:static 2xl:left-auto 2xl:right-auto 2xl:top-auto 2xl:flex 2xl:overflow-visible 2xl:shadow-none 2xl:px-0 2xl:py-0 2xl:bg-transparent ",
       lg : "lg-collapse xl:flex-row xl:items-center xl:basis-auto xl:static xl:left-auto xl:right-auto xl:top-auto xl:flex xl:overflow-visible xl:shadow-none xl:px-0 xl:py-0 xl:bg-transparent ",
@@ -29,7 +28,6 @@
 
   let collapseClasses = `theui-navbar-collapse flex-grow z-[1] flex ${responsiveClasses()}${roundedClass(config?.rounded, "bottom")} ${twMerge("max-h-[80vh] bg-primary", config.navCollapseClasses)}`
 
-  // Toggle functionality
   let hiddenClasses: RESPONSIVE_NAV_ON = {sm: "md:hidden", md: "lg:hidden", lg: "xl:hidden", xl: "2xl:hidden"}
 
   let toggle = () => {
