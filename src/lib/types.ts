@@ -36,7 +36,7 @@ export type SHADOW =
   | 'left-end';
 export type ENTRANCE_ANIMATION = 'fade' | 'slide-in' | 'slide-out' | 'zoom-in' | 'zoom-out'
 export type ACCORDION_SIZE = "compact" | "default" | "large"
-export type PRELOAD = "" | "off" | "tap" | "hover";
+export type PRELOAD = false | "off" | "tap" | "hover";
 export type TABLE_ROW = string[] | Record<string, unknown>[];
 export type BUTTON_SIZE = "xs" | "sm" | "md" | "lg" | "xl" | "auto";
 export type INPUT_TYPE = 'date' | 'datetime-local' | 'email' | 'month' | 'number' | 'password' | 'tel' | 'text' | 'time' | 'url' | 'week' | 'search' | 'textarea';
