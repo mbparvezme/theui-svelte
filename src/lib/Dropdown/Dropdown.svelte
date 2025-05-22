@@ -198,11 +198,10 @@
     </Button>
   {:else}
     <span id={`theui-dropdown-trigger${id}`} class={`theui-dropdown-trigger ${buttonClasses}`}
-    aria-label={label + " dropdown"} aria-controls={`${id}-dropdown`} aria-expanded={open} aria-haspopup="menu"
+    aria-label={`${typeof label == "string" ? "label " : ""}dropdown`} aria-controls={`${id}-dropdown`} aria-expanded={open} aria-haspopup="menu"
     role="button"
     tabindex="0">
       {@render label?.()}
-      {@render arrow()}
     </span>
   {/if}
 

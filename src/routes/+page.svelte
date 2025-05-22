@@ -25,64 +25,21 @@
 </Navbar>
 
 <br>
-<div class="p-16">
-  <AccordionItem>
-    {#snippet title()}
-      T
-    {/snippet}
-    Con..
-  </AccordionItem>
 
+  <div class="w-full flex justify-center gap-4">
+    <Button theme="light" color="brand">Brand</Button>
+    <Button theme="light" color="error">Error</Button>
+    <Button theme="light" color="info">Info</Button>
+    <Button theme="light" color="success">Success</Button>
+    <Button theme="light" color="warning">Warning</Button>
+    <br>
+    <Button theme="gradient" gradientColor="brand">Brand</Button>
+    <Button theme="gradient" gradientColor="error">Error</Button>
+    <Button theme="gradient" gradientColor="info">Info</Button>
+    <Button theme="gradient" gradientColor="success">Success</Button>
+    <Button theme="gradient" gradientColor="warning">Warning</Button>
+  </div>
 
-  <AccordionItem title="Hello A">
-    A
-  </AccordionItem>
-  <br>
-  <Accordion>
-    <AccordionItem title="Hello A">
-      A
-    </AccordionItem>
-    <AccordionItem title="Hello B">
-      B
-    </AccordionItem>
-  </Accordion>
-  <br>
-  <br>
-  <Button onclick={() => notify("HI")} position="top-left">Notification</Button>
-  <br>
-  <div class="ps-80">
-    <Dropdown label="Dropdown" backdrop={true}>
-      <DropdownItem url="/">Link 1</DropdownItem>
-      <DropdownItem url="/">Link 2</DropdownItem>
-      <DropdownItem url="/">Link 3</DropdownItem>
-    </Dropdown>
-  </div>
-  <br>
-  <div class="flex">
-    <div class="p-16 flex flex-col gap-16 w-1/2">
-      <Progress start={55} end={55} label="55" />
-      <Progress start={75} end={55} label="55" />
-      <Progress start={25} end={55} label="55" />
-      <Progress start={25} end={155} label="55" />
-    </div>
-    <div class="p-16 flex flex-col gap-16 w-1/2">
-      <Progress end={55} label="55" thickness="px" />
-      <Progress end={55} label="55" thickness="sm" />
-      <Progress end={55} label="55" thickness="md" />
-      <Progress end={55} label="55" thickness="lg" />
-      <Progress end={55} label="55" thickness="xl" />
-    </div>
-  </div>
-  <br>
-  <br>
-  <br>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <div class="p-16 h-80">
-    <Progress end={55} label="55" vertical />
-  </div>
   <br/>
   <br/>
   <br/>
@@ -90,24 +47,3 @@
   <br/>
   <br/>
   <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-</div>
