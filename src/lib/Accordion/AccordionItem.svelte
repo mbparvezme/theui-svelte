@@ -80,6 +80,7 @@
     if(props?.open){
       if(CTX?.standalone) ST_ACTIVE_ACCORDIONS.value = [""]
       ST_ACTIVE_ACCORDIONS.value.push(id)
+      active = true
     }
   })
 
@@ -133,9 +134,7 @@
     return twMerge(cls, active ? openTitleClasses : titleClasses);
   })
 
-  const getContentClasses = () => {
-    return twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
-  }
+  const getContentClasses = () => twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses)
 </script>
 
 <div class={getContainerClasses()}>
