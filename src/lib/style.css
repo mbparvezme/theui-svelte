@@ -3,8 +3,10 @@
 @plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, .dark *));
-@custom-variant edge-child (& :first-child, & :last-child);
-@custom-variant not-edge-child (& :not(:first-child,:last-child));
+@custom-variant edge-child (&:first-child, &:last-child);
+@custom-variant not-edge-child ( &:not(:first-child), &:not(:last-child) );
+/* @custom-variant not-edge-child (&:not(:first-child):not(:last-child)); */
+
 
 :root{
   --light1: #FFFDFD;
@@ -18,32 +20,6 @@
 }
 
 @theme {
-  /* --color-brand-primary-50 : oklch(0.97 0.0152 12.42);
-  --color-brand-primary-100: oklch(0.94 0.0298 12.58);
-  --color-brand-primary-200: oklch(0.89 0.0535 11.01);
-  --color-brand-primary-300: oklch(0.81 0.1036 12.12);
-  --color-brand-primary-400: oklch(0.72 0.1642 13.87);
-  --color-brand-primary-500: oklch(0.62 0.2276 19.57);
-  --color-brand-primary-600: oklch(0.58 0.2180 17.89);
-  --color-brand-primary-700: oklch(0.51 0.1952 17.24);
-  --color-brand-primary-800: oklch(0.45 0.1684 13.59);
-  --color-brand-primary-900: oklch(0.41 0.1468 10.14);
-  --color-brand-primary-950: oklch(0.27 0.0989 11.14);
-  --text-color-on-brand-primary: #FFFFFF;
-
-  --color-brand-secondary-50 : oklch(0.98 0.0243 171);
-  --color-brand-secondary-100: oklch(0.96 0.0573 167.2);
-  --color-brand-secondary-200: oklch(0.92 0.099 168.25);
-  --color-brand-secondary-300: oklch(0.87 0.1398 169.13);
-  --color-brand-secondary-400: oklch(0.81 0.1596 167.5);
-  --color-brand-secondary-500: oklch(0.75 0.154259 167.0121);
-  --color-brand-secondary-600: oklch(0.64 0.129563 167.7787);
-  --color-brand-secondary-700: oklch(0.54 0.1064 170.91);
-  --color-brand-secondary-800: oklch(0.46 0.087754 173.2514);
-  --color-brand-secondary-900: oklch(0.4 0.0761 174.27);
-  --color-brand-secondary-950: oklch(0.28 0.0509 178.01);
-  --text-color-on-brand-secondary: #2E2105; */
-
   --color-brand-primary-50 : var(--color-rose-50);
   --color-brand-primary-100: var(--color-rose-100);
   --color-brand-primary-200: var(--color-rose-200);

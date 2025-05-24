@@ -50,7 +50,7 @@
     triggerStyle
   ))
 
-  const classes = $derived(`theui-tooltip z-[60] absolute ${customClasses} ${roundedClass(trigger?.dataset.tooltipRounded as ROUNDED || rounded)}`)
+  const classes = $derived(`theui-tooltip z-600 absolute ${customClasses} ${roundedClass(trigger?.dataset.tooltipRounded as ROUNDED || rounded)}`)
 
   const calculateGap = () => Math.max(Number(trigger?.dataset?.tooltipGap) || gap, 8)
 

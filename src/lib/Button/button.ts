@@ -7,7 +7,7 @@ export type ButtonProps = {
   ariaLabel?: string,
   rounded?: ROUNDED,
   size?: BUTTON_SIZE,
-  theme?: 'default' | 'light' | 'gradient'
+  theme?: 'default' | 'soft' | 'gradient'
   color?: 'brand' | 'error' | 'info' | 'success' | 'warning',
   gradientColor?: 'brand' | 'error' | 'info' | 'success' | 'warning',
 }
@@ -34,7 +34,7 @@ export const buttonTheme = (CTX: ButtonContext, type: string, color: string) => 
       success: `${defaultOutlineButtonClasses} border-success-500 text-success-500 hover:bg-success-500 hover:text-success-50 focus:ring-success-500/30`,
       warning: `${defaultOutlineButtonClasses} border-warning-500 text-warning-500 hover:bg-warning-500 hover:text-warning-900 focus:ring-warning-500/30`,
     },
-    light: {
+    soft: {
       brand: "bg-brand-primary-100 text-brand-primary-600 hover:bg-brand-primary-500 hover:text-on-brand-primary border-black/10 focus:ring-brand-primary-300",
       error: "bg-error-100 text-error-600 hover:bg-error-500 hover:text-error-50 border-black/10 focus:ring-error-300",
       info: "bg-info-100 text-info-600 hover:bg-info-500 hover:text-info-50 border-black/10 focus:ring-info-300",
@@ -64,7 +64,7 @@ export const QABTheme = (type: string, color: string) => {
       success: "bg-success-500 hover:bg-success-600 dark:bg-success-700 text-success-50 focus:ring-success-500/30",
       warning: "bg-warning-400 hover:bg-warning-500 dark:bg-warning-500 dark:hover:bg-warning-400 text-warning-900 dark:focus:ring-warning-500/40",
     },
-    light: {
+    soft: {
       brand: "bg-brand-primary-50 text-brand-primary-500 hover:bg-brand-primary-400 hover:text-on-brand-primary focus:ring-brand-primary-300",
       error: "bg-error-100 text-error-500 hover:bg-error-400 hover:text-error-50 focus:ring-error-300",
       info: "bg-info-100 text-info-600 hover:bg-info-500 hover:text-info-50 focus:ring-info-300",

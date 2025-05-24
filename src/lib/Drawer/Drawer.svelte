@@ -6,14 +6,15 @@
 	import { Close, Button } from "$lib"
 
   interface Props {
-    children ?: Snippet,
-    label ?: string | Snippet,
-    animationSpeed ?: ANIMATE_SPEED,
-    backdrop ?: boolean|string,
-    position ?: 'top' | 'end' | 'bottom' | 'start',
-    staticBackdrop ?: boolean,
+    children?: Snippet,
+    label?: string | Snippet,
+    position?: 'top' | 'end' | 'bottom' | 'start',
+    open?: boolean,
+    animationSpeed?: ANIMATE_SPEED,
+    backdrop?: boolean|string,
+    staticBackdrop?: boolean,
     buttonClasses?: string,
-    ariaLabel ?: string,
+    ariaLabel?: string,
     [key: string]: unknown
   }
 
@@ -24,122 +25,92 @@
     backdrop = true,
     position = "start",
     staticBackdrop = false,
-    buttonClasses = "",
-    ariaLabel = "Drawer component",
+    buttonClasses,
+    ariaLabel = "Drawer",
+    open = $bindable(false),
     ...props
   } : Props = $props()
 
-  const id = props?.id as string ?? generateToken()
+  const id = generateToken()
 
-  let openDrawer = (el: HTMLElement) => {
-    el.classList.add('open')
-    document.getElementById(`drawer-trigger-${id}`)?.setAttribute("aria-expanded", "false")
-    document.getElementById(`{id}-drawer`)?.setAttribute("aria-hidden", "true")
-  }
-  
-  let closeDrawer = (el: HTMLElement) => {
-    el.classList.remove('open')
-    document.getElementById(`drawer-trigger-${id}`)?.setAttribute("aria-expanded", "true")
-    document.getElementById(`{id}-drawer`)?.setAttribute("aria-hidden", "false")
-  }
-
-  let toggle = () => {
-    let el = document.getElementById(id) as HTMLElement
-    el.classList.contains('open') ? closeDrawer(el) : openDrawer(el)
-  }
+  let toggle = () => open = !open
 
   let handleKeyboardEsc = (e: KeyboardEvent) => {
-    let el = document.getElementById(id) as HTMLElement
-    if (el.classList.contains("open") && e.key === "Escape") {
-      closeDrawer(el);
+    if (open && e.key === "Escape") {
+      e.preventDefault()
+      open = false
     }
   }
 
   let handleKeyboardEnter = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
+      e.preventDefault()
       toggle();
     }
   }
 
-  let positionCls = () => {
-    const positions: { [key: string]: string } = {
-      top: "drawer-top",
-      end: "drawer-end",
-      bottom: "drawer-bottom",
-      start: "drawer-start"
-    }
-    return positions[position] || "drawer-start"
-  }
+  const positionClasses: string = {
+    top: "drawer-top",
+    end: "drawer-end",
+    bottom: "drawer-bottom",
+    start: "drawer-start"
+  }[position ?? "start"]
 
-  let sizeCls = () => {
-    const sizes: { [key: string]: string } = {
-      top: "w-full min-h-[160px] inset-x-0 top-0",
-      bottom: "w-full min-h-[160px] inset-x-0 bottom-0",
-      start: "w-full sm:w-96 inset-y-0 start-0",
-      end: "w-full sm:w-96 inset-y-0 end-0",
-      fullscreen: "start-0 top-0 end-0 bottom-0"
-    }
+  const sizeClasses: string = {
+    top: "w-full min-h-[160px] inset-x-0 top-0",
+    end: "w-full sm:w-96 inset-y-0 end-0",
+    bottom: "w-full min-h-[160px] inset-x-0 bottom-0",
+    start: "w-full sm:w-96 inset-y-0 start-0",
+    fullscreen: "inset-0",
+  }[props?.fullscreen ? "fullscreen" : (position ?? "start")]
 
-    return sizes[props?.fullscreen ? "fullscreen" : position] || sizes["start"]
-  }
+  const transformClasses: string = {
+    top: "-translate-y-full",
+    end: "translate-x-full rtl:-translate-x-full",
+    bottom: "translate-y-full",
+    start: "-translate-x-full rtl:translate-x-full",
+  }[position ?? "start"]
 
-  let getClass = twMerge(`drawer-body fixed bg-white ${sizeCls()} dark:bg-secondary${animationClass(animationSpeed)}`, (props?.class ?? "") as string)
+  const openTransformClasses: string = {
+    top: "translate-y-0",
+    end: "translate-x-0",
+    bottom: "translate-y-0",
+    start: "translate-x-0",
+  }[position ?? "start"]
+
+  const containerClasses: string = `theui-drawer fixed inset-0 z-300 group ${positionClasses}${animationClass(animationSpeed)}`
+
+  const drawerClass: string = $derived(
+    twMerge(
+      `fixed bg-white dark:bg-secondary ${transformClasses} ${sizeClasses}${animationClass(animationSpeed)}`,
+      open && openTransformClasses,
+      props?.class as string
+    )
+  )
 </script>
 
 <svelte:body onkeydown={(e)=>handleKeyboardEsc(e)}></svelte:body>
 
 {#if label}
   {#if typeof label == "string"}
-    <Button id={`drawer-trigger-${id}`} aria-controls={`${id}-drawer`} aria-expanded="false" {ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} class={buttonClasses}>{@html label}</Button>
+    <Button id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={open} {ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)}>{@html label}</Button>
   {:else}
-    <span id={`drawer-trigger-${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded="false" aria-label={ariaLabel} role="button" onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} tabindex="0">
+    <span id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={open} aria-label={ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
       {@render label?.()}
     </span>
   {/if}
 {/if}
 
 {#if children}
-  <div {id} class="theui-drawer fixed inset-0 z-40 {animationClass(animationSpeed)} {positionCls()}" role="complementary" class:animate={animationSpeed}>
+  <div {id} class={containerClasses} class:invisible={!open} class:opacity-0={!open} role="complementary">
 
-    {#if backdrop && !props?.fullscreen}
+    {#if backdrop && open && !props?.fullscreen}
       <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle()}></div>
     {/if}
 
-    <div id="{id}-drawer" class={getClass} aria-labelledby={`drawer-trigger-${id}`} aria-hidden="true">
+    <div id="drawer{id}" class={drawerClass} aria-labelledby={`theui-drawer-trigger${id}`} aria-hidden={!open}>
       <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-4 end-4 p-1" onclick={()=>toggle()}/>
       {@render children()}
     </div>
-
   </div>
 {/if}
-
-<style lang="postcss">
-  @reference "../style.css";
-  .theui-drawer.open{
-    @apply visible opacity-100;
-  }
-  .theui-drawer{
-    @apply invisible opacity-0;
-  }
-  .theui-drawer.animate .drawer-body{
-    @apply transform;
-  }
-  .theui-drawer.animate.drawer-start .drawer-body{
-    @apply -translate-x-full rtl:translate-x-full;
-  }
-  .theui-drawer.animate.drawer-end .drawer-body{
-    @apply translate-x-full rtl:-translate-x-full;
-  }
-  .theui-drawer.animate.drawer-start.open .drawer-body, .theui-drawer.animate.drawer-end.open .drawer-body{
-    @apply translate-x-0;
-  }
-  .theui-drawer.animate.drawer-top .drawer-body{
-    @apply -translate-y-full;
-  }
-  .theui-drawer.animate.drawer-bottom .drawer-body{
-    @apply translate-y-full;
-  }
-  .theui-drawer.animate.drawer-top.open .drawer-body, .theui-drawer.animate.drawer-bottom.open .drawer-body{
-    @apply translate-y-0;
-  }
-</style>

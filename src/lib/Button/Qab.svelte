@@ -19,7 +19,7 @@
     rounded?: ROUNDED,
 
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    theme ?: 'default' | 'light' | 'gradient'
+    theme ?: 'default' | 'soft' | 'gradient'
     gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     
     ariaLabel ?: string,
@@ -34,7 +34,7 @@
     align = "end",
     size = "md",
     rounded = "full",
-    href,
+    href, 
     triggerEvent = "click",
     iconClasses = "",
     direction = "vertical",

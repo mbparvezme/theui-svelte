@@ -9,9 +9,9 @@
     startItem ?: Snippet,
     endItem ?: Snippet,
     children ?: Snippet,
+    type ?: 'link' | 'divider' | 'header' | 'button'
     href ?: string,
     preload ?: PRELOAD,
-    type ?: 'link' | 'divider' | 'header' | 'button'
     active ?: boolean,
     [key: string]: unknown
   }

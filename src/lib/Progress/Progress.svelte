@@ -74,7 +74,7 @@
   let labelCls = () => {
     const bubblePositionCls: any = props?.vertical ? bubblePosition['vertical'][thickness] : bubblePosition['default'][thickness]
     return  labelVariant == "bubble" || thickness == "px" || thickness == "sm" || thickness == "md"
-            ? `progress-label transform absolute text-[80%] bg-brand-primary-500 text-on-brand-primary-500 w-6 h-6 justify-center flex items-center ${props?.vertical ? "rounded-t-full rounded-r-full rotate-45" : "rounded-t-full rounded-bl-full rotate-45"} ${bubblePositionCls} font-semibold`
+            ? `progress-label transform absolute text-[80%] bg-brand-primary-500 text-on-brand-primary-500 w-6 h-6 justify-center flex items-center rounded-t-full rotate-45 ${props?.vertical ? "rounded-r-full" : "rounded-bl-full"} ${bubblePositionCls} font-semibold`
             : "font-semibold"
   }
 
@@ -113,13 +113,10 @@
 
 <div {id} {...props} class="theui-progress relative {twMerge(`text-on-brand-primary text-xs bg-secondary`,trackCls(), props?.class as string)}" aria-valuenow={end} aria-valuemin={start} aria-valuemax=100>
   <div class={barCls()}>
-    {#if label}<span class={twMerge(labelCls(), bubbleClasses)}><span>{label}</span></span>{/if}
+    {#if label}
+      <span class={twMerge(labelCls(), bubbleClasses)}>
+        <span class="transform -rotate-45">{label}</span>
+      </span>
+    {/if}
   </div>
 </div>
-
-<style lang="postcss">
-  @reference "../style.css";
-  .rotate-45 > *{
-    @apply transform -rotate-45;
-  }
-</style>

@@ -53,7 +53,7 @@
     gradientColor,
   });
 
-  let getClasses = twMerge(`theui-btn-group inline-flex${roundedClass(rounded)}`, props?.class as string)
+  let getClasses = twMerge(`theui-btn-group inline-flex ${roundedClass(rounded)}`, props?.class as string)
 </script>
 
 {#if children}

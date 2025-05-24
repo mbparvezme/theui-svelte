@@ -1,5 +1,4 @@
 export type ANIMATION_PROPERTY_TYPE = 'color' | 'opacity' | 'shadow' | 'transform' | 'all' | 'fileButton'
-export type NOTIFICATION_POSITION = "top-end" | "top-center" | "top-start" | "bottom-end" | "bottom-center" | "bottom-start"
 
 type RoundClassesType = {
   [type in ROUNDED_ITEM_TYPES]: {
@@ -402,6 +401,71 @@ const roundClasses: RoundClassesType = {
       xl: " before:rounded-ee-xl",
       full: " before:rounded-ee-full",
     },
+  },
+  edge: {
+    all: {
+      sm: " edge-child:rounded",
+      md: " edge-child:rounded-md",
+      lg: " edge-child:rounded-lg",
+      xl: " edge-child:rounded-xl",
+      full: " edge-child:rounded-full",
+    },
+    top: {
+      sm: " edge-child:rounded-t",
+      md: " edge-child:rounded-t-md",
+      lg: " edge-child:rounded-t-lg",
+      xl: " edge-child:rounded-t-xl",
+      full: " edge-child:rounded-t-full",
+    },
+    end: {
+      sm: " edge-child:rounded-e",
+      md: " edge-child:rounded-e-md",
+      lg: " edge-child:rounded-e-lg",
+      xl: " edge-child:rounded-e-xl",
+      full: " edge-child:rounded-e-full",
+    },
+    bottom: {
+      sm: " edge-child:rounded-b",
+      md: " edge-child:rounded-b-md",
+      lg: " edge-child:rounded-b-lg",
+      xl: " edge-child:rounded-b-xl",
+      full: " edge-child:rounded-b-full",
+    },
+    start: {
+      sm: " edge-child:rounded-s",
+      md: " edge-child:rounded-s-md",
+      lg: " edge-child:rounded-s-lg",
+      xl: " edge-child:rounded-s-xl",
+      full: " edge-child:rounded-s-full",
+    },
+    topStart: {
+      sm: " edge-child:rounded-ss",
+      md: " edge-child:rounded-ss-md",
+      lg: " edge-child:rounded-ss-lg",
+      xl: " edge-child:rounded-ss-xl",
+      full: " edge-child:rounded-ss-full",
+    },
+    topEnd: {
+      sm: " edge-child:rounded-se",
+      md: " edge-child:rounded-se-md",
+      lg: " edge-child:rounded-se-lg",
+      xl: " edge-child:rounded-se-xl",
+      full: " edge-child:rounded-se-full",
+    },
+    bottomStart: {
+      sm: " edge-child:rounded-es",
+      md: " edge-child:rounded-es-md",
+      lg: " edge-child:rounded-es-lg",
+      xl: " edge-child:rounded-es-xl",
+      full: " edge-child:rounded-es-full",
+    },
+    bottomEnd: {
+      sm: " edge-child:rounded-ee",
+      md: " edge-child:rounded-ee-md",
+      lg: " edge-child:rounded-ee-lg",
+      xl: " edge-child:rounded-ee-xl",
+      full: " edge-child:rounded-ee-full",
+    },
   }
 }
 
@@ -641,8 +705,8 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
  * @param backdrop - A string for custom classes or a boolean for default styling.
  * @returns A string of merged classes for the backdrop.
  */
-export const backdropClasses = (backdrop: string | boolean): string => {
+export const backdropClasses = (backdrop: string | boolean, zIndex?: string): string => {
   const defaultClasses = "backdrop fixed inset-0 bg-black/50 z-[-1] dark:bg-black/75"
   const customClasses = typeof backdrop === "string" ? backdrop : ""
-  return twMerge(defaultClasses, customClasses)
+  return twMerge(defaultClasses, customClasses, zIndex)
 }

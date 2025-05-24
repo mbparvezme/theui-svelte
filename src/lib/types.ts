@@ -20,7 +20,8 @@ export type SHADOW =
   | "2xl"
   | "inner"
   | "none";
-export type POSITION_TYPES =
+
+  export type POSITION_TYPES =
   | 'top'
   | 'top-start'
   | ' top-end'
@@ -35,7 +36,7 @@ export type POSITION_TYPES =
   | 'left-end';
 export type ENTRANCE_ANIMATION = 'fade' | 'slide-in' | 'slide-out' | 'zoom-in' | 'zoom-out'
 export type ACCORDION_SIZE = "compact" | "default" | "large"
-export type PRELOAD = "" | "off" | "tap" | "hover";
+export type PRELOAD = false | "off" | "tap" | "hover";
 export type TABLE_ROW = string[] | Record<string, unknown>[];
 export type BUTTON_SIZE = "xs" | "sm" | "md" | "lg" | "xl" | "auto";
 export type INPUT_TYPE = 'date' | 'datetime-local' | 'email' | 'month' | 'number' | 'password' | 'tel' | 'text' | 'time' | 'url' | 'week' | 'search' | 'textarea';
@@ -99,18 +100,24 @@ export type SELECT_DATA = {disabled?: boolean, text: string, value?: unknown};
 
 export type Tools = "strike" | "superscript" | "subscript" | "listItem" | "blockquote" | "code" | "codeblock" | "link" | "horizontalLine" | "youtube" | "highlighter" | "color" | "redoUndo";
 
-export type NOTIFICATION_TYPE = "error" | "info" | "success" | "warning";
+export type NOTIFICATION_TYPE = "error" | "info" | "success" | "warning"
+
+export type NOTIFICATION_POSITION = "top-end" | "top-center" | "top-start" | "bottom-end" | "bottom-center" | "bottom-start"
 
 export type RESPONSIVE_NAV_ON = { sm: string; md: string; lg: string; xl: string; }
+
 export type MOBILE_NAV_ON = keyof RESPONSIVE_NAV_ON
 
-export type NAV_SCROLL_BEHAVIOR = 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide';
+export type NAV_HEIGHT_TYPES = 'sm' | 'md' | 'lg' | 'xl'
+
+export type NAV_SCROLL_BEHAVIOR = 'default' | 'fixed' | 'shrinkOnScrollDown' | 'hideOnScrollDown' | 'shrinkAndHide'
 
 export type NOTIFY_CONFIG = {
   removeAfter?: number;
   removeOnClick?: boolean;
   rounded?: ROUNDED;
-  theme ?: "default" | "soft" | "gradient"
+  theme?: "default" | "soft" | "gradient";
+  position?: NOTIFICATION_POSITION;
   variant?: "card" | "borderTop" | "borderBottom" | "borderStart";
 };
 

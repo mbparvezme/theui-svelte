@@ -35,8 +35,9 @@
     ...props
   } : Props = $props()
   
-  const id = props?.id as string ?? generateToken()
+  const id = generateToken()
   const isFlush = props?.flush || CTX?.flush
+  let active = $derived(ST_ACTIVE_ACCORDIONS.value.includes(id))
 
   const toggle = () => {
     const accordion = document.getElementById(id)
@@ -79,6 +80,7 @@
     if(props?.open){
       if(CTX?.standalone) ST_ACTIVE_ACCORDIONS.value = [""]
       ST_ACTIVE_ACCORDIONS.value.push(id)
+      active = true
     }
   })
 
@@ -108,50 +110,54 @@
     }
   }
 
-  const getContainerClasses = () => {
-    let cls = `theui-accordion border-gray-300 dark:border-gray-700 not-edge-child:rounded-none! ${ST_ACTIVE_ACCORDIONS.value.includes(id) ? "accordion-active " : ""}`;
-    if(isFlush){
-      cls += "border-b ";
-    }else{
-      cls += `${CTX?.group ? `border-x border-t last:border-b ${roundedClass(rounded)} ` : `border ${roundedClass(rounded)}`}`;
+  const containerBorder: string = isFlush ? "border-b" : `${CTX?.group ? "border-x border-t last:border-b" : "border"}`
+  const containerRounded: string = isFlush ? "" : `${CTX?.group ? `${roundedClass(rounded, "top", "first")}${roundedClass(rounded, "bottom", "last")} [&:not(:first-child)_button]:rounded-t-none!` : roundedClass(rounded)}`
+
+  const triggerClasses = {
+    default: "bg-brand-primary-500 text-on-brand-primary dark:bg-brand-primary-600",
+    flush: {
+      notActive: "border-b border-gray-300 dark:border-gray-700",
+      active: "border-b border-brand-primary-200 dark:border-brand-primary-700 bg-brand-primary-100 dark:bg-brand-primary-900 text-brand-primary-800 dark:text-brand-primary-100",
     }
-    return ST_ACTIVE_ACCORDIONS.value.includes(id) ? twMerge(cls, openContainerClasses) : twMerge(cls, containerClasses);
   }
 
-  const getTitleClasses = () => {
-    let cls = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand ${roundedClass(rounded, "top")} ${titleClass[isFlush ? "flush" : "default"][size]}${animationClass(animationSpeed)} `;
-    if(isFlush){
-      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "border-b border-brand-primary-200 bg-brand-primary-50 text-brand-primary-500 dark:border-brand-primary-700 dark:bg-brand-primary-900 dark:text-on-brand-primary " : "border-b border-gray-300 dark:border-gray-700 ";
-    }else{
-      cls += ST_ACTIVE_ACCORDIONS.value.includes(id) ? "bg-brand-primary-500 text-on-brand-primary dark:bg-brand-primary-600" : " ";
-    }
-    return twMerge(cls, ST_ACTIVE_ACCORDIONS.value.includes(id) ? openTitleClasses : titleClasses);
-  }
+  const getContainerClasses = $derived(() => twMerge(
+    `theui-accordion border-gray-300 dark:border-gray-700 ${active ? "accordion-active " : ""}
+    ${containerBorder} ${containerRounded}`, (active ? openContainerClasses : containerClasses)
+  ))
 
-  const getContentClasses = () => {
-    return twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses);
-  }
+  const getTitleClasses = $derived(() => {
+    let cls = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand
+      ${titleClass[isFlush ? "flush" : "default"][size]}
+      ${isFlush ? "" : roundedClass(rounded, "top")}${animationClass(animationSpeed)}
+      ${isFlush ? (active ? triggerClasses.flush.active : triggerClasses.flush.notActive) : (active ? triggerClasses.default : " ")}`
+    return twMerge(cls, active ? openTitleClasses : titleClasses);
+  })
+
+  const getContentClasses = () => twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses)
 </script>
 
 <div class={getContainerClasses()}>
-  <div id='{id}-heading' class='theui-accordion-title' aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id}>
-    {@render accordionHeading()}
+  <div id='theui-accordion-heading{id}' class='theui-accordion-title' aria-controls={id} aria-expanded={active}>
+    {#if title}
+      {@render accordionHeading()}
+    {/if}
   </div>
-  <div {id} class="accordion-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!ST_ACTIVE_ACCORDIONS.value.includes(id)} class:open={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-labelledby='{id}-heading' aria-hidden={!ST_ACTIVE_ACCORDIONS.value.includes(id)}>
-    <div class={getContentClasses()}>
+  <div {id} class="theui-accordion-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!active} class:open={active} aria-labelledby='theui-accordion-trigger{id}' aria-hidden={!active}>
+    <div id="theui-accordion-content{id}" class={getContentClasses()}>
       {@render children?.()}
     </div>
   </div>
 </div>
 
 {#snippet accordionHeading()}
-  <button id='{id}-heading' class={twMerge(getTitleClasses(), ST_ACTIVE_ACCORDIONS.value.includes(id) && 'accordion-active text-on-brand-primary')} onclick={()=>toggle()} aria-controls={id} aria-label={`${title ?? ""} Accordion`} aria-expanded={ST_ACTIVE_ACCORDIONS.value.includes(id)} aria-describedby={id} type="button">
+  <button id="theui-accordion-trigger{id}" class={getTitleClasses()} onclick={()=>toggle()} aria-controls={id} aria-label={`${typeof title === "string" ? title : ""} Accordion`} aria-expanded={active} aria-describedby={id} type="button">
     {#if typeof title === "string"}
       {@html title}
     {:else}
       {@render title?.()}
     {/if}
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ms-auto" class:transition-transform={animationSpeed} class:transform={!animationSpeed} class:-rotate-180={ST_ACTIVE_ACCORDIONS.value.includes(id)} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 ms-auto" class:transition-transform={animationSpeed} class:transform={!animationSpeed} class:-rotate-180={active} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
     </svg>
   </button>
