@@ -20,7 +20,7 @@
     shadow ?: SHADOW,
     size ?: BUTTON_SIZE,
     square ?: boolean,
-    theme ?: 'default' | 'light' | 'gradient'
+    theme ?: 'default' | 'soft' | 'gradient'
     color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
     type ?: 'button' | 'submit' | 'reset',
@@ -80,8 +80,8 @@
     if(outline){
       return `${baseClasses} ${buttonTheme(CTX, "outline", color)}`
     }else{
-      if(theme === "light"){
-        return `${baseClasses} ${buttonTheme(CTX, "light", color)}`
+      if(theme === "soft"){
+        return `${baseClasses} ${buttonTheme(CTX, "soft", color)}`
       }
       if(theme === "gradient"){
         return `${baseClasses} ${buttonTheme(CTX, "gradient", gradientColor)}`
