@@ -211,17 +211,15 @@ This library leverages z-index for stacking elements. Avoid modifying z-index va
 
 Z-index helps in managing the stacking order of elements and overlays, controlling their arrangement along the z-axis. It is not recommended to customize these values in the design, as doing so may disrupt the layout along the z-axis.
 
-| COMPONENT/Property | CLASS/Selector            | VALUE (Z-INDEX) |
-| ------------------ | ------------------------- | --------------- |
-| Dropdown           | .dropdown .backdrop       | 10              |
-| Dropdown           | .dropdown-content         | 11              |
-| Sticky positioned  | .sticky, [class$=:sticky] | 20              |
-| Fixed positioned   | .fixed, [class$=:fixed]   | 30              |
-| Offcanvas          | .offcanvas                | 40              |
-| Modal              | .modal                    | 50              |
-| Popup              | .popup                    | 60              |
-| Tooltip            | .tooltip                  | 70              |
-| Notifications      | .notifications            | 80              |
+| COMPONENT     | CLASS   | VALUE (Z-INDEX) |
+| --------------| --------| --------------- |
+| Navbar        | .z-100  | 100             |
+| Dropdown      | .z-200  | 200             |
+| Drawer        | .z-300  | 300             |
+| Modal         | .z-400  | 400             |
+| Popup         | .z-500  | 500             |
+| Tooltip       | .z-600  | 600             |
+| Notifications | .z-700  | 700             |
 
 <br>
 

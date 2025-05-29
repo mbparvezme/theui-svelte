@@ -44,7 +44,7 @@
   const id: string = `${generateToken()}-qab-btn`
   const qabItemSize  = {sm: "w-10 h-10", md: "w-12 h-12", lg: "w-14 h-14", xl: "w-16 h-16"}
   const qabTheme = () => QABTheme(theme, theme === "gradient" ? gradientColor : color)
-  let qabItemClasses = twMerge(`flex items-center justify-center shadow-2xl cursor-pointer ${qabItemSize[size]} ${qabTheme()} ${roundedClass(rounded)}${animationClass(animationSpeed)}`, (props?.mainButton ? CTX.mainButtonClasses : ""), props?.class as string)
+  let qabItemClasses = twMerge(`flex items-center justify-center shadow-2xl cursor-pointer ${qabItemSize[size]} ${qabTheme()} ${roundedClass(rounded)}${animationClass(animationSpeed)}`, props?.class as string)
 </script>
 
 <svelte:element
