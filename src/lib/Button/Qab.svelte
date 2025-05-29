@@ -36,7 +36,7 @@
     rounded = "full",
     href, 
     triggerEvent = "click",
-    iconClasses = "",
+    iconClasses,
     direction = "vertical",
     theme = "default",
     color = "brand",
