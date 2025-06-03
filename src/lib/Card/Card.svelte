@@ -47,7 +47,6 @@
     {/if}
   {/if}
 
-  {#if children}
   <div id="{id}-content" class="card-content {twMerge(cardContentClasses, contentClasses)}">
     {#if imageOverlay}
       <div class={backdropClasses( typeof imageOverlay === "boolean" ? "absolute" : imageOverlay + " absolute")}></div>
@@ -61,7 +60,6 @@
     {/if}
     {@render children?.()}
   </div>
-  {/if}
 
   {#if bottomImage}
     {#if typeof bottomImage === "function"}
