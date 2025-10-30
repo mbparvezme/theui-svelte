@@ -20,7 +20,7 @@
   let {
     children,
     type = "checkbox",
-    value,
+    value = $bindable(),
     size = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
     animationSpeed = CTX_FSET?.animationSpeed ?? CTX_FORM?.animationSpeed ?? "normal",
     labelClasses = CTX_FSET?.labelClasses ?? CTX_FORM?.labelClasses ?? "",

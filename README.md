@@ -1,10 +1,10 @@
 <h1 align="center">Svelte 5 Component Library by TheUI</h1>
 <div align="center">
 
-  [![npm version](https://badgen.net/npm/v/theui-sveltekit?color=red)](https://www.npmjs.com/package/theui-sveltekit)
-  [![npm downloads](https://badgen.net/npm/dw/theui-sveltekit)](https://www.npmjs.com/package/theui-sveltekit)
-  [![license](https://badgen.net/npm/license/theui-sveltekit)](https://github.com/mbparvezme/theui-sveltekit/blob/master/license.md)
-  <!-- [![npm downloads](https://badgen.net/npm/dt/theui-sveltekit)](https://www.npmjs.com/package/theui-sveltekit) -->
+  [![npm version](https://img.shields.io/npm/v/theui-svelte?style=for-the-badge&logo=npm&logoColor=red&color=red&labelColor=FFEFEF)](https://www.npmjs.com/package/theui-svelte)
+  [![NPM Downloads](https://img.shields.io/npm/d18m/theui-svelte?style=for-the-badge&&labelColor=EFFFEF)](https://www.npmjs.com/package/theui-svelte)
+  [![GitHub issues](https://img.shields.io/github/issues/mbparvezme/theui-svelte?style=for-the-badge&logo=github&logoColor=black&color=orange&labelColor=FFF5E8)](https://github.com/mbparvezme/theui-svelte/issues)
+
 </div>
 
 <h2 align="center">A tool for the <b>Svelte eco-system</b></h2>

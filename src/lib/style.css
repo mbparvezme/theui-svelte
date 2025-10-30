@@ -130,9 +130,6 @@
   .theui-ring-white{
     @apply outline-none ring-transparent focus:ring-white/50;
   }
-  .theui-ring-brand{
-    @apply outline-none ring-transparent focus:ring-brand-primary-500/50;
-  }
 }
 
 .navbar-collapse .nav-link:not(.nav-dropdown-btn){

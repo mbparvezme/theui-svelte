@@ -1,4 +1,4 @@
-import type { ANIMATE_SPEED, BUTTON_SIZE, ROUNDED } from "$lib/types";
+import type { ANIMATE_SPEED, BUTTON_SIZE, ROUNDED } from "$lib/types.ts";
 import type { Snippet } from "svelte";
 
 export type ButtonProps = {

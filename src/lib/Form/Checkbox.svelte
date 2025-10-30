@@ -9,6 +9,7 @@
   interface Props {
     children?: Snippet,
     wrapperClasses?: string,
+    checked?: boolean,
     [key: string]: unknown
   }
  
@@ -17,6 +18,7 @@
 
   let {
     children,
+    checked = $bindable(false),
     size            = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
     animationSpeed  = CTX_FSET?.animationSpeed ?? CTX_FORM?.animationSpeed ?? "normal",
     rounded         = CTX_FSET?.rounded ?? CTX_FORM?.rounded ?? "sm",

@@ -8,43 +8,45 @@
   interface Props {
     children?: Snippet,
     close?: boolean,
-    imageUrl?: string,
-    imageClasses?: string,
+    imgSrc?: string,
+    imgClasses?: string,
     altText?: string,
     rounded?: ROUNDED,
     size?: 'sm' | 'md' | 'lg',
+    href?: 'string',
     [key: string]: unknown // dismissible, icon
   }
 
   let {
     children,
     content,
-    close = true,
-    imageUrl,
-    imageClasses = "",
+    close = false,
+    imgSrc,
+    imgClasses = "",
     altText = "",
     rounded = "full",
     size = "md",
+    href,
     ...props
   } : Props = $props();
 
 	let nodeRef: HTMLSpanElement
 
-  let chipsClasses = `flex items-center w-max gap-4 cursor-pointer pe-4 text-sm border border-gray-200 text-gray-500 bg-gray-100 font-semibold ${roundedClass(rounded)}`
+  let chipsClasses = `flex items-center w-max gap-4 ${!imgSrc?"pe-4 py-2":""} cursor-pointer text-sm border border-gray-200 dark:border-gray-700 text-gray-500 bg-gray-100 font-semibold ${roundedClass(rounded)}`
 
   let chipsImgClass = twMerge([
     "max-w-none", size === "sm" ? "w-9 h-9" : size === "lg" ? "w-14 h-14" : "w-11 h-11", roundedClass(rounded)
-  ].join(" "), imageClasses);
+  ].join(" "), imgClasses);
 
   const hideChips = () => nodeRef.parentNode?.removeChild(nodeRef)
 </script>
 
-<span class={"theui-chips " + twMerge(chipsClasses, props?.class as string)} class:ps-4={!imageUrl} class:py-2={!imageUrl} bind:this={nodeRef} role="button">
-  {#if imageUrl}<img class={chipsImgClass} alt={altText} src={imageUrl}>{/if}
+<svelte:element this={href ? "a" : "span"} {...props} class={`theui-chips ${twMerge(chipsClasses, props?.class as string)}`} bind:this={nodeRef} role={href ? "" : "button"}>
+  {#if imgSrc}<img class={chipsImgClass} alt={altText} src={imgSrc}>{/if}
 
   {@render children?.()}
 
   {#if close}
     <Close ariaLabel="Hide chips" size={1} onclick={hideChips} />
   {/if}
-</span>
+</svelte:element>
