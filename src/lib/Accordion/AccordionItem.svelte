@@ -121,20 +121,46 @@
     }
   }
 
-  const getContainerClasses = $derived(() => twMerge(
-    `theui-accordion border-gray-300 dark:border-gray-700 ${active ? "accordion-active " : ""}
-    ${containerBorder} ${containerRounded}`, (active ? openContainerClasses : containerClasses)
-  ))
+  const getContainerClasses = $derived(() =>
+    twMerge(
+      `theui-accordion border-gray-300 dark:border-gray-700 ${active ? "accordion-active" : ""} ${containerBorder} ${containerRounded} ${containerClasses} ${active ? openContainerClasses : ""}`
+    )
+  )
 
   const getTitleClasses = $derived(() => {
-    let cls = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand
+    const base = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand`
+    const cls = `
+      ${base}
       ${titleClass[isFlush ? "flush" : "default"][size]}
-      ${isFlush ? "" : roundedClass(rounded, "top")}${animationClass(animationSpeed)}
-      ${isFlush ? (active ? triggerClasses.flush.active : triggerClasses.flush.notActive) : (active ? triggerClasses.default : " ")}`
-    return twMerge(cls, active ? openTitleClasses : titleClasses);
+      ${isFlush ? "" : roundedClass(rounded, "top")}
+      ${animationClass(animationSpeed)}
+      ${
+        isFlush
+          ? active
+            ? triggerClasses.flush.active
+            : triggerClasses.flush.notActive
+          : active
+          ? triggerClasses.default
+          : ""
+      }
+    `
+
+    return twMerge(
+      cls,
+      titleClasses,
+      isFlush ? triggerClasses.flush.notActive : "",
+      isFlush && active ? triggerClasses.flush.active : "",
+      active ? openTitleClasses : ""
+    )
   })
 
-  const getContentClasses = () => twMerge(`theui-accordion-content ${contentClass[isFlush ? "flush" : "default"][size]} ${(!isFlush ? roundedClass(rounded, "bottom") : "")} h-full`, contentClasses)
+  const getContentClasses = () => twMerge(
+    `theui-accordion-content 
+     ${contentClass[isFlush ? "flush" : "default"][size]} 
+     ${isFlush ? "" : roundedClass(rounded, "bottom")} 
+     h-full`,
+    contentClasses
+  )
 </script>
 
 <div class={getContainerClasses()}>
