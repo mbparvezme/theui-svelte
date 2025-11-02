@@ -5,8 +5,6 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant edge-child (&:first-child, &:last-child);
 @custom-variant not-edge-child ( &:not(:first-child), &:not(:last-child) );
-/* @custom-variant not-edge-child (&:not(:first-child):not(:last-child)); */
-
 
 :root{
   --light1: #FFFDFD;
@@ -131,9 +129,6 @@
   }
   .theui-ring-white{
     @apply outline-none ring-transparent focus:ring-white/50;
-  }
-  .theui-ring-brand{
-    @apply outline-none ring-transparent focus:ring-brand-primary-500/50;
   }
 }
 

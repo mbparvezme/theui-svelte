@@ -46,7 +46,7 @@
       <img class={twMerge(imgClasses(props?.horizontal?"start":"top"), topImage?.class as string)} src={topImage?.src} alt={topImage?.alt}>
     {/if}
   {/if}
-
+ 
   <div id="{id}-content" class="card-content {twMerge(cardContentClasses, contentClasses)}">
     {#if imageOverlay}
       <div class={backdropClasses( typeof imageOverlay === "boolean" ? "absolute" : imageOverlay + " absolute")}></div>

@@ -21,11 +21,11 @@
   let {
     children,
     type = "text",
-    value,
+    value = $bindable(),
     helperText,
 
     variant = CTX?.variant ?? "bordered",
-    floatingLabel = CTX?.floatingLabel ?? variant == "flat" ?? false,
+    floatingLabel = (CTX?.floatingLabel || variant == "flat") ?? false,
     size = CTX?.size ?? "md",
     rounded = CTX?.rounded ?? "md",
     animationSpeed = CTX?.animationSpeed ?? "normal",

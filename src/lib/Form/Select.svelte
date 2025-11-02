@@ -22,10 +22,10 @@
   let {
     children,
     options,
-    value,
+    value = $bindable(),
     variant = CTX?.variant ?? "bordered",
     label,
-    floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
+    floatingLabel = (CTX?.floatingLabel || CTX?.variant == "flat") ?? false,
     size = CTX?.size ?? "md",
     rounded = CTX?.rounded ?? "md",
     animationSpeed = CTX?.animationSpeed ?? "normal",

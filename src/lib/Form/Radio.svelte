@@ -8,17 +8,19 @@
 
   interface Props {
     children?: Snippet,
+    group?: unknown,
     value?: unknown,
     wrapperClasses?: string,
     [key: string]: unknown
   }
-
+  
   const CTX_FORM: any = getContext('FORM') ?? {}
   const CTX_FSET: any = getContext('FIELDSET') ?? {}
-
+  
   let {
     children,
-    value = null,
+    group = $bindable(),
+    value = $bindable(),
     size = CTX_FSET?.size ?? CTX_FORM?.size ?? "md",
     animationSpeed = CTX_FSET?.animationSpeed ?? CTX_FORM?.animationSpeed ?? "normal",
     reset = CTX_FSET?.reset ?? CTX_FORM?.reset ?? false,
@@ -35,7 +37,7 @@
   class:flex-row-reverse={props?.reverse}
   class:justify-end={props?.reverse}
 >
-  <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio" aria-disabled={props?.disabled as boolean|undefined} bind:group={value} aria-checked={value === props?.value}>
+  <input {id} {...props} class={inputClasses(C, props, "radio")} type="radio" aria-disabled={props?.disabled as boolean|undefined} bind:group {value} aria-checked={value === props?.value}>
   {#if children}
     <Label for={id} class="cursor-pointer {labelClasses??""}">
       {@render children()}

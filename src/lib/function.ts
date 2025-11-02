@@ -18,6 +18,7 @@ const roundClasses: RoundClassesType = {
       md: " rounded-md",
       lg: " rounded-lg",
       xl: " rounded-xl",
+      "2xl": " rounded-2xl",
       full: " rounded-full",
     },
     top: {
@@ -25,6 +26,7 @@ const roundClasses: RoundClassesType = {
       md: " rounded-t-md",
       lg: " rounded-t-lg",
       xl: " rounded-t-xl",
+      "2xl": " rounded-t-2xl",
       full: " rounded-t-full",
     },
     end: {
@@ -32,6 +34,7 @@ const roundClasses: RoundClassesType = {
       md: " rounded-e-md",
       lg: " rounded-e-lg",
       xl: " rounded-e-xl",
+      "2xl": " rounded-e-2xl",
       full: " rounded-e-full",
     },
     bottom: {
@@ -39,20 +42,21 @@ const roundClasses: RoundClassesType = {
       md: " rounded-b-md",
       lg: " rounded-b-lg",
       xl: " rounded-b-xl",
+      "2xl": " rounded-b-2xl",
       full: " rounded-b-full",
     },
     start: {
       sm: " rounded-s",
       md: " rounded-s-md",
       lg: " rounded-s-lg",
-      xl: " rounded-s-xl",
+      "2xl": " rounded-s-2xl",
       full: " rounded-s-full",
     },
     topStart: {
       sm: " rounded-ss",
       md: " rounded-ss-md",
       lg: " rounded-ss-lg",
-      xl: " rounded-ss-xl",
+      "2xl": " rounded-ss-2xl",
       full: " rounded-ss-full",
     },
     topEnd: {
@@ -60,6 +64,7 @@ const roundClasses: RoundClassesType = {
       md: " rounded-se-md",
       lg: " rounded-se-lg",
       xl: " rounded-se-xl",
+      "2xl": " rounded-se-2xl",
       full: " rounded-se-full",
     },
     bottomStart: {
@@ -67,6 +72,7 @@ const roundClasses: RoundClassesType = {
       md: " rounded-es-md",
       lg: " rounded-es-lg",
       xl: " rounded-es-xl",
+      "2xl": " rounded-es-2xl",
       full: " rounded-es-full",
     },
     bottomEnd: {
@@ -74,6 +80,7 @@ const roundClasses: RoundClassesType = {
       md: " rounded-ee-md",
       lg: " rounded-ee-lg",
       xl: " rounded-ee-xl",
+      "2xl": " rounded-ee-2xl",
       full: " rounded-ee-full",
     },
   },
@@ -83,6 +90,7 @@ const roundClasses: RoundClassesType = {
       md: " file:rounded-md",
       lg: " file:rounded-lg",
       xl: " file:rounded-xl",
+      "2xl": " file:rounded-2xl",
       full: " file:rounded-full",
     },
     top: {
@@ -90,6 +98,7 @@ const roundClasses: RoundClassesType = {
       md: " file:rounded-t-md",
       lg: " file:rounded-t-lg",
       xl: " file:rounded-t-xl",
+      "2xl": " file:rounded-t-2xl",
       full: " file:rounded-t-full",
     },
     end: {
@@ -97,6 +106,7 @@ const roundClasses: RoundClassesType = {
       md: " file:rounded-e-md",
       lg: " file:rounded-e-lg",
       xl: " file:rounded-e-xl",
+      "2xl": " file:rounded-e-2xl",
       full: " file:rounded-e-full",
     },
     bottom: {
@@ -104,6 +114,7 @@ const roundClasses: RoundClassesType = {
       md: " file:rounded-b-md",
       lg: " file:rounded-b-lg",
       xl: " file:rounded-b-xl",
+      "2xl": " file:rounded-b-2xl",
       full: " file:rounded-b-full",
     },
     start: {
@@ -111,13 +122,14 @@ const roundClasses: RoundClassesType = {
       md: " file:rounded-s-md",
       lg: " file:rounded-s-lg",
       xl: " file:rounded-s-xl",
+      "2xl": " file:rounded-s-2xl",
       full: " file:rounded-s-full",
     },
     topStart: {
       sm: " file:rounded-ss",
       md: " file:rounded-ss-md",
       lg: " file:rounded-ss-lg",
-      xl: " file:rounded-ss-xl",
+      "2xl": " file:rounded-ss-2xl",
       full: " file:rounded-ss-full",
     },
     topEnd: {
@@ -125,6 +137,7 @@ const roundClasses: RoundClassesType = {
       md: " file:rounded-se-md",
       lg: " file:rounded-se-lg",
       xl: " file:rounded-se-xl",
+      "2xl": " file:rounded-se-2xl",
       full: " file:rounded-se-full",
     },
     bottomStart: {
@@ -132,13 +145,14 @@ const roundClasses: RoundClassesType = {
       md: " file:rounded-es-md",
       lg: " file:rounded-es-lg",
       xl: " file:rounded-es-xl",
+      "2xl": " file:rounded-es-2xl",
       full: " file:rounded-es-full",
     },
     bottomEnd: {
       sm: " file:rounded-ee",
       md: " file:rounded-ee-md",
       lg: " file:rounded-ee-lg",
-      xl: " file:rounded-ee-xl",
+      "2xl": " file:rounded-ee-2xl",
       full: " file:rounded-ee-full",
     },
   },
@@ -148,6 +162,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-md",
       lg: " first:rounded-lg",
       xl: " first:rounded-xl",
+      "2xl": " first:rounded-2xl",
       full: " first:rounded-full",
     },
     top: {
@@ -155,6 +170,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-t-md",
       lg: " first:rounded-t-lg",
       xl: " first:rounded-t-xl",
+      "2xl": " first:rounded-t-2xl",
       full: " first:rounded-t-full",
     },
     end: {
@@ -162,6 +178,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-e-md",
       lg: " first:rounded-e-lg",
       xl: " first:rounded-e-xl",
+      "2xl": " first:rounded-e-2xl",
       full: " first:rounded-e-full",
     },
     bottom: {
@@ -169,6 +186,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-b-md",
       lg: " first:rounded-b-lg",
       xl: " first:rounded-b-xl",
+      "2xl": " first:rounded-b-2xl",
       full: " first:rounded-b-full",
     },
     start: {
@@ -176,6 +194,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-s-md",
       lg: " first:rounded-s-lg",
       xl: " first:rounded-s-xl",
+      "2xl": " first:rounded-s-2xl",
       full: " first:rounded-s-full",
     },
     topStart: {
@@ -183,6 +202,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-ss-md",
       lg: " first:rounded-ss-lg",
       xl: " first:rounded-ss-xl",
+      "2xl": " first:rounded-ss-2xl",
       full: " first:rounded-ss-full",
     },
     topEnd: {
@@ -190,6 +210,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-se-md",
       lg: " first:rounded-se-lg",
       xl: " first:rounded-se-xl",
+      "2xl": " first:rounded-se-2xl",
       full: " first:rounded-se-full",
     },
     bottomStart: {
@@ -197,6 +218,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-es-md",
       lg: " first:rounded-es-lg",
       xl: " first:rounded-es-xl",
+      "2xl": " first:rounded-es-2xl",
       full: " first:rounded-es-full",
     },
     bottomEnd: {
@@ -204,6 +226,7 @@ const roundClasses: RoundClassesType = {
       md: " first:rounded-ee-md",
       lg: " first:rounded-ee-lg",
       xl: " first:rounded-ee-xl",
+      "2xl": " first:rounded-ee-2xl",
       full: " first:rounded-ee-full",
     }
   },
@@ -213,6 +236,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-md",
       lg: " last:rounded-lg",
       xl: " last:rounded-xl",
+      "2xl": " last:rounded-2xl",
       full: " last:rounded-full",
     },
     top: {
@@ -220,6 +244,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-t-md",
       lg: " last:rounded-t-lg",
       xl: " last:rounded-t-xl",
+      "2xl": " last:rounded-t-2xl",
       full: " last:rounded-t-full",
     },
     end: {
@@ -227,6 +252,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-e-md",
       lg: " last:rounded-e-lg",
       xl: " last:rounded-e-xl",
+      "2xl": " last:rounded-e-2xl",
       full: " last:rounded-e-full",
     },
     bottom: {
@@ -234,6 +260,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-b-md",
       lg: " last:rounded-b-lg",
       xl: " last:rounded-b-xl",
+      "2xl": " last:rounded-b-2xl",
       full: " last:rounded-b-full",
     },
     start: {
@@ -241,6 +268,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-s-md",
       lg: " last:rounded-s-lg",
       xl: " last:rounded-s-xl",
+      "2xl": " last:rounded-s-2xl",
       full: " last:rounded-s-full",
     },
     topStart: {
@@ -248,6 +276,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-ss-md",
       lg: " last:rounded-ss-lg",
       xl: " last:rounded-ss-xl",
+      "2xl": " last:rounded-ss-2xl",
       full: " last:rounded-ss-full",
     },
     topEnd: {
@@ -255,6 +284,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-se-md",
       lg: " last:rounded-se-lg",
       xl: " last:rounded-se-xl",
+      "2xl": " last:rounded-se-2xl",
       full: " last:rounded-se-full",
     },
     bottomStart: {
@@ -262,6 +292,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-es-md",
       lg: " last:rounded-es-lg",
       xl: " last:rounded-es-xl",
+      "2xl": " last:rounded-es-2xl",
       full: " last:rounded-es-full",
     },
     bottomEnd: {
@@ -269,6 +300,7 @@ const roundClasses: RoundClassesType = {
       md: " last:rounded-ee-md",
       lg: " last:rounded-ee-lg",
       xl: " last:rounded-ee-xl",
+      "2xl": " last:rounded-ee-2xl",
       full: " last:rounded-ee-full",
     },
   },
@@ -278,6 +310,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-md",
       lg: " after:rounded-lg",
       xl: " after:rounded-xl",
+      "2xl": " after:rounded-2xl",
       full: " after:rounded-full",
     },
     top: {
@@ -285,6 +318,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-t-md",
       lg: " after:rounded-t-lg",
       xl: " after:rounded-t-xl",
+      "2xl": " after:rounded-t-2xl",
       full: " after:rounded-t-full",
     },
     end: {
@@ -292,6 +326,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-e-md",
       lg: " after:rounded-e-lg",
       xl: " after:rounded-e-xl",
+      "2xl": " after:rounded-e-2xl",
       full: " after:rounded-e-full",
     },
     bottom: {
@@ -299,6 +334,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-b-md",
       lg: " after:rounded-b-lg",
       xl: " after:rounded-b-xl",
+      "2xl": " after:rounded-b-2xl",
       full: " after:rounded-b-full",
     },
     start: {
@@ -306,6 +342,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-s-md",
       lg: " after:rounded-s-lg",
       xl: " after:rounded-s-xl",
+      "2xl": " after:rounded-s-2xl",
       full: " after:rounded-s-full",
     },
     topStart: {
@@ -313,6 +350,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-ss-md",
       lg: " after:rounded-ss-lg",
       xl: " after:rounded-ss-xl",
+      "2xl": " after:rounded-ss-2xl",
       full: " after:rounded-ss-full",
     },
     topEnd: {
@@ -320,6 +358,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-se-md",
       lg: " after:rounded-se-lg",
       xl: " after:rounded-se-xl",
+      "2xl": " after:rounded-se-2xl",
       full: " after:rounded-se-full",
     },
     bottomStart: {
@@ -327,6 +366,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-es-md",
       lg: " after:rounded-es-lg",
       xl: " after:rounded-es-xl",
+      "2xl": " after:rounded-es-2xl",
       full: " after:rounded-es-full",
     },
     bottomEnd: {
@@ -334,6 +374,7 @@ const roundClasses: RoundClassesType = {
       md: " after:rounded-ee-md",
       lg: " after:rounded-ee-lg",
       xl: " after:rounded-ee-xl",
+      "2xl": " after:rounded-ee-2xl",
       full: " after:rounded-ee-full",
     },
   },
@@ -343,6 +384,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-md",
       lg: " before:rounded-lg",
       xl: " before:rounded-xl",
+      "2xl": " before:rounded-2xl",
       full: " before:rounded-full",
     },
     top: {
@@ -350,6 +392,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-t-md",
       lg: " before:rounded-t-lg",
       xl: " before:rounded-t-xl",
+      "2xl": " before:rounded-t-2xl",
       full: " before:rounded-t-full",
     },
     end: {
@@ -357,6 +400,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-e-md",
       lg: " before:rounded-e-lg",
       xl: " before:rounded-e-xl",
+      "2xl": " before:rounded-e-2xl",
       full: " before:rounded-e-full",
     },
     bottom: {
@@ -364,6 +408,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-b-md",
       lg: " before:rounded-b-lg",
       xl: " before:rounded-b-xl",
+      "2xl": " before:rounded-b-2xl",
       full: " before:rounded-b-full",
     },
     start: {
@@ -371,6 +416,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-s-md",
       lg: " before:rounded-s-lg",
       xl: " before:rounded-s-xl",
+      "2xl": " before:rounded-s-2xl",
       full: " before:rounded-s-full",
     },
     topStart: {
@@ -378,6 +424,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-ss-md",
       lg: " before:rounded-ss-lg",
       xl: " before:rounded-ss-xl",
+      "2xl": " before:rounded-ss-2xl",
       full: " before:rounded-ss-full",
     },
     topEnd: {
@@ -385,6 +432,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-se-md",
       lg: " before:rounded-se-lg",
       xl: " before:rounded-se-xl",
+      "2xl": " before:rounded-se-2xl",
       full: " before:rounded-se-full",
     },
     bottomStart: {
@@ -392,6 +440,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-es-md",
       lg: " before:rounded-es-lg",
       xl: " before:rounded-es-xl",
+      "2xl": " before:rounded-es-2xl",
       full: " before:rounded-es-full",
     },
     bottomEnd: {
@@ -399,6 +448,7 @@ const roundClasses: RoundClassesType = {
       md: " before:rounded-ee-md",
       lg: " before:rounded-ee-lg",
       xl: " before:rounded-ee-xl",
+      "2xl": " before:rounded-ee-2xl",
       full: " before:rounded-ee-full",
     },
   },
@@ -408,6 +458,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-md",
       lg: " edge-child:rounded-lg",
       xl: " edge-child:rounded-xl",
+      "2xl": " edge-child:rounded-2xl",
       full: " edge-child:rounded-full",
     },
     top: {
@@ -415,6 +466,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-t-md",
       lg: " edge-child:rounded-t-lg",
       xl: " edge-child:rounded-t-xl",
+      "2xl": " edge-child:rounded-t-2xl",
       full: " edge-child:rounded-t-full",
     },
     end: {
@@ -422,6 +474,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-e-md",
       lg: " edge-child:rounded-e-lg",
       xl: " edge-child:rounded-e-xl",
+      "2xl": " edge-child:rounded-e-2xl",
       full: " edge-child:rounded-e-full",
     },
     bottom: {
@@ -429,6 +482,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-b-md",
       lg: " edge-child:rounded-b-lg",
       xl: " edge-child:rounded-b-xl",
+      "2xl": " edge-child:rounded-b-2xl",
       full: " edge-child:rounded-b-full",
     },
     start: {
@@ -436,6 +490,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-s-md",
       lg: " edge-child:rounded-s-lg",
       xl: " edge-child:rounded-s-xl",
+      "2xl": " edge-child:rounded-s-2xl",
       full: " edge-child:rounded-s-full",
     },
     topStart: {
@@ -443,6 +498,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-ss-md",
       lg: " edge-child:rounded-ss-lg",
       xl: " edge-child:rounded-ss-xl",
+      "2xl": " edge-child:rounded-ss-2xl",
       full: " edge-child:rounded-ss-full",
     },
     topEnd: {
@@ -450,6 +506,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-se-md",
       lg: " edge-child:rounded-se-lg",
       xl: " edge-child:rounded-se-xl",
+      "2xl": " edge-child:rounded-se-2xl",
       full: " edge-child:rounded-se-full",
     },
     bottomStart: {
@@ -457,6 +514,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-es-md",
       lg: " edge-child:rounded-es-lg",
       xl: " edge-child:rounded-es-xl",
+      "2xl": " edge-child:rounded-es-2xl",
       full: " edge-child:rounded-es-full",
     },
     bottomEnd: {
@@ -464,6 +522,7 @@ const roundClasses: RoundClassesType = {
       md: " edge-child:rounded-ee-md",
       lg: " edge-child:rounded-ee-lg",
       xl: " edge-child:rounded-ee-xl",
+      "2xl": " edge-child:rounded-ee-2xl",
       full: " edge-child:rounded-ee-full",
     },
   }

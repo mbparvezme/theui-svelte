@@ -9,7 +9,7 @@ export type ANIMATE_SPEED =
   | "fast"
   | "faster";
 
-export type ROUNDED = "sm" | "md" | "lg" | "xl" | "full" | "none" | undefined;
+export type ROUNDED = "sm" | "md" | "lg" | "xl" | "2xl" | "full" | "none" | undefined;
 
 export type SHADOW =
   | "xs"

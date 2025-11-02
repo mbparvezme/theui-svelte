@@ -57,7 +57,7 @@
           {@render content()}
         </a>
       {:else}
-        <button class={itemClass(type)}>
+        <button {...props} class={itemClass(type)}>
           {@render content()}
         </button>
       {/if}
