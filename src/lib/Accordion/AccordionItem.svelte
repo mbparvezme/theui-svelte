@@ -128,7 +128,7 @@
   )
 
   const getTitleClasses = $derived(() => {
-    const base = `theui-accordion-trigger flex items-center w-full cursor-pointer ring-4 theui-ring-brand`
+    const base = `theui-accordion-trigger flex items-center w-full cursor-pointer`
     const cls = `
       ${base}
       ${titleClass[isFlush ? "flush" : "default"][size]}
@@ -150,6 +150,7 @@
       titleClasses,
       isFlush ? triggerClasses.flush.notActive : "",
       isFlush && active ? triggerClasses.flush.active : "",
+      active ? "focus:ring-4 focus:ring-brand-primary-300" : "",
       active ? openTitleClasses : ""
     )
   })
