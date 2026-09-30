@@ -20,7 +20,14 @@ export default ts.config(
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node }
 		},
-		rules: { 'no-undef': 'off' }
+		rules: {
+			'no-undef': 'off',
+			// The rule exists so an app deployed under a base path does not forget resolve().
+			// Here every href comes from the person using the component and may be external,
+			// a hash or a mailto:, all of which make resolve() throw. Only links are exempt;
+			// a stray goto() or pushState() in the library is still reported.
+			'svelte/no-navigation-without-resolve': ['error', { ignoreLinks: true }]
+		}
 	},
 	{
 		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],

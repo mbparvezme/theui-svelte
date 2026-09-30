@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { twMerge } from "tailwind-merge"
-  import { roundedClass, generateToken } from "$lib/function"
 	import { onMount } from "svelte"
+  import { twMerge } from "tailwind-merge"
   import type { ROUNDED } from "$lib/types";
+  import { roundedClass, generateToken } from "$lib/function"
 
   interface Props {
     start ?: number,
@@ -14,6 +14,8 @@
     id ?: string,
     barClasses ?: string,
     bubbleClasses ?: string,
+    // Fills from the bottom up instead of left to right
+    vertical ?: boolean,
     [key: string] : unknown,
   }
 
@@ -27,8 +29,22 @@
     thickness = "md",
     labelVariant = "bubble",
     rounded = "full",
+    vertical = false,
     ...props
   } : Props = $props()
+
+  let containerEl: HTMLDivElement
+  let barEl: HTMLDivElement
+
+  // The bar and the aria values share these numbers: nothing above 100, and a start past
+  // the end swaps with it.
+  const clamped = $derived.by(() => {
+    let s = start
+    let e = end
+    if (e > 100) e = 100
+    if (s > e) [s, e] = [e, s]
+    return { start: s, end: e }
+  })
 
   const sizes: Record<'vertical' | 'default', Record<Exclude<Props['thickness'], undefined>, string>> = {
     vertical: {
@@ -65,54 +81,46 @@
   }
 
   let trackCls = () => {
-    const sizeClass = props?.vertical ? (sizes['vertical'][thickness] ?? sizes['vertical'].md) : (sizes['default'][thickness] ?? sizes['default'].md)
-    return `select-none ${sizeClass} ${(props?.vertical ? "inline-flex h-full" : "flex w-full")} ${roundedClass(rounded)}`
+    const sizeClass = vertical ? (sizes['vertical'][thickness] ?? sizes['vertical'].md) : (sizes['default'][thickness] ?? sizes['default'].md)
+    return `select-none ${sizeClass} ${(vertical ? "inline-flex h-full" : "flex w-full")} ${roundedClass(rounded)}`
   }
 
-  let barCls = () => `progress-bar absolute ${twMerge(`flex items-center justify-center bg-brand-primary-500 text-on-brand-primary-500 ${roundedClass(rounded)}`, barClasses)}`
+  let barCls = () => `progress-bar absolute ${twMerge(`flex items-center justify-center bg-brand-500 text-on-brand-500 ${roundedClass(rounded)}`, barClasses)}`
 
   let labelCls = () => {
-    const bubblePositionCls: any = props?.vertical ? bubblePosition['vertical'][thickness] : bubblePosition['default'][thickness]
-    return  labelVariant == "bubble" || thickness == "px" || thickness == "sm" || thickness == "md"
-            ? `progress-label transform absolute text-[80%] bg-brand-primary-500 text-on-brand-primary-500 w-6 h-6 justify-center flex items-center rounded-t-full rotate-45 ${props?.vertical ? "rounded-r-full" : "rounded-bl-full"} ${bubblePositionCls} font-semibold`
+    const bubblePositionCls: string = vertical ? bubblePosition['vertical'][thickness] : bubblePosition['default'][thickness]
+    return labelVariant === 'bubble' && !['lg', 'xl'].includes(thickness)
+            ? `progress-label transform absolute text-[80%] bg-brand-500 text-on-brand-500 w-6 h-6 justify-center flex items-center rounded-t-full rotate-45 ${vertical ? "rounded-r-full" : "rounded-bl-full"} ${bubblePositionCls} font-semibold`
             : "font-semibold"
+
   }
 
-  let updateProgress = (container: any) => {
-    if(end > 100){
-      end = 100
-    }
+  let updateProgress = (container: HTMLElement) => {
+    const { start: s, end: e } = clamped
 
-    if(start > end){
-      let temp = end
-      end = start
-      start = temp
-    }
-
-    let bar = document.querySelector(`#${id} .progress-bar`);
-    let isRTL = getComputedStyle(container).direction === 'rtl';
-    if (props?.vertical) {
-      (bar as HTMLElement).style.inset = `${start}% 0 ${100 - end}% 0`;
+    if (!barEl) return
+    const isRTL = getComputedStyle(container).direction === 'rtl'
+    if (vertical) {
+      barEl.style.inset = `${s}% 0 ${100 - e}% 0`
     } else {
-      if (isRTL) {
-        (bar as HTMLElement).style.inset = `0 ${start}% 0 ${100 - end}%`; // Swap for RTL
-      } else {
-        (bar as HTMLElement).style.inset = `0 ${100 - end}% 0 ${start}%`;
-      }
+      barEl.style.inset = isRTL
+        ? `0 ${s}% 0 ${100 - e}%`
+        : `0 ${100 - e}% 0 ${s}%`
     }
   }
 
-  $effect(() => updateProgress(document.documentElement))
+  $effect(() => updateProgress(containerEl))
 
   onMount(() => {
-    let container = document.documentElement
-    let observer = new MutationObserver(() => updateProgress(container))
+    const container = document.documentElement
+    const observer = new MutationObserver(() => updateProgress(container))
     observer.observe(container, { attributes: true, attributeFilter: ['dir'] })
+    return () => observer.disconnect()
   })
 </script>
 
-<div {id} {...props} class="theui-progress relative {twMerge(`text-on-brand-primary text-xs bg-secondary`,trackCls(), props?.class as string)}" aria-valuenow={end} aria-valuemin={start} aria-valuemax=100>
-  <div class={barCls()}>
+<div bind:this={containerEl} {id} {...props} class="theui-progress relative {twMerge(`text-on-brand text-xs bg-secondary`,trackCls(), props?.class as string)}" aria-valuenow={clamped.end} aria-valuemin={clamped.start} aria-valuemax=100 role="progressbar">
+  <div bind:this={barEl} class={barCls()}>
     {#if label}
       <span class={twMerge(labelCls(), bubbleClasses)}>
         <span class="transform -rotate-45">{label}</span>

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from "svelte"
-  import type { ANIMATE_SPEED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
-  import { animationClass, generateToken, backdropClasses } from "$lib/function"
+  import type { ANIMATE_SPEED } from "$lib/types"
+  import { animationClass, generateToken, backdropClasses, coreSpeed } from "$lib/function"
 	import { Close, Button } from "$lib"
 
   interface Props {
@@ -15,70 +15,76 @@
     staticBackdrop?: boolean,
     buttonClasses?: string,
     ariaLabel?: string,
-    [key: string]: unknown
+    // Covers the whole screen instead of sliding in from one side
+    fullscreen?: boolean,
+    [key: string]: unknown // class, id, data-*
   }
 
   let {
     children,
     label,
-    animationSpeed = "fast",
+    animationSpeed = coreSpeed("fast"),
     backdrop = true,
     position = "start",
     staticBackdrop = false,
     buttonClasses,
     ariaLabel = "Drawer",
     open = $bindable(false),
+    fullscreen = false,
     ...props
   } : Props = $props()
 
   const id = generateToken()
 
-  let toggle = () => open = !open
+  const toggle = () => open = !open
 
-  let handleKeyboardEsc = (e: KeyboardEvent) => {
+  const handleKeyboardEsc = (e: KeyboardEvent) => {
     if (open && e.key === "Escape") {
       e.preventDefault()
       open = false
     }
   }
 
-  let handleKeyboardEnter = (e: KeyboardEvent) => {
-    if (e.key === "Enter") {
+  const handleKeyboardEnterSpace = (e: KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault()
       toggle();
     }
   }
 
-  const positionClasses: string = {
+  const positionClasses: string = $derived({
     top: "drawer-top",
     end: "drawer-end",
     bottom: "drawer-bottom",
     start: "drawer-start"
-  }[position ?? "start"]
+  }[position ?? "start"])
 
-  const sizeClasses: string = {
+  const sizeClasses: string = $derived({
     top: "w-full min-h-[160px] inset-x-0 top-0",
     end: "w-full sm:w-96 inset-y-0 end-0",
     bottom: "w-full min-h-[160px] inset-x-0 bottom-0",
     start: "w-full sm:w-96 inset-y-0 start-0",
     fullscreen: "inset-0",
-  }[props?.fullscreen ? "fullscreen" : (position ?? "start")]
+  }[fullscreen ? "fullscreen" : (position ?? "start")])
 
-  const transformClasses: string = {
+  const transformClasses: string = $derived({
     top: "-translate-y-full",
     end: "translate-x-full rtl:-translate-x-full",
     bottom: "translate-y-full",
     start: "-translate-x-full rtl:translate-x-full",
-  }[position ?? "start"]
+  }[position ?? "start"])
 
-  const openTransformClasses: string = {
+  // The rtl: variant is repeated on purpose. twMerge only drops a class that carries the
+  // same modifier, so without it the closed rtl:translate-x-full would survive and the
+  // drawer would stay off-screen in a right-to-left page.
+  const openTransformClasses: string = $derived({
     top: "translate-y-0",
-    end: "translate-x-0",
+    end: "translate-x-0 rtl:translate-x-0",
     bottom: "translate-y-0",
-    start: "translate-x-0",
-  }[position ?? "start"]
+    start: "translate-x-0 rtl:translate-x-0",
+  }[position ?? "start"])
 
-  const containerClasses: string = `theui-drawer fixed inset-0 z-300 group ${positionClasses}${animationClass(animationSpeed)}`
+  const containerClasses: string = $derived(`theui-drawer fixed inset-0 z-300 group ${positionClasses}${animationClass(animationSpeed)}`)
 
   const drawerClass: string = $derived(
     twMerge(
@@ -93,22 +99,22 @@
 
 {#if label}
   {#if typeof label == "string"}
-    <Button id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={open} {ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)}>{@html label}</Button>
+    <Button id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`drawer${id}`} aria-expanded={open} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnterSpace(e)}>{label}</Button>
   {:else}
-    <span id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`${id}-drawer`} aria-expanded={open} aria-label={ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnter(e)} role="button" tabindex="0">
+    <span id={`theui-drawer-trigger${id}`} class={buttonClasses} aria-controls={`drawer${id}`} aria-expanded={open} aria-label={ariaLabel} onclick={()=>toggle()} onkeydown={(e: KeyboardEvent)=>handleKeyboardEnterSpace(e)} role="button" tabindex="0">
       {@render label?.()}
     </span>
   {/if}
 {/if}
 
 {#if children}
-  <div {id} class={containerClasses} class:invisible={!open} class:opacity-0={!open} role="complementary">
+  <div {id} class={containerClasses} class:invisible={!open} class:opacity-0={!open} role="complementary" inert={!open}>
 
-    {#if backdrop && open && !props?.fullscreen}
+    {#if backdrop && open && !fullscreen}
       <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : toggle()}></div>
     {/if}
 
-    <div id="drawer{id}" class={drawerClass} aria-labelledby={`theui-drawer-trigger${id}`} aria-hidden={!open}>
+    <div {...props} id="drawer{id}" class={drawerClass} aria-labelledby={label ? `theui-drawer-trigger${id}` : undefined} aria-label={label ? undefined : ariaLabel} aria-hidden={!open}>
       <Close class="text-default flex-grow-0 opacity-25 hover:opacity-75 transition-opacity absolute top-4 end-4 p-1" onclick={()=>toggle()}/>
       {@render children()}
     </div>

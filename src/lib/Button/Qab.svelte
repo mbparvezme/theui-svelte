@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
+  import type { ANIMATE_SPEED, ROUNDED, BTN_QAB_CTX } from "$lib/types"
   import { fly } from "svelte/transition"
   import { setContext, type Snippet } from "svelte"
-  import { generateToken } from "$lib/function"
+  import { generateToken, coreSpeed } from "$lib/function"
   import { twMerge } from "tailwind-merge"
   import { QabItem, Svg } from "$lib"
 
@@ -10,7 +10,7 @@
     children?: Snippet,
     icon?: Snippet,
     align?: 'start' | 'end',
-    size?: 'sm' | 'md' | 'lg' | 'xl',
+    size?: BTN_QAB_CTX['size'],
     direction?: 'horizontal' | 'vertical',
     triggerEvent?: 'click' | 'hover',
 
@@ -18,9 +18,9 @@
     animationSpeed?: ANIMATE_SPEED,
     rounded?: ROUNDED,
 
-    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    theme ?: 'default' | 'soft' | 'gradient'
-    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    color ?: BTN_QAB_CTX['color'],
+    theme ?: BTN_QAB_CTX['theme'],
+    gradientColor ?: BTN_QAB_CTX['gradientColor'],
     
     ariaLabel ?: string,
     iconClasses?: string,
@@ -30,7 +30,7 @@
   let {
     children,
     icon,
-    animationSpeed = "normal",
+    animationSpeed = coreSpeed(),
     align = "end",
     size = "md",
     rounded = "full",
@@ -58,16 +58,16 @@
     faster: 100,
   }
 
-  const animObj = {
+  let animObj = $derived({
     horizontal: {
-      end: {x: 16, duration: animSpeed[animationSpeed]},
-      start: {x: -16, duration: animSpeed[animationSpeed]},
+      end: { x: 16, duration: animSpeed[animationSpeed] },
+      start: { x: -16, duration: animSpeed[animationSpeed] },
     },
     vertical: {
-      end: {y: 16, duration: animSpeed[animationSpeed]},
-      start: {y: 16, duration: animSpeed[animationSpeed]},
-    }
-  }
+      end: { y: 16, duration: animSpeed[animationSpeed] },
+      start: { y: 16, duration: animSpeed[animationSpeed] },
+    },
+  })
 
   const triggerPosition = {start: "start-6 bottom-6", end: "end-6 bottom-6"}
 
@@ -106,40 +106,112 @@
 
   const directionClasses = {horizontal: "flex-row", vertical: "flex-col"}
 
-	const handleClick = $derived(() => {
-    if(triggerEvent == "click"){
+  const itemsId = `${id}-items`
+  let itemsEl: HTMLDivElement | null = $state(null)
+  let hideTimer: ReturnType<typeof setTimeout> | undefined
+  let skipFocusOpen = false // Escape returns focus to the main button without reopening in hover mode
+
+  // Runs a handler the user passed (e.g. onclick) after the internal one
+  const callUserHandler = (name: string, e: Event) => {
+    const fn = props?.[name]
+    if (typeof fn === "function") fn(e)
+  }
+
+  const isInsideQab = (node: EventTarget | null) =>
+    node instanceof Node && (!!document.getElementById(id)?.contains(node) || !!itemsEl?.contains(node))
+
+	const handleClick = (e: MouseEvent) => {
+    if(triggerEvent == "click" && !props?.disabled){
       visible = !visible
     }
-	})
+    callUserHandler("onclick", e)
+	}
 
-	const handleMouse = $derived((e: MouseEvent) => {
-    if(triggerEvent === "hover"){
-			e.preventDefault()
-			visible = !visible
-		}
-	})
+  // Hover mode: open on enter; close after a short delay so the pointer can cross the gap to the items
+  const openOnHover = () => {
+    if (triggerEvent !== "hover" || props?.disabled) return
+    clearTimeout(hideTimer)
+    visible = true
+  }
 
-  const handleBlur = $derived((e: MouseEvent) => {
-		if (visible && e.target instanceof Element && !e.target.closest(`#${id}`)) {
-      e.preventDefault()
-			visible = false
-		}
-	})
+  const closeOnHover = () => {
+    if (triggerEvent !== "hover") return
+    clearTimeout(hideTimer)
+    hideTimer = setTimeout(() => visible = false, 150)
+  }
 
-  setContext('QAB', {size, rounded, iconClasses, theme, color, gradientColor})
+  // Hover mode, keyboard: close when focus leaves both the main button and the items
+  const closeOnFocusOut = (e: FocusEvent) => {
+    if (triggerEvent !== "hover" || isInsideQab(e.relatedTarget)) return
+    visible = false
+  }
+
+  // Getters keep the items in sync when these props change after mount
+  const QAB_CTX: BTN_QAB_CTX = {
+    get size() { return size },
+    get rounded() { return rounded },
+    get iconClasses() { return iconClasses },
+    get theme() { return theme },
+    get color() { return color },
+    get gradientColor() { return gradientColor },
+  }
+
+  setContext('QAB', QAB_CTX)
+
+  $effect(() => {
+    if (!visible) return
+    function onClick(e: MouseEvent) {
+      if (e.target instanceof Element && !e.target.closest(`#${id}`)) {
+        visible = false
+      }
+    }
+    function onKeydown(e: KeyboardEvent) {
+      if (e.key !== "Escape") return
+      visible = false
+      if (itemsEl?.contains(document.activeElement)) {
+        skipFocusOpen = true
+        document.getElementById(id)?.focus()
+      }
+    }
+    window.addEventListener('click', onClick)
+    window.addEventListener('keydown', onKeydown)
+    return () => {
+      window.removeEventListener('click', onClick)
+      window.removeEventListener('keydown', onKeydown)
+    }
+  })
+
+  // The items container keeps the QAB open while hovered or focused
+  $effect(() => {
+    if (!itemsEl) return
+    const el = itemsEl
+    el.addEventListener('mouseenter', openOnHover)
+    el.addEventListener('mouseleave', closeOnHover)
+    el.addEventListener('focusout', closeOnFocusOut)
+    return () => {
+      el.removeEventListener('mouseenter', openOnHover)
+      el.removeEventListener('mouseleave', closeOnHover)
+      el.removeEventListener('focusout', closeOnFocusOut)
+    }
+  })
+
+  $effect(() => () => clearTimeout(hideTimer))
 </script>
 
-<svelte:window onclick={(e: MouseEvent)=>handleBlur(e)} />
-
 <QabItem
+  {...props}
   {id}
   {ariaLabel}
   {href}
+  disabled={props?.disabled}
+  aria-expanded={children && !href ? visible : undefined}
+  aria-controls={children && !href && visible ? itemsId : undefined}
   class="theui-qab fixed {twMerge(`${triggerPosition[align]} ${qabSize[size]}`, props?.class as string)}"
-  onclick={() => handleClick()}
-  onmouseenter={(e: MouseEvent) => handleMouse(e)}
-  onmouseleave={(e: MouseEvent) => handleMouse(e)}
-  {...props}
+  onclick={(e: MouseEvent) => handleClick(e)}
+  onmouseenter={(e: MouseEvent) => { openOnHover(); callUserHandler("onmouseenter", e) }}
+  onmouseleave={(e: MouseEvent) => { closeOnHover(); callUserHandler("onmouseleave", e) }}
+  onfocus={(e: FocusEvent) => { if (!skipFocusOpen) openOnHover(); skipFocusOpen = false; callUserHandler("onfocus", e) }}
+  onfocusout={(e: FocusEvent) => { closeOnFocusOut(e); callUserHandler("onfocusout", e) }}
 >
   {#if icon}
     {@render icon()}
@@ -151,7 +223,7 @@
 </QabItem>
 
 {#if children && visible}
-  <div class="theui-qab-items flex fixed {optionPosition[align][direction][size]} {directionClasses[direction]}" in:fly={animObj[direction][align]}>
+  <div id={itemsId} bind:this={itemsEl} class="theui-qab-items flex fixed {optionPosition[align][direction][size]} {directionClasses[direction]}" in:fly={animObj[direction][align]}>
     {@render children?.()}
   </div>
 {/if}

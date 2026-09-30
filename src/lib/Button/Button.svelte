@@ -2,11 +2,12 @@
   import type { ANIMATE_SPEED, ROUNDED, SHADOW, BUTTON_SIZE } from "$lib/types"
   import { getContext, type Snippet } from "svelte"
   import { twMerge } from "tailwind-merge"
-  import { animationClass, roundedClass, shadowClass } from "$lib/function"
+  import { animationClass, roundedClass, shadowClass, coreSpeed, coreShadow } from "$lib/function"
   import { Svg } from "$lib"
-  import { buttonTheme } from "./button";
+  import { buttonTheme, type ButtonContext } from "./button"
 
-  const CTX: any = getContext('BUTTON_GROUP')
+  const CTX: ButtonContext = getContext('BUTTON_GROUP')
+
   interface Props {
     children?: Snippet,
     beforeLabel?: Snippet,
@@ -15,15 +16,19 @@
     ariaLabel?: string,
     newTabIcon?: boolean,
     href?: string,
+    isActive?: boolean,
     outline ?: boolean,
     rounded ?: ROUNDED,
+    loading?: boolean,
+    loadingText?: string,
     shadow ?: SHADOW,
     size ?: BUTTON_SIZE,
     square ?: boolean,
-    theme ?: 'default' | 'soft' | 'gradient'
-    color ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
-    gradientColor ?: 'brand' | 'error' | 'info' | 'success' | 'warning',
+    theme ?: ButtonContext['theme'],
+    color ?: ButtonContext['color'],
+    gradientColor ?: ButtonContext['gradientColor'],
     type ?: 'button' | 'submit' | 'reset',
+    actions?: [fn: (node: HTMLElement, params?: unknown) => { destroy?: () => void } | void, params?: unknown][],
     [key: string]: unknown // Any props
   }
 
@@ -31,24 +36,27 @@
     children,
     beforeLabel,
     afterLabel,
-    ariaLabel = "Button",
-    animationSpeed = CTX?.animationSpeed || "normal",
+    ariaLabel,
+    animationSpeed = CTX?.animationSpeed || coreSpeed(),
     newTabIcon = true,
     href,
     isActive = false,
     outline = CTX?.outline || false,
     rounded = CTX?.rounded || "md",
-    shadow = "md",
+    loading = false,
+    loadingText = "Loading...",
+    shadow = coreShadow(),
     size = CTX?.size || "md",
     square = CTX?.square || false,
     theme = CTX?.theme || "default",
     color = CTX?.color || "brand",
     gradientColor = CTX?.gradientColor || "brand",
     type = "button",
+    actions,
     ...props
   } : Props = $props()
 
-  let sizeClasses: Record<'default'|'square', Record<keyof BUTTON_SIZE, string>> = {
+  let sizeClasses: Record<'default' | 'square', Record<BUTTON_SIZE, string>> = {
     default : {
       xs: "btn-xs py-1 px-2 text-xs",
       sm: "btn-sm px-3 py-2 text-sm",
@@ -67,6 +75,15 @@
     }
   }
 
+  let el = $state<HTMLElement>()
+
+  $effect(() => {
+    if (!el || !actions?.length) return
+    const domEl = el
+    const cleanups = actions.map(([fn, p]) => fn(domEl, p)?.destroy)
+    return () => cleanups.forEach(fn => fn?.())
+  })
+
   let utilityClasses = () => {
     let utilClasses = CTX?.group ? 
       `${roundedClass(rounded, CTX.stacked ? "top" : "start", "first")}${roundedClass(rounded, CTX.stacked ? "bottom" : "end", "last")}`
@@ -74,8 +91,16 @@
     return `${utilClasses} ${(CTX?.variant == "bordered" && !CTX?.outline) ? `${(CTX?.stacked ? "border-b last:border-b-0" : "border-e last:border-e-0")}` : ""}`
   }
 
+  let activeClasses = $derived(
+    isActive
+      ? outline
+        ? "brightness-90 ring-2 ring-inset ring-current/20"
+        : "brightness-75 shadow-[inset_0_2px_4px_rgba(0,0,0,0.15)]"
+      : ""
+  )
+
   let getButtonClass = () => {
-    let baseClasses = `${(href ? "theui-link" : "theui-button")} inline-flex gap-2 cursor-pointer focus:ring-4 focus:outline-none ${sizeClasses[square ? "square" : "default"][size]} ${animationClass(animationSpeed)} ${utilityClasses()} ${props?.disabled ? "opacity-50 pointer-events-none shadow-none" : ''}`
+    let baseClasses = `${(href ? "theui-link" : "theui-button")} inline-flex items-center gap-2 cursor-pointer focus:ring-4 focus:outline-none ${sizeClasses[square ? "square" : "default"][size]} ${animationClass(animationSpeed)} ${utilityClasses()} ${props?.disabled ? "opacity-50 pointer-events-none shadow-none" : ''} ${activeClasses}`
 
     if(outline){
       return `${baseClasses} ${buttonTheme(CTX, "outline", color)}`
@@ -89,24 +114,41 @@
       return `${baseClasses} ${buttonTheme(CTX, "default", color)}`
     }
   }
+
+  let buttonClass = $derived(twMerge(getButtonClass(), (loading && "cursor-wait opacity-75 pointer-events-none"), CTX?.buttonClasses, props?.class as string))
 </script>
 
 <svelte:element
+  bind:this={el}
   this={href ? "a" : "button"}
-  {href}
   {...props}
-  class={twMerge(getButtonClass(), CTX?.buttonClasses, props?.class as string)}
+  href={props?.disabled ? undefined : href}
+  class={buttonClass}
   type={href ? undefined : type}
   role={href ? "link" : "button"}
-  aria-disabled={props?.disabled==true}
+  aria-disabled={props?.disabled ? true : undefined}
+  disabled={href ? undefined : (props?.disabled ? true : undefined)}
   aria-label={ariaLabel}
+  aria-pressed={!href && isActive ? true : undefined}
 >
 
   {#if beforeLabel}
     <span>{@render beforeLabel?.()}</span>
   {/if}
 
-	{@render children?.()}
+  {#if loading}
+    <span class="animate-spin shrink-0">
+      <Svg size={1}>
+        <path d="M10.72,19.9a8,8,0,0,1-6.5-9.7A8,8,0,0,1,10.72,2.06a1,1,0,0,1,1.06,1.7,6,6,0,1,0,8.48,8.47,1,1,0,0,1,1.71,1.07A8,8,0,0,1,10.72,19.9Z"/>
+      </Svg>
+    </span>
+  {/if}
+
+  {@render children?.()}
+
+  {#if loading && loadingText}
+    <span>{loadingText}</span>
+  {/if}
 
   {#if afterLabel}
     <span>{@render afterLabel?.()}</span>

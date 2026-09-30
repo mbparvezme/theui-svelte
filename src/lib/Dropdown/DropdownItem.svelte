@@ -1,22 +1,33 @@
 <script lang="ts">
   import { getContext, type Snippet } from "svelte"
-  import type { PRELOAD } from "$lib/types"
   import { twMerge } from "tailwind-merge"
+  import type { PRELOAD, DROPDOWN_CTX } from "$lib/types"
 
-  const CTX : {activeItemClasses: string, itemClasses: string, dividerClass: string, headerClass: string} = getContext('DROPDOWN_CTX')
+  const CTX : DROPDOWN_CTX = getContext('DROPDOWN_CTX')
 
   interface Props {
-    startItem ?: Snippet,
-    endItem ?: Snippet,
-    children ?: Snippet,
-    type ?: 'link' | 'divider' | 'header' | 'button'
-    href ?: string,
-    preload ?: PRELOAD,
-    active ?: boolean,
-    [key: string]: unknown
+    startItem?: Snippet,
+    endItem?: Snippet,
+    children?: Snippet,
+    type?: 'link' | 'divider' | 'header' | 'button'
+    text?: string,
+    href?: string,
+    preload?: PRELOAD,
+    active?: boolean,
+    [key: string]: unknown // class, ...
   }
 
-  let {startItem, endItem, children, text, href, preload = "hover", type = "link", active = false, ...props} : Props = $props()
+  let {
+    startItem,
+    endItem,
+    children,
+    text,
+    href,
+    preload = "hover",
+    type = "link",
+    active = false,
+    ...props
+  } : Props = $props()
 
   let itemClass = (t: Props['type']) => {
     const typeClasses: Record<Exclude<Props['type'], undefined>, string> = {
@@ -33,7 +44,7 @@
   {@render startItem?.()}
 
   {#if text}
-		{@html text}
+    {text}
 	{:else if children}
 		{@render children()}
 	{/if}
@@ -44,20 +55,20 @@
 {/snippet}
 
 {#if type=="divider"}
-  <li class="dropdown-item {itemClass("divider")}" role="presentation"></li>
+  <li class="dropdown-item {itemClass("divider")}" role="separator"></li>
 {:else}
-  <li class="dropdown-item" role={type=="header" ? "heading" : "menuitem"}>
+  <li class="dropdown-item" role="none">
     {#if type == "header"}
       <h6 class={itemClass(type)}>
         {@render content()}
       </h6>
     {:else}
       {#if href}
-        <a href={href} class={itemClass(type)} data-sveltekit-preload-data={preload||preload}>
+        <a {href} {...props} class={itemClass(type)} role="menuitem" data-sveltekit-preload-data={preload}>
           {@render content()}
         </a>
       {:else}
-        <button {...props} class={itemClass(type)}>
+        <button type="button" {...props} class={itemClass(type)} role="menuitem">
           {@render content()}
         </button>
       {/if}

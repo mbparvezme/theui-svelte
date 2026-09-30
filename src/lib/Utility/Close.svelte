@@ -1,15 +1,16 @@
 <script lang="ts">
-	import type { ROUNDED } from "$lib/types";
-  import type { Snippet } from "svelte";
+  import type { Snippet } from "svelte"
+	import type { ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
 	import { Svg } from "$lib"
-	import { roundedClass } from "$lib/function.js";
+	import { roundedClass } from "$lib/function.js"
 
-  interface Props {children?: Snippet, size?: number, ariaLabel?: string, rounded: ROUNDED, onclick: any, [key: string]: unknown}
-  let {children, size = 1.5, ariaLabel = "Close button", rounded = "md", onclick, ...props} : Props = $props()
+  interface Props {children?: Snippet, size?: number, ariaLabel?: string, rounded?: ROUNDED, onclick?: (e: MouseEvent) => void, [key: string]: unknown}
+  // The role already says "button", so a label of "Close button" would be read out twice
+  let {children, size = 1.5, ariaLabel = "Close", rounded = "md", onclick, ...props} : Props = $props()
 </script>
 
-<button class="theui-close {twMerge("opacity-60 dark:opacity-50 hover:opacity-100 transition-opacity cursor-pointer theui-ring-black ring-2", roundedClass(rounded), props?.class as string)}" aria-label={ariaLabel} tabindex="0" {onclick} type="button">
+<button {...props} class="theui-close {twMerge("opacity-60 dark:opacity-50 hover:opacity-100 transition-opacity cursor-pointer theui-ring-black ring-2", roundedClass(rounded), (props?.class ?? "") as string)}" {onclick} type="button">
   <span class="sr-only">{ariaLabel}</span>
   {#if children}
     {@render children()}

@@ -1,11 +1,10 @@
 <script lang="ts">
   import { onMount, tick } from "svelte"
   import { fade, type FadeParams } from 'svelte/transition'
-  import { browser } from '$app/environment'
   import { computePosition, flip, shift, offset, arrow, type Placement } from "@floating-ui/dom"
-  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
   import { twMerge } from "tailwind-merge"
-  import { roundedClass } from "$lib/function"
+  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
+  import { roundedClass, sanitize, coreSpeed } from "$lib/function"
 
   interface Props {
     position?: Placement
@@ -19,7 +18,7 @@
   let {
     position = "top",
     triggerEvent = "hover",
-    animationSpeed = "normal",
+    animationSpeed = coreSpeed(),
     rounded = "lg",
     gap = 12,
     ...props
@@ -38,7 +37,7 @@
   let trigger: HTMLElement | null = $state(null)
   let COMPONENT: HTMLDivElement | null = $state(null)
   let ARROW: HTMLSpanElement | null = $state(null)
-  let content: string | HTMLElement = $state("")
+  let content: string= $state("")
   let triggerStyle: string = $state("")
   let show: boolean = $state(false)
   let animObj: FadeParams | undefined = $state(undefined)
@@ -50,7 +49,7 @@
     triggerStyle
   ))
 
-  const classes = $derived(`theui-tooltip z-600 absolute ${customClasses} ${roundedClass(trigger?.dataset.tooltipRounded as ROUNDED || rounded)}`)
+  const classes = $derived(`theui-tooltip z-600 absolute ${customClasses} ${roundedClass(((trigger as HTMLElement | null)?.dataset?.tooltipRounded as ROUNDED) || rounded)}`)
 
   const calculateGap = () => Math.max(Number(trigger?.dataset?.tooltipGap) || gap, 8)
 
@@ -88,10 +87,12 @@
 
   const showTooltip = (element: HTMLElement) => {
     trigger = element
+    if (element.id) element.setAttribute('aria-describedby', `${element.id}-tooltip`)
     animObj = {
       duration: tooltipAnimationSpeed[element.dataset.tooltipAnimationSpeed as ANIMATE_SPEED || animationSpeed]
     }
-    content = element.dataset.tooltip || ""
+
+    content = sanitize(element.dataset.tooltip || "")
     triggerStyle = element.dataset.tooltipStyle || ""
 
     if (content) {
@@ -101,12 +102,14 @@
   }
 
   const hideTooltip = () => {
-    show = false
+    if (trigger?.id) trigger.removeAttribute('aria-describedby')
     trigger = null
+    show = false
   }
 
   const handleKeyboard = (e: KeyboardEvent) => {
-    if (show && e.key === "Escape") {
+    if (!show) return
+    if (e.key === "Escape") {
       e.preventDefault()
       hideTooltip()
     }
@@ -133,25 +136,28 @@
         break
       
       case 'click':
-        if (eventType === 'click') showTooltip(element)
+        if (eventType !== 'click') break
+        // Toggle, so Enter/Space (which fire click) can also close it
+        if (show && trigger === element) hideTooltip()
+        else showTooltip(element)
         break
       
       case 'pointerleave':
         if (eventType !== 'click') hideTooltip()
         break
 
-        case 'focusout':
-        if (e instanceof MouseEvent || e instanceof FocusEvent) {
-          if (!e.relatedTarget || !element.contains(e.relatedTarget as Node)) {
-            hideTooltip()
-          }
-        }
+      case 'focusout': {
+        const fe = e as FocusEvent
+        const stayedInTrigger = fe.relatedTarget && element.contains(fe.relatedTarget as Node)
+        const stayedInTooltip = COMPONENT?.contains(fe.relatedTarget as Node)
+        if (!stayedInTrigger && !stayedInTooltip) hideTooltip()
         break
+      }
     }
   }
 
   onMount(() => {
-    if (!browser) return
+    if (typeof window === "undefined") return
 
     // Add event listeners with capture to catch events during propagation
     const events = ['pointerenter', 'pointerleave', 'focusin', 'focusout', 'click']
@@ -171,12 +177,14 @@
 
 {#if show}
   <div
+    {...props}
     bind:this={COMPONENT}
     transition:fade={animObj}
     class={classes}
     role="tooltip"
     id={trigger?.id ? `${trigger.id}-tooltip` : undefined}
   >
+    <!-- eslint-disable-next-line svelte/no-at-html-tags -->
     {@html content}
     <span
       bind:this={ARROW}

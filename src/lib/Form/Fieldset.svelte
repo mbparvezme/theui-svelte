@@ -1,34 +1,47 @@
 <script lang="ts">
 	import { getContext, setContext, type Snippet } from "svelte"
   import type { INPUT_CONFIG } from "$lib/types"
-	import { generateToken } from "$lib/function";
+	import { generateToken, coreSpeed, coreReset } from "$lib/function"
 
-  interface Props {
-    children : Snippet,
-    title ?: string,
+  type Props = {
+    children: Snippet,
+    title?: string,
     [key: string] : unknown
-  }
+  } & Omit<INPUT_CONFIG, 'inputGrow'>
 
-  const CTX: any = getContext('FORM') ?? {}
+  const CTX: INPUT_CONFIG = getContext('FORM') ?? {}
 
   let {
     children,
     title,
-    animationSpeed = CTX?.animationSpeed ?? "normal",
+    animationSpeed = CTX?.animationSpeed ?? coreSpeed(),
     variant = CTX?.variant ?? "bordered",
-    floatingLabel = CTX?.floatingLabel ?? CTX?.variant == "flat" ?? false,
+    // Own variant differs from the Form's: follow it; otherwise use the Form's floatingLabel
+    floatingLabel = variant !== CTX?.variant ? variant === "flat" : (CTX?.floatingLabel ?? variant === "flat"),
     labelClasses = CTX?.labelClasses ?? "",
     rounded = CTX?.rounded ?? "md",
     size = CTX?.size ?? "md",
-    reset = CTX?.reset ?? false,
+    reset = CTX?.reset ?? coreReset(),
     ...props
-  } : Props & Exclude<INPUT_CONFIG, "inputGrow"> = $props()
+  } : Props = $props()
 
-  let id: string = props?.id as string ?? generateToken()
-  setContext('FIELDSET', {animationSpeed, size, floatingLabel, labelClasses, rounded, variant, reset})
+  const id = $derived((props.id as string | undefined) ?? generateToken())
+  // Set during init so child inputs can read it; getters keep them in sync when props change
+  const FIELDSET_CTX: INPUT_CONFIG = {
+    get animationSpeed() { return animationSpeed },
+    get size() { return size },
+    get floatingLabel() { return floatingLabel },
+    get labelClasses() { return labelClasses },
+    get rounded() { return rounded },
+    get variant() { return variant },
+    get reset() { return reset },
+  }
+  setContext('FIELDSET', FIELDSET_CTX)
 </script>
 
 <fieldset {...props} {id} class={props?.class as string}>
-	<legend class="sr-only">{title}</legend>
-  {@render children?.()}
+  {#if title}
+	  <legend class="sr-only">{title}</legend>
+  {/if}
+  {@render children()}
 </fieldset>

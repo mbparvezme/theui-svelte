@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount, setContext, type Snippet } from "svelte"
-  import type { ANIMATE_SPEED, ROUNDED } from "$lib/types"
-  import { animationClass, roundedClass, generateToken, backdropClasses } from "$lib/function"
   import { twMerge } from "tailwind-merge"
+  import type { ANIMATE_SPEED, ROUNDED, DROPDOWN_CTX } from "$lib/types"
+  import { animationClass, roundedClass, generateToken, backdropClasses, coreSpeed } from "$lib/function"
   import { Button, Svg } from "$lib"
 
   type DROPDOWN_ANIMATION_TYPE = 'slide-left' | 'slide-up' | 'slide-right' | 'slide-down' | 'fade' | 'zoom-in' | 'zoom-out'
@@ -16,8 +16,8 @@
     animationSpeed?: ANIMATE_SPEED,
     animation?: DROPDOWN_ANIMATION_TYPE,
     arrowIcon?: Snippet|boolean,
+    ariaLabel?: string,
     backdrop?: boolean | string,
-    closeOnBlur?: boolean,
     activeItemClasses?: string,
     itemClasses?: string,
     dividerClasses?: string,
@@ -27,17 +27,17 @@
 		buttonClasses?: string,
     id?: string,
     rounded?: ROUNDED
-		[key: string]: unknown
+		[key: string]: unknown // Any other attribute of the container element. `class` is ignored, use `containerClasses`.
   }
 
   let{
     children,
     align = "end",
-    animationSpeed = "fast",
+    animationSpeed = coreSpeed("fast"),
     animation = "fade",
     arrowIcon = true,
+    ariaLabel,
     backdrop = false,
-    closeOnBlur = true,
     activeItemClasses,
     itemClasses,
     dividerClasses,
@@ -55,8 +55,9 @@
 
 	let open: boolean = $state(false)
   let dropdownContainer: HTMLElement;
+  let menuElement: HTMLElement | null = $state(null)
 
-  const transformClasses: string = {
+  const transformClasses: string = $derived({
     "slide-left": "transform translate-x-2",
     "slide-up": "transform translate-y-2",
     "slide-right": "transform -translate-x-2",
@@ -64,9 +65,9 @@
     "fade": "",
     "zoom-in": "transform scale-80",
     "zoom-out": "transform scale-110"
-  }[animation ?? "fade"]
+  }[animation ?? "fade"])
 
-  const openTransformClasses: string = {
+  const openTransformClasses: string = $derived({
     "slide-left": "transform translate-x-0",
     "slide-up": "transform translate-y-0",
     "slide-right": "transform translate-x-0",
@@ -74,60 +75,66 @@
     "fade": "",
     "zoom-in": "transform scale-100",
     "zoom-out": "transform scale-100"
-  }[animation ?? "fade"]
+  }[animation ?? "fade"])
 
-	type sizeClassesTypes = Record<Exclude<Props["width"], string|undefined>, string>
-	const sizeClasses = (): sizeClassesTypes => {
-		const validWidths = ['sm', 'md', 'lg', 'full', 'auto']
-		if (!validWidths.includes(width)) {
-			return typeof width === "string" ? width : "";
-		}
+  const SIZE_MAP: Record<string, string> = {
+    sm: "dropdown-sm w-48",
+    md: "dropdown-md w-64",
+    lg: "dropdown-lg w-80",
+    full: "dropdown-full w-full start-0 end-0",
+    auto: "dropdown-auto",
+  }
 
-		let validWidthSizes: sizeClassesTypes = {
-			sm: "dropdown-sm w-48",
-			md: "dropdown-md w-64",
-			lg: "dropdown-lg w-80",
-			full: "dropdown-full w-full start-0 end-0",
-			auto: "dropdown-auto"
-		}[width as Exclude<Props["width"], string|undefined>]
+  const sizeClasses = $derived(SIZE_MAP[width] ?? width)
 
-		return validWidthSizes
-	}
-
-  const getContainerClasses: string = twMerge(`theui-dropdown relative inline-block z-200 ${animationClass(animationSpeed)}`, containerClasses)
+  const getContainerClasses: string = $derived(twMerge(`theui-dropdown relative inline-block z-200 ${animationClass(animationSpeed)}`, containerClasses))
 
   let getDropdownClasses = $derived(
     twMerge(
       `dropdown-content absolute list-none z-[11] bg-white dark:bg-secondary text-base shadow-lg py-1 text-nowrap
-      ${sizeClasses()}
+      ${sizeClasses}
       ${align === "end" ? "start-auto end-0" : ""}
       ${roundedClass(rounded)}
       ${animation}
       ${animationClass(animationSpeed)}
-      ${animationSpeed != "none" &&  transformClasses}`,
+      ${animationSpeed != "none" ? transformClasses : ""}`,
       (animationSpeed != "none" && open) && openTransformClasses,
       dropdownClasses
     )
   )
 
-	let handleClick = $derived(() => {
+	let handleClick = (e?: MouseEvent) => {
+    // Headers, dividers and empty space inside the menu do not close it
+    const target = e?.target
+    if (target instanceof Element && menuElement?.contains(target) && !target.closest("a, button, [role='menuitem']")) return
     if(triggerEvent !== "hover"){
 			open = !open
 		}
-	})
+	}
 
-	let handleHover = $derived((e: Event) => {
+  let hoverTimeout: ReturnType<typeof setTimeout>
+	let handleHover = (e: Event) => {
     if(triggerEvent === "hover"){
       e.stopPropagation()
-      if (e.type === "mouseenter" || e.type === "focus" || e.type === "touchstart") {
+      if (e.type === "mouseenter" || e.type === "touchstart") {
+        clearTimeout(hoverTimeout)
         open = true
-      } else if (e.type === "mouseleave" || e.type === "touchend") {
-        setTimeout(() => open = false, 200)
+      // Only the pointer leaving closes it: on touch, `touchend` comes right after the tap that opened it
+      } else if (e.type === "mouseleave") {
+        hoverTimeout = setTimeout(() => open = false, 200)
       }
     }
-	})
+	}
 
   let handleKeyboard = (e: KeyboardEvent) => {
+    // Keys pressed on an item belong to that item, so links and buttons keep working
+    if (menuElement && e.target instanceof Node && menuElement.contains(e.target)) {
+      if (e.code === "Escape") {
+        open = false
+        dropdownContainer?.querySelector<HTMLElement>(".theui-dropdown-trigger")?.focus()
+      }
+      return
+    }
     switch(e.code) {
       case "Escape":
       case "ArrowUp":
@@ -156,16 +163,18 @@
     return () => document.removeEventListener('click', handleClickOutside)
   })
 
-	let config: {
-		activeItemClasses: string,
-		itemClasses: string,
-		dividerClass: string,
-		headerClass: string
-  } = {
-    itemClasses: twMerge("flex text-wrap w-full items-center gap-4 py-3 px-4 bg-transparent hover:bg-gray-500/10 text-default cursor-pointer", itemClasses),
-    activeItemClasses: twMerge("flex items-center gap-4 py-3 px-4 bg-gray-500/10", activeItemClasses),
-    dividerClass: twMerge("border-b pb-2 mb-2 border-gray-300 dark:border-gray-700", dividerClasses),
-    headerClass: twMerge("flex items-center gap-4 p-4 font-bold text-sm opacity-50 uppercase", headerClasses)
+  const itemCls = $derived(twMerge("flex text-wrap w-full items-center gap-4 py-3 px-4 bg-transparent hover:bg-gray-500/10 text-default cursor-pointer", itemClasses))
+  const activeItemCls = $derived(twMerge("flex items-center gap-4 py-3 px-4 bg-gray-500/10", activeItemClasses))
+  const dividerCls = $derived(twMerge("border-b pb-2 mb-2 border-gray-300 dark:border-gray-700", dividerClasses))
+  const headerCls = $derived(twMerge("flex items-center gap-4 p-4 font-bold text-sm opacity-50 uppercase", headerClasses))
+
+  // Getters, so an item reads each class as it is now. This replaces an $state object that
+  // an $effect had to copy the props into after every change.
+	const config: DROPDOWN_CTX = {
+    get itemClasses() { return itemCls },
+    get activeItemClasses() { return activeItemCls },
+    get dividerClass() { return dividerCls },
+    get headerClass() { return headerCls }
   }
 
   setContext('DROPDOWN_CTX', config)
@@ -191,14 +200,14 @@
 >
   {#if typeof label == "string"}
     <Button id={`theui-dropdown-trigger${id}`} class={`theui-dropdown-trigger ${buttonClasses}`}
-    aria-label={label + " dropdown"} aria-controls={`${id}-dropdown`} aria-expanded={open} aria-haspopup="menu"
+    ariaLabel={ariaLabel} aria-controls={`${id}-dropdown`} aria-expanded={open} aria-haspopup="menu"
     >
-      {@html label}
+      {label}
       {@render arrow()}
     </Button>
   {:else}
     <span id={`theui-dropdown-trigger${id}`} class={`theui-dropdown-trigger ${buttonClasses}`}
-    aria-label={`${typeof label == "string" ? "label " : ""}dropdown`} aria-controls={`${id}-dropdown`} aria-expanded={open} aria-haspopup="menu"
+    aria-label={ariaLabel} aria-controls={`${id}-dropdown`} aria-expanded={open} aria-haspopup="menu"
     role="button"
     tabindex="0">
       {@render label?.()}
@@ -206,10 +215,11 @@
   {/if}
 
   {#if backdrop && open}
-    <div class={backdropClasses(backdrop)} onclick={()=>handleClick()} aria-hidden="true"></div>
+    <!-- stopPropagation: otherwise the click also reaches the container and opens the menu again -->
+    <div class={backdropClasses(backdrop)} onclick={(e) => { e.stopPropagation(); open = false }} aria-hidden="true"></div>
   {/if}
 
-  <ul id={`${id}-dropdown`} class={getDropdownClasses} class:invisible={!open} class:opacity-0={!open} role="menu" aria-labelledby={`theui-dropdown-trigger${id}`}>
+  <ul bind:this={menuElement} id={`${id}-dropdown`} class={getDropdownClasses} class:invisible={!open} class:opacity-0={!open} role="menu" aria-labelledby={`theui-dropdown-trigger${id}`}>
 		{@render children?.()}
 	</ul>
 </div>

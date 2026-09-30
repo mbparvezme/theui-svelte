@@ -1,48 +1,35 @@
 @import "tailwindcss";
 @plugin '@tailwindcss/forms';
-@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant edge-child (&:first-child, &:last-child);
-@custom-variant not-edge-child ( &:not(:first-child), &:not(:last-child) );
+@custom-variant not-edge-child (&:not(:first-child):not(:last-child));
 
 :root{
-  --light1: #FFFDFD;
-  --light2: #F5F3F3;
-  --light3: #EBE9E9;
-  --dark1: #16161D;
-  --dark1: #1E1E26;
-  --dark1: #26262F;
+  --theui-light1: #FFFDFD;
+  --theui-light2: #F5F3F3;
+  --theui-light3: #EBE9E9;
+  --theui-dark1: #16161D;
+  --theui-dark2: #1E1E26;
+  --theui-dark3: #26262F;
   --text-muted-on-light: #636369;
   --text-muted-on-dark: #A1A1AA;
+  --max-width: 1280px
 }
 
 @theme {
-  --color-brand-primary-50 : var(--color-rose-50);
-  --color-brand-primary-100: var(--color-rose-100);
-  --color-brand-primary-200: var(--color-rose-200);
-  --color-brand-primary-300: var(--color-rose-300);
-  --color-brand-primary-400: var(--color-rose-400);
-  --color-brand-primary-500: var(--color-rose-500);
-  --color-brand-primary-600: var(--color-rose-600);
-  --color-brand-primary-700: var(--color-rose-700);
-  --color-brand-primary-800: var(--color-rose-800);
-  --color-brand-primary-900: var(--color-rose-900);
-  --color-brand-primary-950: var(--color-rose-950);
-  --text-color-on-brand-primary: #FFFFFF;
-
-  --color-brand-secondary-50 : var(--color-emerald-50);
-  --color-brand-secondary-100: var(--color-emerald-100);
-  --color-brand-secondary-200: var(--color-emerald-200);
-  --color-brand-secondary-300: var(--color-emerald-300);
-  --color-brand-secondary-400: var(--color-emerald-400);
-  --color-brand-secondary-500: var(--color-emerald-500);
-  --color-brand-secondary-600: var(--color-emerald-600);
-  --color-brand-secondary-700: var(--color-emerald-700);
-  --color-brand-secondary-800: var(--color-emerald-800);
-  --color-brand-secondary-900: var(--color-emerald-900);
-  --color-brand-secondary-950: var(--color-emerald-950);
-  --text-color-on-brand-secondary: var(--color-emerald-50);
+  --color-brand-50 : var(--color-rose-50);
+  --color-brand-100: var(--color-rose-100);
+  --color-brand-200: var(--color-rose-200);
+  --color-brand-300: var(--color-rose-300);
+  --color-brand-400: var(--color-rose-400);
+  --color-brand-500: var(--color-rose-500);
+  --color-brand-600: var(--color-rose-600);
+  --color-brand-700: var(--color-rose-700);
+  --color-brand-800: var(--color-rose-800);
+  --color-brand-900: var(--color-rose-900);
+  --color-brand-950: var(--color-rose-950);
+  --text-color-on-brand: #FFFFFF;
 
   --color-error-50 : var(--color-red-50);
   --color-error-100: var(--color-red-100);
@@ -92,31 +79,35 @@
   --color-warning-900: var(--color-yellow-900);
   --color-warning-950: var(--color-yellow-950);
 
-  --text-color-default: #16161D;
-  --text-color-muted: #636369;
-  --text-color-alt: #FFFDFD;
+  --text-color-default: var(--theui-dark1);
+  --text-color-muted: var(--text-muted-on-light);
+  --text-color-alt: var(--theui-light1);
 
-  --background-color-primary: #FFFDFD;
-  --background-color-secondary: #F5F3F3;
-  --background-color-tertiary: #EBE9E9;
-  --background-color-alt: #16161D;
+  --background-color-primary: var(--theui-light1);
+  --background-color-secondary: var(--theui-light2);
+  --background-color-tertiary: var(--theui-light3);
+  --background-color-alt: var(--theui-dark1);
 
   --breakpoint-nn: 20rem;
   --breakpoint-xs: 30rem;
 
-  --max-width: 1280px
+  /* Skeleton shimmer of animation="wave". Keyframes cannot be written as a utility class. */
+  --animate-theui-skeleton-wave: theui-skeleton-wave 1.6s linear 0.4s infinite;
+  @keyframes theui-skeleton-wave {
+    to { transform: translateX(100%); }
+  }
 }
 
 @layer base {
   .dark {
-    --text-color-default: #F5F3F3;
-    --text-color-muted: #A1A1AA;
-    --text-color-alt: #16161D;
+    --text-color-default: var(--theui-light2);
+    --text-color-muted: var(--text-muted-on-dark);
+    --text-color-alt: var(--theui-dark1);
 
-    --background-color-primary: #16161D;
-    --background-color-secondary: #1E1E26;
-    --background-color-tertiary: #26262F;
-    --background-color-alt: #F5F3F3;
+    --background-color-primary: var(--theui-dark1);
+    --background-color-secondary: var(--theui-dark2);
+    --background-color-tertiary: var(--theui-dark3);
+    --background-color-alt: var(--theui-light2);
   }
 }
 
@@ -132,15 +123,27 @@
   }
 }
 
-.navbar-collapse .nav-link:not(.nav-dropdown-btn){
+.theui-navbar-collapse .nav-link:not(.theui-nav-dropdown-btn){
   @apply hover:bg-secondary;
 }
-.navbar-collapse.xl-collapse .nav-links > .nav-link{
+/* The links expand one breakpoint above navBreakpoint, so the reset starts there */
+.theui-navbar-collapse.xl-collapse .nav-links > .nav-link{
+  @apply 2xl:hover:bg-transparent;
+}
+.theui-navbar-collapse.lg-collapse .nav-links > .nav-link{
   @apply xl:hover:bg-transparent;
 }
-.navbar-collapse.lg-collapse .nav-links > .nav-link{
+.theui-navbar-collapse.md-collapse .nav-links > .nav-link{
   @apply lg:hover:bg-transparent;
 }
-.navbar-collapse.md-collapse .nav-links > .nav-link{
+.theui-navbar-collapse.sm-collapse .nav-links > .nav-link {
   @apply md:hover:bg-transparent;
+}
+
+/* @tailwindcss/forms draws the select chevron with a background image pinned to
+   `right 0.5rem center`. That edge is the end of the line in a left-to-right page but the
+   start of it in a right-to-left one, so without this the arrow sits on top of the text. */
+[dir="rtl"] select:not([multiple]):not([size]),
+[dir="rtl"] select[size="1"] {
+  background-position: left 0.5rem center;
 }

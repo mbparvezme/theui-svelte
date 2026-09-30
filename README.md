@@ -46,15 +46,15 @@ Last but not least, here is the list of components available in the component li
       <td><a href="https://www.theui.dev/docs/alert">Alert</a></td>
     </tr>
     <tr>
+      <td><a href="https://www.theui.dev/docs/avatar">Avatar</a></td>
       <td><a href="https://www.theui.dev/docs/badge">Badge</a></td>
+    </tr>
+    <tr>
       <td><a href="https://www.theui.dev/docs/breadcrumb">Breadcrumb</a></td>
-    </tr>
-    <tr>
       <td><a href="https://www.theui.dev/docs/button">Button</a></td>
-      <td><a href="https://www.theui.dev/docs/button-group">Button group</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.theui.dev/docs/quick-action-button">Quick action button</a></td>
+      <td><a href="https://www.theui.dev/docs/button-group">Button group</a></td>
       <td><a href="https://www.theui.dev/docs/card">Card</a></td>
     </tr>
     <tr>
@@ -62,32 +62,44 @@ Last but not least, here is the list of components available in the component li
       <td><a href="https://www.theui.dev/docs/collapse">Collapse</a></td>
     </tr>
     <tr>
+      <td><a href="https://www.theui.dev/docs/divider">Divider</a></td>
       <td><a href="https://www.theui.dev/docs/drawer">Drawer</a></td>
+    </tr>
+    <tr>
       <td><a href="https://www.theui.dev/docs/dropdown">Dropdown</a></td>
-    </tr>
-    <tr>
       <td><a href="https://www.theui.dev/docs/list-group">List group</a></td>
+    </tr>
+    <tr>
       <td><a href="https://www.theui.dev/docs/modal">Modal</a></td>
-    </tr>
-    <tr>
       <td><a href="https://www.theui.dev/docs/navbar">Navbar</a></td>
+    </tr>
+    <tr>
       <td><a href="https://www.theui.dev/docs/notification">Notification</a></td>
-    </tr>
-    <tr>
       <td><a href="https://www.theui.dev/docs/pagination">Pagination</a></td>
-      <td><a href="https://www.theui.dev/docs/popover">Popover</a></td>
     </tr>
     <tr>
+      <td><a href="https://www.theui.dev/docs/popover">Popover</a></td>
       <td><a href="https://www.theui.dev/docs/popup">Popup (Exit and Entry popup)</a></td>
+    </tr>
+    <tr>
       <td><a href="https://www.theui.dev/docs/progress-bar">Progress bar</a></td>
+      <td><a href="https://www.theui.dev/docs/qab">Quick action button</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.theui.dev/docs/rating">Rating</a></td>
+      <td><a href="https://www.theui.dev/docs/skeleton">Skeleton</a></td>
     </tr>
     <tr>
       <td><a href="https://www.theui.dev/docs/slider">Slider</a></td>
-      <td><a href="https://www.theui.dev/docs/table">Table</a></td>
+      <td><a href="https://www.theui.dev/docs/spinner">Spinner</a></td>
     </tr>
     <tr>
+      <td><a href="https://www.theui.dev/docs/table">Table</a></td>
       <td><a href="https://www.theui.dev/docs/tabs">Tabs</a></td>
+    </tr>
+    <tr>
       <td><a href="https://www.theui.dev/docs/tooltip">Tooltip</a></td>
+      <td></td>
     </tr>
   </tbody>
 </table>
@@ -103,22 +115,38 @@ Last but not least, here is the list of components available in the component li
   <tbody style="width: 100%;">
     <tr>
       <td><a href="https://www.theui.dev/docs/form">Form</a></td>
-      <td><a href="https://www.theui.dev/docs/check-box">Check-box</a></td>
+      <td><a href="https://www.theui.dev/docs/form-wizard">Form wizard</a></td>
     </tr>
     <tr>
       <td><a href="https://www.theui.dev/docs/fieldset">Fieldset</a></td>
-      <td><a href="https://www.theui.dev/docs/radio-button">Radio button</a></td>
-    </tr>
-    <tr>
       <td><a href="https://www.theui.dev/docs/label">Label</a></td>
-      <td><a href="https://www.theui.dev/docs/file-input">File input</a></td>
     </tr>
     <tr>
       <td><a href="https://www.theui.dev/docs/input">Text input</a></td>
-      <td><a href="https://www.theui.dev/docs/toggle">Toggle</a></td>
+      <td><a href="https://www.theui.dev/docs/select">Select</a></td>
     </tr>
     <tr>
-      <td><a href="https://www.theui.dev/docs/select">Select</a></td>
+      <td><a href="https://www.theui.dev/docs/checkbox">Check-box</a></td>
+      <td><a href="https://www.theui.dev/docs/radio-button">Radio button</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.theui.dev/docs/toggle">Toggle</a></td>
+      <td><a href="https://www.theui.dev/docs/range">Range</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.theui.dev/docs/combobox">Combobox</a></td>
+      <td><a href="https://www.theui.dev/docs/stepper">Stepper</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.theui.dev/docs/date-picker">Date picker</a></td>
+      <td><a href="https://www.theui.dev/docs/time-picker">Time picker</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.theui.dev/docs/otp-input">OTP input</a></td>
+      <td><a href="https://www.theui.dev/docs/file-input">File input</a></td>
+    </tr>
+    <tr>
+      <td><a href="https://www.theui.dev/docs/file-dropzone">File dropzone</a></td>
       <td><a href="https://www.theui.dev/docs/helper-text">Helper text</a></td>
     </tr>
   </tbody>
@@ -147,6 +175,8 @@ Last but not least, here is the list of components available in the component li
 <br>
 
 ## **3. Installation Guide**
+**Requirements:** Svelte 5.57.1 or newer, Tailwind CSS v4 and Node.js 22.12 or newer.
+
 To add the Svelte Components library to your project, you can do it in two ways:
 1. Use the boilerplate from GitHub.
 2. Manual installation from scratch.
@@ -175,17 +205,18 @@ npm run dev
 Easily add theui-svelte to your project via a GitHub boilerplate or manual installation. For manual setup:
 
 - Install SvelteKit with TailwindCSS.
-- Configure Tailwind CSS by updating the <code>./src/app.css</code> file..
+- Configure Tailwind CSS by updating the <code>./src/app.css</code> file.
 
 ### **a. Install Sveltekit with TailwindCSS**
 
 ```bash
-# Install Svelte
+# Create a SvelteKit project
+# When prompted "What would you like to add to your project?", select tailwindcss
 npx sv create my-app
 cd my-app
 
-# Install node modules
-npm i
+# Add Tailwind CSS - if you didn't select tailwindcss during the project creation, run:
+# npx sv add tailwindcss
 
 # Install theui-svelte
 npm i theui-svelte

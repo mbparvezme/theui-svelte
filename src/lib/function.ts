@@ -1,4 +1,40 @@
+import type { ANIMATE_SPEED, CORE, ROUNDED, SHADOW, ROUNDED_SIDES, ROUNDED_ITEM_TYPES, NOTIFY_CONFIG, NOTIFICATION_TYPE, NOTIFICATION_DATA_TYPE } from "$lib/types"
+import DOMPurify from "dompurify"
+import { twMerge } from "tailwind-merge"
+import { ST_NOTIFICATIONS } from "$lib/state.svelte"
+
+// Library wide defaults. Private on purpose: setTheuiDefaults is the only way in, and
+// roundedClass/coreSpeed/coreReset/coreShadow are the only way out.
+const CORE_DEFAULTS: CORE = {}
+
+/**
+ * Sets the library wide defaults, so you do not repeat the same prop on every component.
+ *
+ * Call this **once, at module scope** — a `<script module>` block or a plain module your
+ * app imports. It is a single value shared by everything the process renders, so calling
+ * it while a page renders, in a `load` function or in a component's instance script, lets
+ * one visitor's settings reach another visitor's page during server rendering.
+ *
+ * `animationSpeed`, `shadow` and `reset` are fallbacks: a prop on the component, or a
+ * `Form` or `Fieldset` around it, still wins over them. `rounded` is not — it is an off
+ * switch, and `false` squares every component whatever its `rounded` prop says. Only a
+ * class of your own can round a corner after that.
+ *
+ * @param config - The defaults to set. Keys you leave out keep their previous value.
+ */
+export const setTheuiDefaults = (config: CORE): void => { Object.assign(CORE_DEFAULTS, config) }
+
+/** The global `animationSpeed`, or `fallback` when none was set. */
+export const coreSpeed = (fallback: ANIMATE_SPEED = "normal"): ANIMATE_SPEED => CORE_DEFAULTS.animationSpeed ?? fallback
+
+/** The global `reset`, or `fallback` when none was set. */
+export const coreReset = (fallback: boolean = false): boolean => CORE_DEFAULTS.reset ?? fallback
+
+/** The global `shadow`, or `fallback` when none was set. */
+export const coreShadow = (fallback: SHADOW = "md"): SHADOW => CORE_DEFAULTS.shadow ?? fallback
+
 export type ANIMATION_PROPERTY_TYPE = 'color' | 'opacity' | 'shadow' | 'transform' | 'all' | 'fileButton'
+type ThemeStyles = Record<NOTIFICATION_TYPE | "brand", string>
 
 type RoundClassesType = {
   [type in ROUNDED_ITEM_TYPES]: {
@@ -8,8 +44,24 @@ type RoundClassesType = {
   }
 }
 
-import type { ANIMATE_SPEED, ROUNDED, SHADOW, ROUNDED_SIDES, ROUNDED_ITEM_TYPES, NOTIFY_CONFIG, NOTIFICATION_TYPE } from "$lib/types"
-import { twMerge } from "tailwind-merge"
+export const notify = (msg: string, type: NOTIFICATION_TYPE = "error", config: NOTIFY_CONFIG = {}): string => {
+  // On the server the notification list is shared by every request, so a message pushed
+  // there could show up for other visitors. Notifications only live in the browser.
+  if (typeof window === "undefined") return ""
+
+  const defaultConfig: NOTIFY_CONFIG = { removeOnClick: true, removeAfter: 4000, rounded: "md", theme: "default", variant: "card" };
+  const C: NOTIFY_CONFIG & { id: string } = { ...defaultConfig, ...config, id: generateToken() };
+
+  const sanitizedMsg = sanitize(msg);
+  ST_NOTIFICATIONS.value.push({ msg: sanitizedMsg, type, CONFIG: C, removing: false });
+
+  if (C.removeAfter !== undefined && C.removeAfter !== false) {
+    setTimeout(() => removeNotification(C.id), C.removeAfter);
+  }
+  return C.id;
+}
+
+export const removeNotification = (id: string) => ST_NOTIFICATIONS.value = ST_NOTIFICATIONS.value.filter((n: NOTIFICATION_DATA_TYPE) => n.CONFIG.id !== id)
 
 const roundClasses: RoundClassesType = {
   default: {
@@ -49,6 +101,7 @@ const roundClasses: RoundClassesType = {
       sm: " rounded-s",
       md: " rounded-s-md",
       lg: " rounded-s-lg",
+      xl: " rounded-s-xl",
       "2xl": " rounded-s-2xl",
       full: " rounded-s-full",
     },
@@ -56,6 +109,7 @@ const roundClasses: RoundClassesType = {
       sm: " rounded-ss",
       md: " rounded-ss-md",
       lg: " rounded-ss-lg",
+      xl: " rounded-ss-xl",
       "2xl": " rounded-ss-2xl",
       full: " rounded-ss-full",
     },
@@ -129,6 +183,7 @@ const roundClasses: RoundClassesType = {
       sm: " file:rounded-ss",
       md: " file:rounded-ss-md",
       lg: " file:rounded-ss-lg",
+      xl: " file:rounded-ss-xl",
       "2xl": " file:rounded-ss-2xl",
       full: " file:rounded-ss-full",
     },
@@ -152,6 +207,7 @@ const roundClasses: RoundClassesType = {
       sm: " file:rounded-ee",
       md: " file:rounded-ee-md",
       lg: " file:rounded-ee-lg",
+      xl: " file:rounded-ee-xl",
       "2xl": " file:rounded-ee-2xl",
       full: " file:rounded-ee-full",
     },
@@ -594,23 +650,23 @@ const shadowClasses: { [size in Exclude<SHADOW, "none">]: string } = {
   inner: " shadow-inner"
 }
 
-export const messageTheme = {
+export const messageTheme: Record<"default" | "soft" | "gradient", ThemeStyles> = {
   default: {
-    brand: "bg-brand-primary-500 dark:bg-brand-primary-500/60 text-on-brand-primary/90",
+    brand: "bg-brand-500 dark:bg-brand-500/60 text-on-brand/90",
     error: "bg-error-600 dark:bg-error-500/60 text-error-50 dark:text-error-50/90",
     info: "bg-info-500 dark:bg-info-500/60 text-info-50 dark:text-info-50/90",
     success: "bg-success-500 dark:bg-success-500/60 text-success-50 dark:text-success-50/90",
     warning: "bg-warning-300 dark:bg-warning-300/60 text-warning-950 dark:text-warning-50/80",
   },
   soft: {
-    brand: "bg-brand-primary-100 text-brand-primary-950 dark:bg-brand-primary-950 text-brand-primary-950 dark:text-on-brand-primary/90",
+    brand: "bg-brand-100 text-brand-950 dark:bg-brand-950 dark:text-on-brand/90",
     error: "bg-error-100 text-error-950 dark:bg-error-950 dark:text-error-50/90",
     info: "bg-info-100 text-info-950 dark:bg-info-950 dark:text-info-50/90",
     success: "bg-success-100 text-success-950 dark:bg-success-950 dark:text-success-50/90",
     warning: "bg-warning-100 text-warning-950 dark:bg-warning-950 dark:text-warning-50/90",
   },
   gradient: {
-    brand: "bg-gradient-to-r from-brand-primary-500 via-brand-primary-700 to-brand-primary-600 dark:from-brand-primary-500/50 dark:via-brand-primary-600/80 dark:to-brand-primary-500/60 text-on-brand-primary",
+    brand: "bg-gradient-to-r from-brand-500 via-brand-700 to-brand-600 dark:from-brand-500/50 dark:via-brand-600/80 dark:to-brand-500/60 text-on-brand",
     error: "bg-gradient-to-r from-error-500 via-error-600 to-warning-500 dark:from-error-900 dark:via-error-600/60 dark:to-warning-700 text-error-50",
     info: "bg-gradient-to-r from-info-500 via-info-600 to-success-500 dark:from-info-500/50 dark:via-info-600/70 dark:to-success-500/50 text-info-50",
     success: "bg-gradient-to-r from-success-500 via-success-600 to-info-500 dark:from-success-500/50 dark:via-info-600/70 dark:to-success-500/50 text-success-50",
@@ -618,23 +674,23 @@ export const messageTheme = {
   }
 }
 
-export const messageBarTheme = {
+export const messageBarTheme: Record<"default" | "soft" | "gradient", ThemeStyles> = {
   default: {
-    brand: "border-brand-primary-400 dark:border-brand-primary-200/50",
+    brand: "border-brand-400 dark:border-brand-200/50",
     error: "border-error-300 dark:border-error-200/50",
     info: "border-info-300 dark:border-info-200/50",
     success: "border-success-300 dark:border-success-200/50",
     warning: "border-warning-500 dark:border-warning-200/50",
   },
   soft: {
-    brand: "border-brand-primary-300 dark:border-brand-primary-200/50",
+    brand: "border-brand-300 dark:border-brand-200/50",
     error: "border-error-300 dark:border-error-500/50",
     info: "border-info-300 dark:border-info-500/50",
     success: "border-success-300 dark:border-success-500/50",
     warning: "border-warning-500 dark:border-warning-500/50",
   },
   gradient: {
-    brand: "border-brand-primary-400 dark:border-brand-primary-700",
+    brand: "border-brand-400 dark:border-brand-700",
     error: "border-error-300 dark:border-error-200/50",
     info: "border-info-300 dark:border-info-200/50",
     success: "border-success-300 dark:border-success-200/50",
@@ -671,17 +727,26 @@ export const isKeyExist = (obj: Record<string, unknown>, key: string): boolean =
 export const generateRandomNum = (min = 10, max = 99): number => Math.floor(Math.random() * (max - min + 1)) + min
 
 
+let tokenCount = 0
+
 /**
- * Generates a unique alphanumeric token with a prefix, timestamp, and random number.
- * 
+ * Generates a unique token with a prefix, used for element ids.
+ *
+ * `crypto.randomUUID()` only exists in secure contexts (https and localhost). A page opened
+ * over plain http, such as a dev server visited from a phone on the LAN, gets a random
+ * string and a counter instead.
+ *
  * @param prefix - Optional string prefix for the token, defaults to "_id".
- * @returns A unique token string combining the prefix, current timestamp, and randomness.
- * 
+ * @returns A unique token string combining the prefix and a random part.
+ *
  * @example
- * generateToken("user_"); // Example output: "user_lk9vby43j24"
- * generateToken();        // Example output: "_id_k9vmzct08f"
+ * generateToken("user"); // Example output: "user_1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed"
+ * generateToken();       // Example output: "_id_1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed"
  */
-export const generateToken = (prefix: string = "_id"): string => `${prefix}${(Date.now() + 1).toString(36)}${generateRandomNum()}`
+export const generateToken = (prefix = "_id") => {
+  const id = globalThis.crypto?.randomUUID?.() ?? `${Math.random().toString(36).slice(2)}${(++tokenCount).toString(36)}`
+  return `${prefix}_${id}`
+}
 
 
 /**
@@ -706,8 +771,19 @@ export const animationClass = (animate: ANIMATE_SPEED | undefined, type: ANIMATI
  * @param type - Item type (e.g., "default", "fileButton"), defaults to "default".
  * @returns A string with the computed Tailwind CSS rounded classes.
  */
-export const roundedClass = (value: ROUNDED = "md", side: ROUNDED_SIDES = "all", type: ROUNDED_ITEM_TYPES = "default"): string =>
-  value && value !== "none" ? roundClasses[type]?.[side]?.[value] || " " : " "
+export const roundedClass = (value: ROUNDED = "md", side: ROUNDED_SIDES = "all", type: ROUNDED_ITEM_TYPES = "default"): string => {
+  // setTheuiDefaults({ rounded: false }) turns every corner square and outranks the prop,
+  // so this check comes before the value. Your own class still wins, because the component
+  // merges it last.
+  if (CORE_DEFAULTS.rounded === false) return " "
+  if (!value || value === "none") return " "
+  const result = roundClasses[type]?.[side]?.[value]
+  if (result === undefined) {
+    console.warn(`[theui-svelte] roundedClass: no class found for type="${type}", side="${side}", value="${value}"`)
+    return " "
+  }
+  return result
+}
 
 
 /**
@@ -726,6 +802,7 @@ export const shadowClass = (size?: SHADOW): string => size && size !== "none" ? 
  * @returns `true` if the URL is local, otherwise `false`.
  */
 export const isLocalUrl = (url: string): boolean => {
+  if (typeof window === "undefined") return false
   try {
     const parsedUrl = new URL(url, window.location.origin)
     return parsedUrl.origin === window.location.origin
@@ -744,17 +821,25 @@ export const isLocalUrl = (url: string): boolean => {
  * @returns A string of merged classes for the notification.
  */
 export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TYPE = "error", props: Record<string, unknown> = {}): string => {
-  const theme = config?.theme || "default"
+  const theme: keyof typeof messageTheme = config.theme ?? "default"
+
+  const rounded = config?.rounded || "md"
+  const variant = config?.variant || "card"
+  const bar = messageBarTheme[theme][type]
+
+
   const baseClass = `theui-notification px-4 py-3 shadow-2xl shadow-black/50 cursor-pointer ${messageTheme[theme][type]}`
 
-  const variantClasses: Record<string, string> = {
-    card: roundedClass(config?.rounded || "md"),
-    borderTop: `${roundedClass(config?.rounded || "md", "bottom")} ${messageBarTheme[theme][type]} border-t-4`,
-    borderBottom: `${roundedClass(config?.rounded || "md", "top")} ${messageBarTheme[theme][type]} border-b-4`,
-    borderStart: `${roundedClass(config?.rounded || "md")} ${messageBarTheme[theme][type]} border-s-4`,
+  let variantClass: string;
+  switch (variant) {
+    case "card": variantClass = roundedClass(rounded); break;
+    case "borderTop": variantClass = `${roundedClass(rounded, "bottom")} ${bar} border-t-4`; break;
+    case "borderBottom": variantClass = `${roundedClass(rounded, "top")} ${bar} border-b-4`; break;
+    case "borderStart": variantClass = `${roundedClass(rounded)} ${bar} border-s-4`; break;
+    default: variantClass = roundedClass(rounded);
   }
 
-  return twMerge(baseClass, theme !== "gradient" ? variantClasses[config?.variant || "card"] : "", props.class as string)
+  return twMerge(baseClass, theme !== "gradient" ? variantClass : "", props.class as string);
 }
 
 
@@ -767,5 +852,17 @@ export const notificationClasses = (config: NOTIFY_CONFIG, type: NOTIFICATION_TY
 export const backdropClasses = (backdrop: string | boolean, zIndex?: string): string => {
   const defaultClasses = "backdrop fixed inset-0 bg-black/50 z-[-1] dark:bg-black/75"
   const customClasses = typeof backdrop === "string" ? backdrop : ""
-  return twMerge(defaultClasses, customClasses, zIndex)
+  return twMerge(defaultClasses, customClasses, zIndex ?? "")
 }
+
+
+const HTML_ESCAPES: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }
+
+/**
+ * Cleans a string before it is rendered as HTML.
+ *
+ * DOMPurify needs a browser, so on the server the string is escaped instead of
+ * cleaned. That way markup written by a visitor never reaches the page unchecked.
+ */
+export const sanitize = (html: string): string =>
+  typeof window !== "undefined" ? DOMPurify.sanitize(html) : html.replace(/[&<>"']/g, (c) => HTML_ESCAPES[c])

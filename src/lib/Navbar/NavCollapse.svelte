@@ -1,16 +1,19 @@
 <script lang="ts">
   import {getContext, setContext, type Snippet} from "svelte"
 	import { twMerge } from "tailwind-merge";
-	import type { MOBILE_NAV_ON, RESPONSIVE_NAV_ON } from "$lib/types"
+	import type { MOBILE_NAV_ON, RESPONSIVE_NAV_ON, NAV_CTX } from "$lib/types"
 	import { roundedClass } from "$lib/function"
 	import { ST_MOBILE_NAV } from "$lib/state.svelte"
 	import { Svg } from "$lib"
-  const {config, id} = getContext('NAV') as any
 
-  const CTX = getContext('NAV') as any
-  setContext('NAV', {...CTX, config: {...CTX.config, responsive: true}});
+  const CTX: NAV_CTX = getContext('NAV')
+  // Inherits the navbar settings live and marks everything inside as responsive
+  const config: NAV_CTX['config'] = Object.create(CTX.config, { responsive: { value: true, enumerable: true } })
+  setContext('NAV', { id: CTX.id, config })
 
   let {children, toggleIcon} : {children: Snippet, toggleIcon?: Snippet} = $props()
+
+  const collapseId = `${CTX.id}-collapse`
 
   let responsiveClasses = () => {
     let responsiveClassesByBreakPoints: RESPONSIVE_NAV_ON = {
@@ -26,31 +29,32 @@
     return config.navBreakpoint ? `${navMobileStatusClasses["on"]} ${responsiveClassesByBreakPoints[config.navBreakpoint as MOBILE_NAV_ON] ?? ""}` : navMobileStatusClasses["off"]
   }
 
-  let collapseClasses = `theui-navbar-collapse flex-grow z-[1] flex ${responsiveClasses()}${roundedClass(config?.rounded, "bottom")} ${twMerge("max-h-[80vh] bg-primary", config.navCollapseClasses)}`
+  let collapseClasses = $derived(`theui-navbar-collapse flex-grow z-[1] flex ${responsiveClasses()}${roundedClass(config?.rounded, "bottom")} ${twMerge("max-h-[80vh] bg-primary", config.navCollapseClasses)}`)
 
   let hiddenClasses: RESPONSIVE_NAV_ON = {sm: "md:hidden", md: "lg:hidden", lg: "xl:hidden", xl: "2xl:hidden"}
 
   let toggle = () => {
-    if (ST_MOBILE_NAV.value.includes(id)) {
-      ST_MOBILE_NAV.value = ST_MOBILE_NAV.value.filter((i: string) => i !== id);
+    if (ST_MOBILE_NAV.value.has(CTX.id)) {
+      ST_MOBILE_NAV.value.delete(CTX.id)
     }else{
-      ST_MOBILE_NAV.value.push(id)
+      ST_MOBILE_NAV.value.add(CTX.id)
     }
   }
 
-  let getClass = `nav-toggle w-12 h-12 ms-auto flex items-center justify-center cursor-pointer ${hiddenClasses[config.navBreakpoint as MOBILE_NAV_ON] ?? "hidden"}`
+  let getClass = $derived(`nav-toggle w-12 h-12 ms-auto flex items-center justify-center cursor-pointer ${hiddenClasses[config.navBreakpoint as MOBILE_NAV_ON] ?? "hidden"}`)
 </script>
 
 <div
+  id={collapseId}
   class={collapseClasses}
-  class:flex={!config.navBreakpoint || ST_MOBILE_NAV.value.includes(id)}
-  class:hidden={config.navBreakpoint != false && !ST_MOBILE_NAV.value.includes(id)}
-  class:overflow-hidden={config.navBreakpoint != false && !ST_MOBILE_NAV.value.includes(id)}
-  class:overflow-auto={config.navBreakpoint != false && ST_MOBILE_NAV.value.includes(id)}
+  class:flex={!config.navBreakpoint || ST_MOBILE_NAV.value.has(CTX.id)}
+  class:hidden={config.navBreakpoint != false && !ST_MOBILE_NAV.value.has(CTX.id)}
+  class:overflow-hidden={config.navBreakpoint != false && !ST_MOBILE_NAV.value.has(CTX.id)}
+  class:overflow-auto={config.navBreakpoint != false && ST_MOBILE_NAV.value.has(CTX.id)}
   >
     {@render children()}
   </div>
-  <button type="button" onclick={()=>toggle()} class={getClass} aria-label="Toggle navigation">
+  <button type="button" onclick={()=>toggle()} class={getClass} aria-label="Toggle navigation" aria-expanded={ST_MOBILE_NAV.value.has(CTX.id)} aria-controls={collapseId}>
     {#if toggleIcon}
       {@render toggleIcon()}
     {:else}
