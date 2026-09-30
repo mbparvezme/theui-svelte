@@ -2,36 +2,36 @@
   import { getContext, type Snippet } from "svelte"
   import { twMerge } from "tailwind-merge"
   import { TH, TD } from "$lib"
+	import type { TABLE_CONTEXT } from "$lib/types"
 
   interface Props {children?: Snippet, data?: Array<string>|Record<string, unknown>, keys?: string[], tableHeader?: boolean, [key: string]: unknown}
   let {children, data, keys, tableHeader = false, ...props} : Props = $props()
-  const CTX: any = getContext("TABLE")
+  const CTX = getContext<TABLE_CONTEXT>("TABLE")
+
+  const cellValue = (value: unknown): string => {
+    if (value === null || value === undefined) return ""
+    return String(value)
+  }
 </script>
 
-{#if children}
-  <tr {...props} class={twMerge(tableHeader ? CTX?.trHeadClasses : CTX.trClasses, props?.class as string)}>
+<tr {...props} class={twMerge(tableHeader ? CTX?.trHeadClasses : CTX?.trClasses, props?.class as string)}>
+  {#if children}
     {@render children()}
-  </tr>
-{:else}
-  <tr {...props} class={twMerge(tableHeader ? CTX?.trHeadClasses : CTX.trClasses, props?.class as string)}>
-    {#if Array.isArray(data)}
-      {#each data as d}
-        {#if tableHeader}
-          <TH scope="col">{@html d.toString()}</TH>
-        {:else}
-          <TD>{@html d.toString()}</TD>
-        {/if}
-      {/each}
-    {/if}
-
-    {#if keys && data !== null && Object.prototype.toString.call(data) === "[object Object]"}
-      {#each keys as k}
-        {#if tableHeader}
-          <TH scope="col">{@html (data as Record<string, unknown>)[k] as string | number ?? "INVALID_KEY"}</TH>
-        {:else}
-          <TD>{@html (data as Record<string, unknown>)[k] as string | number ?? "INVALID_KEY"}</TD>
-        {/if}
-      {/each}
-    {/if}
-  </tr>
-{/if}
+  {:else if Array.isArray(data)}
+    {#each data as d, i (i)}
+      {#if tableHeader}
+        <TH scope="col">{cellValue(d)}</TH>
+      {:else}
+        <TD>{cellValue(d)}</TD>
+      {/if}
+    {/each}
+  {:else if keys && data !== null && typeof data === "object"}
+    {#each keys as k (k)}
+      {#if tableHeader}
+        <TH scope="col">{cellValue((data as Record<string, unknown>)[k])}</TH>
+      {:else}
+        <TD>{cellValue((data as Record<string, unknown>)[k])}</TD>
+      {/if}
+    {/each}
+  {/if}
+</tr>

@@ -1,49 +1,45 @@
 <script lang="ts">
-	import type { ANIMATE_SPEED } from "$lib/types"
-	import { animationClass } from "$lib/function"
 	import { getContext, type Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
+	import type { ANIMATE_SPEED, LIST_GROUP_CTX } from "$lib/types"
+	import { animationClass, coreSpeed } from "$lib/function"
 
-  let CTX = getContext("LISTGROUP") as any
+  let CTX: LIST_GROUP_CTX = getContext("LIST_GROUP")
 
   interface Props {
-		children?: Snippet,
+		children: Snippet,
     animationSpeed?: ANIMATE_SPEED,
     href?: string,
-		variant?: 'bordered' | 'flat',
     size?: 'sm' | 'md' | 'lg' | 'xl',
-    [key: string]: unknown
+    [key: string]: unknown // class, ...
 	}
 
   let {
     children,
     href,
-    animationSpeed = CTX?.animationSpeed ?? "normal",
-    variant = CTX?.variant ?? "bordered",
+    animationSpeed = CTX?.animationSpeed ?? coreSpeed(),
     size = CTX?.size ?? "md",
     ...props
   } : Props = $props()
 
-  let sizeClasses: Record<Exclude<Props["size"], undefined>, string> = {
+  const sizeClasses: Record<Exclude<Props["size"], undefined>, string> = {
     "xl" : "p-6",
     "lg" : "p-5",
     "md" : "p-4",
     "sm" : "py-2 px-3"
   }
 
-  let itemClasses = `${sizeClasses[size]} cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 ${animationClass(animationSpeed)}`
+  const itemClasses = $derived(twMerge("cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800", sizeClasses[size] ?? "", animationClass(animationSpeed), CTX?.itemClasses, props?.class as string))
 </script>
 
-{#if children}
-  {#if href}
-    <li role="listitem">
-      <a {href} class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}">
-        {@render children()}
-      </a>
-    </li>
-  {:else}
-    <li class="list-item {twMerge(itemClasses, CTX?.itemClasses, props?.class as string)}" role="listitem">
+{#if href}
+  <li role="listitem">
+    <a {href} {...props} class="list-item {itemClasses}">
       {@render children()}
-    </li>
-  {/if}
+    </a>
+  </li>
+{:else}
+  <li class="list-item {itemClasses}" role="listitem">
+    {@render children()}
+  </li>
 {/if}

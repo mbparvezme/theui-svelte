@@ -2,31 +2,62 @@
   import { onMount, type Snippet } from "svelte"
   import { twMerge } from "tailwind-merge"
 
-  let {systemDefault = true, children, ...props} : {systemDefault?: boolean, children?: Snippet, [key: string]: unknown} = $props()
-  let toggleTheme: () => void = () => {}
+  type Theme = "light" | "dark"
+  const STORAGE_KEY = "theui-theme"
 
-  let isDarkModeActive: boolean = $state(false)
+  let {
+    systemDefault = true,
+    children,
+    ...props
+  }: { systemDefault?: boolean; children?: Snippet; [key: string]: unknown } = $props()
 
-  onMount((): void => {
-    if (!localStorage.theme) {
-      localStorage.setItem("theme", systemDefault && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-    }
-    if(localStorage.theme === "dark"){
-      isDarkModeActive = true
-      document.documentElement.classList.add("dark")
-    }else{
-      isDarkModeActive = false
-    }
-    toggleTheme = () => {
-      const newTheme = localStorage.theme === "light" ? "dark" : "light"
-      isDarkModeActive = !isDarkModeActive
-      localStorage.setItem("theme", newTheme)
-      document.documentElement.classList.toggle("dark", newTheme === "dark")
+  let isDarkModeActive = $state(false)
+  let mounted = $state(false)
+
+  function getSystemTheme(): Theme {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  }
+
+  function getStoredTheme(): Theme | null {
+    return localStorage.getItem(STORAGE_KEY) as Theme | null
+  }
+
+  function applyTheme(theme: Theme) {
+    isDarkModeActive = theme === "dark"
+    document.documentElement.classList.toggle("dark", theme === "dark")
+  }
+
+  function resolveTheme(): Theme {
+    const stored = getStoredTheme()
+    if (stored) return stored
+    return systemDefault ? getSystemTheme() : "light"
+  }
+
+  function toggleTheme() {
+    const next: Theme = getStoredTheme() === "dark" ? "light" : "dark"
+    localStorage.setItem(STORAGE_KEY, next)
+    applyTheme(next)
+  }
+
+  onMount(() => {
+    applyTheme(resolveTheme())
+    mounted = true
+  })
+
+  $effect(() => {
+    if (mounted && !getStoredTheme()) {
+      applyTheme(systemDefault ? getSystemTheme() : "light")
     }
   })
 </script>
 
-<button aria-label="Toggle light or dark mode" {...props} class={"theui-theme-toggler " + twMerge("bg-transparent p-0.5 cursor-pointer", props?.class as string)} onclick={()=>toggleTheme()} aria-pressed={isDarkModeActive ? "true" : "false"}>
+<button
+  aria-label="Toggle light or dark mode"
+  {...props}
+  class={twMerge("theui-theme-toggler bg-transparent p-0.5 cursor-pointer", props?.class as string)}
+  onclick={toggleTheme}
+  aria-pressed={isDarkModeActive ? "true" : "false"}
+>
   {#if children}
     {@render children()}
   {:else}

@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount, onDestroy, type Snippet } from "svelte"
+  import { onMount, type Snippet } from "svelte"
+  import { twMerge } from "tailwind-merge"
   import type { ROUNDED } from "$lib/types"
   import { roundedClass, backdropClasses } from "$lib/function"
-  import { twMerge } from "tailwind-merge"
 
   interface Props {
     children ?: Snippet,
@@ -31,57 +31,71 @@
   let entryPopup = $state(false)
   let exitPopup = $state(false)
 
+  const safeGetItem = (key: string): string | null => {
+    try { return localStorage.getItem(key) } catch { return null }
+  }
+  const safeSetItem = (key: string, value: string): void => {
+    try { localStorage.setItem(key, value) } catch { /* storage unavailable */ }
+  }
+
+  let cleanupExitListener: (() => void) | undefined
+
   const showEntryPopup = () => {
     if (repeat === false) {
-      if (localStorage.getItem("entryPopUp")) return;
-      localStorage.setItem("entryPopUp", "true");
+      if (safeGetItem("entryPopUp")) return
+      safeSetItem("entryPopUp", "true")
     } else if (repeat === "page") {
-      let epData = JSON.parse(localStorage.getItem("entryPopUp") || "[]");
-      if (!epData.includes(window.location.href)) {
-        epData.push(window.location.href);
-        localStorage.setItem("entryPopUp", JSON.stringify(epData));
-      }
+      try {
+        const epData: string[] = JSON.parse(safeGetItem("entryPopUp") || "[]")
+        if (epData.includes(window.location.href)) return
+        epData.push(window.location.href)
+        safeSetItem("entryPopUp", JSON.stringify(epData))
+      } catch { /* corrupted data, proceed */ }
     }
-    entryPopup = true;
-  };
-
-  const showExitPopup = (e: any) => {
-    const target = e.target;
-    if (e.clientY < 50 && e.relatedTarget === null && target?.nodeName.toLowerCase() !== 'select') {
-      entryPopup = false; // Hide entry popup if exit popup is shown
-      if (repeat === false) {
-        if (localStorage.getItem('exitPopUp')) return;
-        localStorage.setItem('exitPopUp', 'true');
-      } else if (repeat === "page") {
-        let epData = JSON.parse(localStorage.getItem('exitPopUp') || '[]');
-        if (!epData.includes(window.location.href)) {
-          epData.push(window.location.href);
-          localStorage.setItem('exitPopUp', JSON.stringify(epData));
-        }
-      }
-      exitPopup = true;
-      document.removeEventListener("mouseout", showExitPopup); // Remove after triggering once if repeat is "page"
-    }
-  };
+    entryPopup = true
+  }
 
   onMount(() => {
-    if (typeof window !== 'undefined') {
-      if (trigger === "onEntry" || trigger === "onEntryExit") {
-        showEntryPopup();
-      }
-      if (trigger === "onExit" || trigger === "onEntryExit") {
-        document.addEventListener("mouseout", showExitPopup);
-      }
+    if (trigger === "onEntry" || trigger === "onEntryExit") {
+      showEntryPopup()
     }
-  });
 
-  onDestroy(() => {
-    if (typeof window !== 'undefined') {
-      document.removeEventListener("mouseout", showExitPopup);
+    if (trigger === "onExit" || trigger === "onEntryExit") {
+      const showExitPopup = (e: MouseEvent) => {
+        const target = e.target instanceof Element ? e.target : null
+        if (e.clientY < 50 && e.relatedTarget === null && target?.nodeName.toLowerCase() !== 'select') {
+          entryPopup = false
+          if (repeat === false) {
+            if (safeGetItem("exitPopUp")) {
+              document.removeEventListener("mouseout", showExitPopup)
+              return
+            }
+            safeSetItem("exitPopUp", "true")
+          } else if (repeat === "page") {
+            try {
+              const epData: string[] = JSON.parse(safeGetItem("exitPopUp") || "[]")
+              if (epData.includes(window.location.href)) {
+                document.removeEventListener("mouseout", showExitPopup)
+                return
+              }
+              epData.push(window.location.href)
+              safeSetItem("exitPopUp", JSON.stringify(epData))
+            } catch { /* corrupted data, proceed */ }
+          }
+          exitPopup = true
+          if (repeat !== true) {
+            document.removeEventListener("mouseout", showExitPopup)
+          }
+        }
+      }
+
+      document.addEventListener("mouseout", showExitPopup)
+      cleanupExitListener = () => document.removeEventListener("mouseout", showExitPopup)
+      return () => { cleanupExitListener?.() }
     }
-  });
+  })
 
-	let handleKeyboard = (e: KeyboardEvent) => {
+	const handleKeyboard = (e: KeyboardEvent) => {
 		if (e.code === "Escape"){
       e.preventDefault()
       entryPopup = false
@@ -89,19 +103,19 @@
     }
 	}
 
-  let handleBackdrop = () => {
-		if (staticBackdrop === false){
+  const handleBackdrop = () => {
+		if (!staticBackdrop){
       entryPopup = false
       exitPopup = false
     }
   }
 </script>
 
-<svelte:body on:keydown={(e)=>handleKeyboard(e)}></svelte:body>
+<svelte:body onkeydown={(e)=>handleKeyboard(e)}></svelte:body>
 
 {#if entryPopup || exitPopup}
-<div {...props} class="theui-popup z-500 fixed inset-0 overflow-y-hidden flex items-center justify-center" class:entry-popup={trigger == "onEntry"} class:exit-popup={trigger == "onExit"} role='dialog' aria-hidden={!entryPopup && !exitPopup}>
-  {#if backdrop && (entryPopup || exitPopup)}
+<div {...props} class="theui-popup z-500 fixed inset-0 overflow-y-hidden flex items-center justify-center" class:entry-popup={trigger === "onEntry"} class:exit-popup={trigger === "onExit"} role="dialog" aria-modal="true">
+  {#if backdrop}
     <div role="presentation" class={backdropClasses(backdrop)} onclick={()=>staticBackdrop ? false : handleBackdrop()}></div>
   {/if}
   <div class="popup-content overflow-y-auto relative {twMerge("bg-secondary max-w-3xl max-h-screen p-8", props?.class as string)} {roundedClass(rounded)}">

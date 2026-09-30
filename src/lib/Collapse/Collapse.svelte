@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { type Snippet } from "svelte"
   import type { ANIMATE_SPEED } from "$lib/types"
-	import { onMount, type Snippet } from "svelte"
-  import { animationClass, generateToken } from "$lib/function"
+  import { animationClass, generateToken, coreSpeed } from "$lib/function"
 
   interface Props {
     children: Snippet,
@@ -14,50 +14,44 @@
   let {
     children,
     trigger,
-    animationSpeed = "fast",
+    animationSpeed = coreSpeed("fast"),
     ariaLabel = "",
-    isOpen = false,
+    isOpen = $bindable(false),
   } : Props = $props();
   
   const id = generateToken()
-  let element: HTMLElement|null = $state(null)
+  let element: HTMLElement | null = $state(null)
+  let contentHeight = $state("")
 
   const openCollapse = () => {
-    if(animationSpeed){
-      (element as HTMLElement).style.height = (element as HTMLElement).scrollHeight + "px"
+    if (animationSpeed && animationSpeed !== "none") {
+      contentHeight = element?.scrollHeight + "px"
     }
     isOpen = true
   }
 
   const hideCollapse = () => {
-    if(animationSpeed) (element as HTMLElement).style.height = "0"
+    if (animationSpeed && animationSpeed !== "none") contentHeight = "0"
     isOpen = false
-    console.log(isOpen)
   }
 
-  let toggleCollapse = (): void => {
-    if(isOpen){
-      hideCollapse()
-    }else{
-      openCollapse()
-    }
-  }
+  const toggleCollapse = (): void => isOpen ? hideCollapse() : openCollapse()
+
+  // isOpen can also change from outside (bind:isOpen); keep the animated height in sync
+  $effect(() => {
+    if (!animationSpeed || animationSpeed === "none") return
+    if (isOpen && contentHeight === "0") contentHeight = element?.scrollHeight + "px"
+    else if (!isOpen && contentHeight !== "0") contentHeight = "0"
+  })
 
   let handleKeyboard = (e: KeyboardEvent) => {
-    e.preventDefault()
+    if (e.code === "Space") e.preventDefault()
     if(isOpen) {
-      if (e.code === "Escape" || e.code === "Space" || e.code === "Enter") {
-        hideCollapse()
-      }
-    }
-    else{
-      if(e.code === "Enter" || e.code === "Space") {
-        openCollapse()
-      }
+      if (e.code === "Escape" || e.code === "Enter" || e.code === "Space") hideCollapse()
+    } else {
+      if (e.code === "Enter" || e.code === "Space") openCollapse()
     }
   }
-
-  onMount(() => { element = document.getElementById(id)! })
 </script>
 
 {#if trigger}
@@ -69,7 +63,7 @@
 {/if}
 
 {#if children}
-<div {id} class="theui-collapse-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!isOpen} class:collapse-open={isOpen} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
+<div {id} bind:this={element} class="theui-collapse-body overflow-hidden {animationClass(animationSpeed)}" class:h-0={!isOpen} class:collapse-open={isOpen} style={animationSpeed && animationSpeed !== "none" ? `height: ${contentHeight}` : undefined} aria-labelledby="{id}Collapse" aria-hidden={!isOpen}>
   {@render children?.()}
 </div>
 {/if}

@@ -1,11 +1,14 @@
 <script lang="ts">
-  import { getContext, onMount, type Snippet } from "svelte"
-	import type { MOBILE_NAV_ON, RESPONSIVE_NAV_ON } from "$lib/types"
+  import { getContext, setContext, onMount, type Snippet } from "svelte"
+	import type { MOBILE_NAV_ON, RESPONSIVE_NAV_ON, NAV_CTX } from "$lib/types"
   import { twMerge } from "tailwind-merge"
   import { animationClass, roundedClass, generateToken } from "$lib/function"
   import { Svg } from "$lib"
 
-  const { config } = getContext('NAV') as any
+  const CTX: NAV_CTX = getContext('NAV')
+  // Inherits the navbar settings live and marks the links inside as dropdown links
+  const config: NAV_CTX['config'] = Object.create(CTX.config, { isDropdownLink: { value: true, enumerable: true } })
+  setContext('NAV', { id: CTX.id, config })
 
   interface Props {
     children?: Snippet,
@@ -24,19 +27,21 @@
     label,
     align = "start",
     width = "sm",
-    triggerEvent = config.triggerEvent,
+    triggerEvent = CTX.config.dropdownTriggerEvent,
     animation = "fade",
     arrowIcon = true,
     linkClasses,
     ...props
   } : Props = $props()
 
-  config.isDropdown = true
-  config.linkClasses = twMerge(config.linkClasses, linkClasses)
+  const effectiveLinkClasses = $derived(twMerge("gap-x-1 w-full justify-between flex items-center cursor-pointer", config.linkClasses, linkClasses))
+
   let dropdownContainer: HTMLElement
-  let dropdownMenu: HTMLElement
+  let menuElement: HTMLElement | null = $state(null)
+  let triggerElement: HTMLButtonElement | null = $state(null)
 
   const id: string = generateToken()
+  const menuId = `${id}-menu`
   let open: boolean = $state(false)
 
   const menuWidthClasses: Record<MOBILE_NAV_ON | 'nonRes', Record<MOBILE_NAV_ON | 'full', string>> = {
@@ -78,21 +83,18 @@
   }
 
   const topPositionClasses = () => {
-    const heightClassObj: Record<'sm' | 'md' | 'lg' | 'xl', String> = {
+    const heightClassObj: Record<'sm' | 'md' | 'lg' | 'xl', string> = {
       sm: "top-full",
       md: "top-full",
       lg: "top-[calc(100%_+_4px)]",
       xl: "top-[calc(100%_+_12px)]",
     }
 
-    return  typeof config.height === "string" ?
-            config.height in heightClassObj ?
-              heightClassObj[config.height as keyof typeof heightClassObj] :
-              config.height :
-            ""
+    // A custom height is a class for the navbar, not the menu, so it falls back to top-full
+    return heightClassObj[config.height as keyof typeof heightClassObj] ?? "top-full"
   }
 
-  const alignmentClasses: string = `${width != "full" ? (align=="end" ? "end-0" : "start-0") : ""}`
+  const alignmentClasses: string = $derived(`${width != "full" ? (align=="end" ? "end-0" : "start-0") : ""}`)
 
   const resCls = () => {
     const collapseClasses: RESPONSIVE_NAV_ON = {
@@ -109,7 +111,8 @@
       xl: "2xl:max-h-[80vh]",
     }
 
-    return `shadow-none hidden 
+    // Below the breakpoint the menu sits inside the mobile menu, so it is shown only while open
+    return `shadow-none ${open ? "flex" : "hidden"}
             ${collapseClasses[config.navBreakpoint as MOBILE_NAV_ON]}
             ${dropdownMaxHeight[config.navBreakpoint as MOBILE_NAV_ON]}
             ${menuWidthClasses[config?.navBreakpoint as MOBILE_NAV_ON || "md"][width]}`
@@ -117,24 +120,23 @@
 
   const memoizedResCls = $derived(resCls())
 
-  const nonResCls = `absolute pl-0 flex shadow-xl block w-80 max-h-[80vh] ${menuWidthClasses["nonRes"][width]}`
+  const nonResCls = $derived(`absolute pl-0 flex shadow-xl block max-h-[80vh] ${menuWidthClasses["nonRes"][width]}`)
 
-  const transformClasses: string = {
+  const transformClasses: string = $derived({
     "slide": "transform translate-y-8",
     "fade": "",
     "zoom": "transform scale-75",
-  }[animation ?? "fade"]
+  }[animation ?? "fade"])
 
-  const openTransformClasses: string = {
+  const openTransformClasses: string = $derived({
     "slide": "transform translate-y-0",
     "fade": "",
     "zoom": "transform scale-100",
-  }[animation ?? "fade"]
-
+  }[animation ?? "fade"])
 
   let dropdownClasses = $derived(
     `nav-dropdown flex-col py-2 bg-primary overflow-y-auto
-    ${config?.responsive ? memoizedResCls : nonResCls}
+    ${config?.responsive && config.navBreakpoint ? memoizedResCls : nonResCls}
     ${topPositionClasses()}
     ${alignmentClasses}
     ${roundedClass(config?.rounded)}
@@ -142,24 +144,37 @@
     ${config.animationSpeed != "none" ? twMerge(transformClasses, open && openTransformClasses) : ""}`
   )
 
-  let handleClick = $derived(() => {
+  let handleClick = () => {
     if(triggerEvent !== "hover"){
       open = !open
     }
-  })
+  }
+
+  let hoverTimer: ReturnType<typeof setTimeout>
 
   let handleHover = (e: Event) => {
     if(triggerEvent === "hover"){
       e.stopPropagation()
-      if (e.type === "mouseenter" || e.type === "focus" || e.type === "touchstart") {
+      if (e.type === "mouseenter" || e.type === "touchstart") {
         open = true
-      } else if (e.type === "mouseleave" || e.type === "touchend") {
-        setTimeout(() => open = false, 200)
       }
+    }
+    clearTimeout(hoverTimer)
+    // Only the pointer leaving closes it: on touch, `touchend` comes right after the tap that opened it
+    if (e.type === "mouseleave") {
+      hoverTimer = setTimeout(() => open = false, 200)
     }
 	}
 
   let handleKeyboard = (e: KeyboardEvent) => {
+    // Keys pressed on a link belong to that link, so Enter and Space keep working
+    if (menuElement && e.target instanceof Node && menuElement.contains(e.target)) {
+      if (e.code === "Escape") {
+        open = false
+        triggerElement?.focus()
+      }
+      return
+    }
     switch(e.code) {
       case "Escape":
       case "ArrowUp":
@@ -185,7 +200,10 @@
       }
     }
     document.addEventListener('click', handleClickOutside)
-    return () => document.removeEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+      clearTimeout(hoverTimer)
+    }
   })
 </script>
 
@@ -199,17 +217,17 @@
       onkeydown={handleKeyboard}
       onclick={handleClick}
 >
-  <button class="theui-nav-dropdown-btn gap-x-1 w-full justify-between flex items-center cursor-pointer {config.linkClasses}"
-    aria-haspopup="true" aria-expanded={open} type="button">
+  <button bind:this={triggerElement} class="theui-nav-dropdown-btn {effectiveLinkClasses}"
+    aria-expanded={open} aria-controls={menuId} type="button">
     {#if label}
       {#if typeof label == "function"}
         {@render label()}
       {:else}
-        {@html label}
+        {label}
       {/if}
     {/if}
 
-    {#if arrowIcon} 
+    {#if arrowIcon}
       {#if arrowIcon === true}
         <Svg class="transition-transform duration-200 {open ? 'rotate-180' : ''}" stroke={true} viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></Svg>
       {:else}
@@ -218,9 +236,8 @@
     {/if}
   </button>
 
-  <div  bind:this={dropdownMenu} class="theui-nav-dropdown {twMerge(dropdownClasses, props?.class as string)}"
-        class:invisible={!open} class:opacity-0={!open}
-        role="menu" tabindex="-1">
+  <div bind:this={menuElement} id={menuId} class="theui-nav-dropdown {twMerge(dropdownClasses, props?.class as string)}"
+        class:invisible={!open} class:opacity-0={!open}>
     {@render children?.()}
   </div>
 </div>

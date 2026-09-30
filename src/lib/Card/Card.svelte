@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from "svelte"
-	import type { ROUNDED, ROUNDED_SIDES, SHADOW, CARD_IMAGE_TYPE } from "$lib/types"
-	import { backdropClasses, roundedClass, shadowClass, generateToken } from "$lib/function"
 	import { twMerge } from "tailwind-merge"
+	import type { ROUNDED, ROUNDED_SIDES, SHADOW, CARD_IMAGE_TYPE } from "$lib/types"
+	import { backdropClasses, roundedClass, shadowClass, generateToken, coreShadow } from "$lib/function"
 
   interface Props {
     children?: Snippet,
@@ -14,7 +14,9 @@
     contentClasses?: string,
     titleClasses?: string,
     imageOverlay?: boolean | string,
-    [key: string]: unknown
+    // Puts the image beside the content instead of above it
+    horizontal?: boolean,
+    [key: string]: unknown // class, id, data-*
   }
 
   let {
@@ -22,28 +24,31 @@
     title,
     rounded = "md",
     topImage,
-    shadow = "md",
+    shadow = coreShadow(),
     bottomImage,
     contentClasses = "",
     titleClasses = "",
     imageOverlay = false,
+    horizontal = false,
     ...props
   }: Props = $props()
 
-  let id: string = generateToken()
+  // Generated once, so the id stays the same when another attribute changes
+  const fallbackId: string = generateToken()
+  const id: string = $derived(typeof props?.id === "string" ? props.id : fallbackId)
 
-  let cardContainerClasses = `${!props?.horizontal?"flex-col":"justify-between"}${roundedClass(rounded)}${shadowClass(shadow)}`;
-  let cardContentClasses = `flex flex-col gap-4 p-4 ${imageOverlay ? `absolute inset-0 text-white z-[0]` : ""}`
-  let imgClasses = (side: ROUNDED_SIDES) => `block w-full ${props?.horizontal && !imageOverlay ?"max-w-[30%]":""}${roundedClass(rounded, imageOverlay ? "all" : side)}`
+  let cardContainerClasses = $derived(`${!horizontal?"flex-col":"justify-between"}${roundedClass(rounded)}${shadowClass(shadow)}`);
+  let cardContentClasses = $derived(`flex flex-col gap-4 p-4 ${imageOverlay ? `absolute inset-0 text-white z-[0]` : ""}`)
+  let imgClasses = $derived((side: ROUNDED_SIDES) => `block w-full ${horizontal && !imageOverlay ?"max-w-[30%]":""}${roundedClass(rounded, imageOverlay ? "all" : side)}`)
 </script>
 
-<div {id} class="card relative {twMerge("flex bg-primary", props?.class as string)} {cardContainerClasses}" aria-labelledby={title && typeof title === "string" ? {id}+"-title" : {id}+"-content"}>
+<div {...props} {id} class="card relative {twMerge("flex bg-primary", props?.class as string)} {cardContainerClasses}">
 
   {#if topImage}
     {#if typeof topImage === "function"}
       {@render topImage?.()}
     {:else if topImage.src}
-      <img class={twMerge(imgClasses(props?.horizontal?"start":"top"), topImage?.class as string)} src={topImage?.src} alt={topImage?.alt}>
+      <img class={twMerge(imgClasses(horizontal?"start":"top"), topImage?.class as string)} src={topImage?.src} alt={topImage?.alt}>
     {/if}
   {/if}
  
@@ -53,7 +58,9 @@
     {/if}
     {#if title}
       {#if typeof title === "string"}
-          <h4 id="{id}-title" class={twMerge("text-xl font-semibold", titleClasses)}>{@html title}</h4>
+          <h4 id="{id}-title" class={twMerge("text-xl font-semibold", titleClasses)}>
+            {title}
+          </h4>
           {:else}
           {@render title?.()}
         {/if}
@@ -65,7 +72,7 @@
     {#if typeof bottomImage === "function"}
       {@render bottomImage?.()}
     {:else if bottomImage.src}
-      <img class={twMerge(imgClasses(props?.horizontal?"end":"bottom"), bottomImage?.class as string)} src={bottomImage?.src} alt={bottomImage?.alt}>
+      <img class={twMerge(imgClasses(horizontal?"end":"bottom"), bottomImage?.class as string)} src={bottomImage?.src} alt={bottomImage?.alt}>
     {/if}
   {/if}
 

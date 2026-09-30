@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { ROUNDED } from "$lib/types"
 	import type { Snippet } from "svelte"
 	import { twMerge } from "tailwind-merge"
+	import type { ROUNDED } from "$lib/types"
 	import { roundedClass, generateToken, messageTheme, messageBarTheme } from "$lib/function"
 	import { Close, Svg } from "$lib"
 
@@ -11,7 +11,12 @@
 		type ?: 'error' | 'info' | 'success' | 'warning',
 		theme ? : 'default'|'soft',
 		variant ?: 'card' | 'borderTop'| 'borderBottom'| 'borderStart',
-    [key: string]: unknown // dismissible, icon
+		role?: string,
+		// Shows a close button
+		dismissible ?: boolean,
+		// Shows the icon that matches the type
+		icon ?: boolean,
+	    [key: string]: unknown // class, id, data-*
 	}
 
 	let {
@@ -20,45 +25,52 @@
 		type = "error",
 		theme = "default",
 		variant = "card",
+		role = "alert",
+		dismissible = false,
+		icon = false,
 		...props
 	} : Props = $props()
+
+	// Generated once, so the id stays the same when another attribute changes
+	const fallbackId: string = generateToken()
+	const id: string = $derived(typeof props?.id === "string" ? props.id : fallbackId)
 	
-	let nodeRef: HTMLDivElement
-	const id = generateToken()
-
-	let getClass = () => {
+	let alertClass = $derived(() => {
 		let baseClass = `theui-alert flex items-center p-4 mb-4 gap-4 text-sm font-medium dark:font-normal ${messageTheme[theme][type]}`
-		const variantClasses = {
-			card: roundedClass(rounded),
-			borderTop: `${roundedClass(rounded, "bottom")} ${messageBarTheme[theme][type]} border-t-4`,
-			borderBottom: `${roundedClass(rounded, "top")} ${messageBarTheme[theme][type]} border-b-4`,
-			borderStart: `${roundedClass(rounded)} ${messageBarTheme[theme][type]} border-s-4`
-		}
-		const variantClass = variantClasses[variant] || ""
+		const variantClass = (() => {
+			switch (variant) {
+				case "card":       return roundedClass(rounded);
+				case "borderTop":   return `${roundedClass(rounded, "bottom")} ${messageBarTheme[theme][type]} border-t-4`;
+				case "borderBottom": return `${roundedClass(rounded, "top")} ${messageBarTheme[theme][type]} border-b-4`;
+				case "borderStart": return `${roundedClass(rounded)} ${messageBarTheme[theme][type]} border-s-4`;
+				default:           return "";
+			}
+		})();
 		return twMerge(`${baseClass} ${variantClass}`, props?.class as string);
-	}
+	})
 
-	const toggleAlert = () => {
-		nodeRef.parentNode?.removeChild(nodeRef)
-	}
+	let visible = $state(true)
+	const toggleAlert = () => { visible = false }
 </script>
 
-<div {id} class={getClass()} role="alert" bind:this={nodeRef}>
-	<!-- Alert Icon -->
-	{#if props?.icon && ["error", "info", "success", "warning"].includes(type)}
-		{@render commonIcons()}
-	{/if}
+{#if visible}
+	<div {...props} {id} class={alertClass()} {role}>
+		<!-- Alert Icon -->
+		{#if icon}
+			{@render commonIcons()}
+		{/if}
 
-	<!-- Alert children -->
-	{@render children?.()}
+		<!-- Alert children -->
+		{@render children?.()}
 
-	<!-- Alert Close Button -->
-	{#if props?.dismissible}
-		<div class="ms-auto mb-auto">
-			<Close ariaLabel="Close alert" onclick={()=>toggleAlert()} />
-		</div>
-	{/if}
-</div>
+		<!-- Alert Close Button -->
+		{#if dismissible}
+			<div class="ms-auto mb-auto">
+				<Close ariaLabel="Close alert" onclick={()=>toggleAlert()} />
+			</div>
+		{/if}
+	</div>
+{/if}
 
 <!-- Component Snippet -->
 {#snippet commonIcons()}

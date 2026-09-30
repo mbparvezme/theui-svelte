@@ -1,322 +1,212 @@
-import { generateToken } from "$lib/function";
-import { twMerge } from "tailwind-merge";
+import { twMerge } from "tailwind-merge"
+import type { SLIDER_BREAKPOINT, SLIDER_EFFECT, SLIDER_RESPONSIVE } from "$lib/types"
 
-export interface SliderConfig {
-  autoPlay: boolean;
-  stopOnHover: boolean;
-  slideDuration: number;
-  transitionDuration: number;
-  activeSlide: number;
-  indicatorClasses: string;
-  indicatorActiveClasses: string;
+// ---------------------------------------------------------------- Numbers
+
+// Remainder that is never negative, for positions that wrap around
+export const mod = (n: number, m: number) => ((n % m) + m) % m
+
+export const clamp = (n: number, min: number, max: number) => Math.min(max, Math.max(min, n))
+
+// Ease in and out, for moves between slides
+export const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+
+export const cssLength = (value: number | string) => typeof value === "number" ? `${value}px` : value
+
+export const isZeroLength = (value: string) => /^0([a-z%]*)$/i.test(value.trim())
+
+// ---------------------------------------------------------------- Screen size
+
+// Tailwind's default breakpoints
+export const BREAKPOINTS: [Exclude<SLIDER_BREAKPOINT, "base">, string][] = [
+  ["sm", "40rem"], ["md", "48rem"], ["lg", "64rem"], ["xl", "80rem"], ["2xl", "96rem"]
+]
+
+// The value for the current screen: the largest matching breakpoint, then base
+export const pickResponsive = <T>(value: SLIDER_RESPONSIVE<T>, fallback: T, screens: string[]): T => {
+  if (value === null || typeof value !== "object") return value as T
+  const values = value as Partial<Record<SLIDER_BREAKPOINT, T>>
+  let result = values.base ?? fallback
+  for (const [name] of BREAKPOINTS) {
+    if (screens.includes(name) && values[name] !== undefined) result = values[name] as T
+  }
+  return result
 }
 
-export class Slider {
-  config: SliderConfig;
-  autoPlayInterval!: ReturnType<typeof setInterval>;
-  id: string = generateToken();
-  isTransitioning: boolean = false; // To track if a transition is in progress
+// ---------------------------------------------------------------- Layout
 
-  SLIDERS: Record<string, {
-    slides: HTMLElement[],
-    activeSlide: HTMLElement | null,
-    previousSlide: string | null,
-    nextSlide: string | null
-  }> = {};
-
-  private indicatorClasses: string =
-    "w-8 h-4 bg-white bg-clip-padding flex border-y-[7px] border-transparent opacity-50 rounded-sm transition duration-1000 focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:outline-none rounded-sm";
-  private remainingTime: number = 0;
-  private isHovered: boolean = false;
-  private pendingTimeout: ReturnType<typeof setTimeout> | null = null;
-
-  constructor(config: Partial<SliderConfig>) {
-    const defaultConfig: SliderConfig = {
-      autoPlay: true,
-      stopOnHover: true,
-      slideDuration: 5000,
-      transitionDuration: 300,
-      activeSlide: 1,
-      indicatorClasses: "",
-      indicatorActiveClasses: "",
-    };
-    this.config = { ...defaultConfig, ...config };
-    this.SLIDERS[this.id] = {
-      slides: [],
-      activeSlide: null,
-      previousSlide: null,
-      nextSlide: null
-    }
-  }
-
-  cloneSlides() {
-    const itemsContainer = document.getElementById(`${this.id}-items`);
-    if (!itemsContainer) return;
-
-    const slides = Array.from(itemsContainer.children);
-    if (!slides.length || itemsContainer.querySelector("[data-clone]")) return;
-
-    const firstSlide = slides[0];
-    const lastSlide = slides[slides.length - 1];
-    const firstClone = firstSlide.cloneNode(true) as HTMLElement;
-    const lastClone = lastSlide.cloneNode(true) as HTMLElement;
-
-    firstClone.setAttribute("data-clone", "true");
-    lastClone.setAttribute("data-clone", "true");
-
-    itemsContainer.appendChild(firstClone);
-    itemsContainer.insertBefore(lastClone, firstSlide);
-    this.SLIDERS[this.id].slides = [lastClone, ...(slides as HTMLElement[]), firstClone];
-  }
-
-  // Update the changeSlide function to ensure indicator stays in sync
-  changeSlide(updateType: "next" | "prev") {
-    if (this.isTransitioning) return;
-    this.isTransitioning = true;
-
-    const newIndex = this.calculateNextSlideIndex(updateType);
-    const indicatorIndex = this.calculateNextIndicatorIndex(newIndex);
-    this.updateActiveIndicator(indicatorIndex);
-    this.SLIDERS[this.id].activeSlide = this.SLIDERS[this.id].slides[newIndex];
-    this.slideTransition();
-
-    if (this.config.autoPlay && !this.isHovered) {
-      this.startTimerAnimation();
-    }
-  }
-
-  slideTransition() {
-    const track = document.getElementById(`${this.id}-items`);
-    const slides = this.SLIDERS[this.id].slides;
-    const totalSlides = slides.length;
-    const slideIndex = slides.indexOf(this.SLIDERS[this.id].activeSlide as HTMLElement);
-
-    if (track) {
-      const translateValue = -slideIndex * track.clientWidth;
-      track.style.transform = `translateX(${translateValue}px)`;
-      track.style.transition = `transform ${this.config.transitionDuration}ms ease`;
-
-      this.addTransitionListener(track, () => {
-        if (slideIndex === 0) {
-          this.SLIDERS[this.id].activeSlide = slides[totalSlides - 2];
-          this.updateTrackPosition();
-        } else if (slideIndex === totalSlides - 1) {
-          this.SLIDERS[this.id].activeSlide = slides[1];
-          this.updateTrackPosition();
-        }
-        this.isTransitioning = false; // Reset transitioning flag
-      });
-    }
-  }
-
-  addTransitionListener(track: HTMLElement, callback: () => void) {
-    const handler = () => {
-      callback();
-      track.removeEventListener("transitionend", handler);
-    };
-    track.addEventListener("transitionend", handler);
-  }
-
-  calculateNextSlideIndex(updateType: "next" | "prev") {
-    const totalSlides = this.SLIDERS[this.id].slides.length;
-    const currentSlideIndex = this.SLIDERS[this.id].slides.indexOf(
-      this.SLIDERS[this.id].activeSlide as HTMLElement
-    );
-    return updateType === "next"
-      ? (currentSlideIndex + 1) % totalSlides
-      : (currentSlideIndex - 1 + totalSlides) % totalSlides;
-  }
-
-  calculateNextIndicatorIndex(newIndex: number) {
-    const totalSlides = this.SLIDERS[this.id].slides.length - 2;
-    return newIndex === 0
-      ? totalSlides - 1
-      : newIndex === this.SLIDERS[this.id].slides.length - 1
-        ? 0
-        : newIndex - 1;
-  }
-
-  updateTrackPosition() {
-    const track = document.getElementById(`${this.id}-items`);
-    const slides = this.SLIDERS[this.id].slides;
-    const slideIndex = slides.indexOf(this.SLIDERS[this.id].activeSlide as HTMLElement);
-    if (track) {
-      const translateValue = -slideIndex * track.clientWidth;
-      track.style.transform = `translateX(${translateValue}px)`;
-      track.style.transition = "none";
-    }
-  }
-
-  handleMouseEnter() {
-    if (this.config.stopOnHover && this.config.autoPlay) {
-      // Clear any pending timeout first
-      if (this.pendingTimeout) {
-        clearTimeout(this.pendingTimeout);
-        this.pendingTimeout = null;
-      }
-
-      this.isHovered = true;
-      this.stopAutoPlay();
-      this.stopTimerAnimation();
-
-      // Calculate remaining time based on current progress
-      const timerElement = document.getElementById(`${this.id}-timer`);
-      if (timerElement) {
-        const computedWidth = parseFloat(window.getComputedStyle(timerElement).width);
-        const containerWidth = parseFloat(window.getComputedStyle(timerElement.parentElement!).width);
-        this.remainingTime = this.config.slideDuration - (computedWidth / containerWidth * this.config.slideDuration);
-      }
-    }
-  }
-
-  handleMouseLeave() {
-    if (this.config.stopOnHover && this.config.autoPlay) {
-      this.isHovered = false;
-      this.startAutoPlayWithRemainingTime();
-      this.startTimerAnimationWithRemainingTime();
-    }
-  }
-
-  private startAutoPlayWithRemainingTime() {
-    this.stopAutoPlay();
-
-    // Clear any existing timeout first
-    if (this.pendingTimeout) {
-      clearTimeout(this.pendingTimeout);
-    }
-
-    // Store the new timeout reference
-    this.pendingTimeout = setTimeout(() => {
-      if (!this.isHovered) {
-        this.changeSlide("next");
-        this.startAutoPlay(); // Resume normal intervals
-      }
-      this.pendingTimeout = null;
-    }, this.remainingTime);
-  }
-
-  private startTimerAnimationWithRemainingTime() {
-    const timerElement = document.getElementById(`${this.id}-timer`);
-    if (!timerElement) return;
-
-    // Calculate the starting width based on remaining time
-    const progress = 1 - (this.remainingTime / this.config.slideDuration);
-    const startingWidth = `${progress * 100}%`;
-
-    timerElement.style.transition = "none";
-    timerElement.style.width = startingWidth;
-
-    void timerElement.offsetWidth; // Force reflow
-
-    timerElement.style.transition = `width ${this.remainingTime}ms linear`;
-    timerElement.style.width = "100%";
-
-    // Reset remaining time for next cycle
-    this.remainingTime = 0;
-  }
-
-  startAutoPlay() {
-    this.autoPlayInterval = setInterval(
-      () => this.changeSlide("next"),
-      this.config.slideDuration
-    );
-  }
-
-  stopAutoPlay() {
-    clearInterval(this.autoPlayInterval);
-  }
-
-  createIndicator() {
-    const itemsContainer = document.getElementById(`${this.id}-items`);
-    if (itemsContainer) {
-      const slides = Array.from(itemsContainer.children);
-      if (slides.length) {
-        const indicatorContainer = document.getElementById(
-          `${this.id}-indicators`
-        );
-        if (indicatorContainer) {
-          for (let i = 0; i < slides.length; i++) {
-            const button = document.createElement("button");
-            button.className = `slide-indicator ${twMerge(
-              this.indicatorClasses,
-              this.config.indicatorClasses
-            )}`;
-            button.type = "button";
-            button.setAttribute("aria-label", `Go to slide ${i + 1}`);
-            button.addEventListener("click", () =>
-              this.changeSlideByIndicator(i)
-            );
-            indicatorContainer.appendChild(button);
-          }
-        }
-      }
-    }
-  }
-
-  changeSlideByIndicator(index: number) {
-    if (this.isTransitioning) return; // Prevent multiple transitions
-    this.updateActiveIndicator(index);
-    this.SLIDERS[this.id].activeSlide = this.SLIDERS[this.id].slides[index + 1];
-    this.slideTransition();
-  }
-
-  updateActiveIndicator(index: number) {
-    const indicatorContainer = document.getElementById(`${this.id}-indicators`);
-    if (!indicatorContainer) return;
-
-    const buttons = indicatorContainer.querySelectorAll<HTMLButtonElement>(
-      ".slide-indicator"
-    );
-
-    buttons.forEach((button, i) => {
-      button.className = `slide-indicator ${twMerge(
-        this.indicatorClasses,
-        this.config.indicatorClasses,
-        i === index
-          ? twMerge("opacity-100", this.config.indicatorActiveClasses)
-          : "opacity-50"
-      )}`;
-    });
-  }
-
-  startTimerAnimation() {
-    const timerElement = document.getElementById(`${this.id}-timer`);
-    if (!timerElement) return;
-
-    timerElement.style.transition = "none";
-    timerElement.style.width = "0";
-
-    void timerElement.offsetWidth;
-
-    timerElement.style.transition = `width ${this.config.slideDuration}ms linear`;
-    timerElement.style.width = "100%";
-  }
-
-  stopTimerAnimation() {
-    const timerElement = document.getElementById(`${this.id}-timer`);
-    if (timerElement) {
-      timerElement.style.width = window.getComputedStyle(timerElement).width;
-      timerElement.style.transition = "none";
-    }
-  }
-
-  getButtonClasses(classes: string, type: "prev" | "next") {
-    return twMerge(
-      `absolute flex justify-center items-center top-1/2 transform -translate-y-1/2 bg-gray-200 dark:text-black opacity-60 p-2 w-12 h-12 rounded-full transition-opacity duration-300 hover:opacity-100 ${type === "next" ? "right-4" : "left-4"
-      }`,
-      classes
-    );
-  }
-
-  getIndicatorContainerClasses(classes: string) {
-    return twMerge("bottom-0 inset-x-0 flex justify-center gap-2 mb-4", classes);
-  }
-
-  destroy() {
-    this.stopAutoPlay();
-    this.stopTimerAnimation();
-    if (this.pendingTimeout) {
-      clearTimeout(this.pendingTimeout);
-    }
-  }
+export type SLIDER_LAYOUT = {
+  effect: SLIDER_EFFECT,
+  vertical: boolean,
+  rtl: boolean,
+  total: number,
+  // Slides in view at once
+  view: number,
+  // Slots the slides move by so the active slides sit in the middle
+  centerShift: number,
+  // 1 when the neighbors peek in at the edges
+  peekSlots: number,
+  looping: boolean,
+  // Size of the slides area in pixels, for the depth of the cube
+  width: number,
+  height: number
 }
+
+// Slides that can be seen at the same time during a move
+export const slideSpan = (view: number, peekSlots: number) => view + 1 + 2 * peekSlots
+
+// Distance of a slide from the current position, in slides
+export const slideOffset = (i: number, pos: number, layout: SLIDER_LAYOUT) => {
+  const { total, view, centerShift, peekSlots, looping } = layout
+  if (!looping) return i - pos
+  // Every slide is placed once inside a window of `total` slots that starts at the first
+  // slot in view, so the slides that wrap around are always out of view when they jump.
+  const firstInView = Math.floor(pos - centerShift - 1 - peekSlots) + 1
+  const first = firstInView - Math.floor((total - slideSpan(view, peekSlots)) / 2)
+  return first + mod(i - first, total) - pos
+}
+
+// Where a slide is painted, and whether it can be seen and reached, for its offset
+export const slidePlacement = (rawOffset: number, layout: SLIDER_LAYOUT) => {
+  const { effect, vertical, rtl, view, centerShift, peekSlots, width, height } = layout
+  const offset = Math.round(rawOffset * 10000) / 10000
+  const distance = Math.abs(offset)
+  // Place among the slots in view: 0 is the first full slot
+  const slot = offset + centerShift
+  // Moving forward is to the left, or to the right in a right-to-left page
+  const dir = vertical || !rtl ? 1 : -1
+
+  let visible: boolean
+  let current: boolean
+  let style: string
+
+  if (effect === "slide") {
+    visible = slot > -1 - peekSlots + 0.001 && slot < view + peekSlots - 0.001
+    current = slot > -0.01 && slot < view - 0.99
+    const size = `calc((100% - 2 * var(--theui-slider-peek) - ${view - 1} * var(--theui-slider-gap)) / ${view})`
+    const shift = `calc(${dir} * var(--theui-slider-peek) + ${slot * dir} * (100% + var(--theui-slider-gap)))`
+    style = vertical
+      ? `height:${size};min-height:0;transform:translate3d(0,${shift},0);`
+      : `width:${size};transform:translate3d(${shift},0,0);`
+  } else {
+    // Every other effect stacks the slides in one place, with the nearest slide on top
+    visible = distance < 0.999
+    current = distance < 0.5
+    style = `z-index:${distance < 0.5 ? 1 : 0};`
+    if (effect === "fade") {
+      style += `opacity:${1 - distance};`
+    } else if (effect === "zoom") {
+      // The incoming slide grows from 80%, the outgoing one grows past 100% while it fades
+      style += `opacity:${1 - distance};transform:scale(${1 - offset * 0.2});`
+    } else if (effect === "flip") {
+      // Each slide shows its front for half of the turn only
+      visible = distance < 0.5
+      const turn = vertical ? `rotateX(${offset * 180}deg)` : `rotateY(${-offset * 180 * dir}deg)`
+      style += `backface-visibility:hidden;transform:perspective(1200px) ${turn};`
+    } else if (effect === "cube") {
+      // The slides are the sides of a cube that turns around its center
+      const depth = (vertical ? height : width) / 2
+      const turn = vertical ? `rotateX(${-offset * 90}deg)` : `rotateY(${offset * 90 * dir}deg)`
+      style += `backface-visibility:hidden;transform:perspective(${Math.max(1200, depth * 4)}px) translateZ(${-depth}px) ${turn} translateZ(${depth}px);`
+    }
+  }
+
+  if (!visible) style += "visibility:hidden;"
+
+  // The slides fully in view stay still; only the slides at the edges move
+  const edge = effect !== "slide" ? offset
+    : slot < 0 ? slot
+    : slot > view - 1 ? slot - (view - 1)
+    : 0
+
+  return { visible, current, style, parallax: clamp(edge, -1, 1) }
+}
+
+// ---------------------------------------------------------------- Navigation
+
+// Signed distance from the target to a slide, the shorter way round
+export const loopDistance = (i: number, target: number, total: number) => {
+  let distance = mod(i - mod(target, total), total)
+  if (distance > total / 2) distance -= total
+  return distance
+}
+
+// Pixels one slide move takes, with the gap and the peek of the slides area
+export const dragStep = (size: number, gapPx: number, peekPx: number, view: number) => {
+  const step = (size - 2 * peekPx - (view - 1) * gapPx) / view + gapPx
+  return step > 0 ? step : size
+}
+
+// Where a released drag lands: 15% of a slide is enough to move to the next one
+export const dragLanding = (pos: number, from: number) =>
+  pos > from ? Math.floor(pos + 0.85) : Math.ceil(pos - 0.85)
+
+// Pulls back a drag past the first or last slide
+export const resistEdges = (pos: number, last: number) =>
+  pos < 0 ? pos / 3 : pos > last ? last + (pos - last) / 3 : pos
+
+// ---------------------------------------------------------------- Classes
+
+const focusRing = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+
+export const rootClasses = (vertical: boolean, classes: string) =>
+  twMerge("theui-slider relative flex flex-col w-full", vertical && "h-96", classes)
+
+export const slidesClasses = (vertical: boolean, swipe: boolean, dragging: boolean) => twMerge(
+  "theui-slider-slides grid grid-cols-1 grid-rows-[minmax(0,1fr)] size-full overflow-hidden",
+  swipe && (vertical ? "touch-pan-x" : "touch-pan-y"),
+  dragging && "select-none"
+)
+
+export const controlClasses = (type: "prev" | "next", vertical: boolean, classes: string) => twMerge(
+  `theui-slider-control absolute z-[2] flex items-center justify-center size-12 p-2 rounded-full bg-gray-200 text-black opacity-60 cursor-pointer transition-opacity duration-300 enabled:hover:opacity-100 disabled:opacity-25 disabled:cursor-not-allowed ${focusRing}`,
+  vertical
+    ? `left-1/2 -translate-x-1/2 ${type === "prev" ? "top-4" : "bottom-4"}`
+    : `top-1/2 -translate-y-1/2 ${type === "prev" ? "start-4" : "end-4"}`,
+  classes
+)
+
+export const indicatorContainerClasses = (vertical: boolean, classes: string) => twMerge(
+  "theui-slider-indicators absolute z-[2] flex justify-center gap-2 pointer-events-none",
+  vertical ? "inset-y-0 end-0 me-4 flex-col" : "inset-x-0 bottom-0 mb-4",
+  classes
+)
+
+export const indicatorClasses = (active: boolean, vertical: boolean, classes: string, activeClasses: string) => twMerge(
+  `theui-slider-indicator bg-white bg-clip-padding border-transparent rounded-sm cursor-pointer pointer-events-auto transition-opacity duration-300 ${focusRing}`,
+  vertical ? "w-4 h-8 border-x-[7px]" : "w-8 h-4 border-y-[7px]",
+  active ? "opacity-100" : "opacity-50 hover:opacity-80",
+  classes,
+  active && activeClasses
+)
+
+export const thumbnailContainerClasses = (classes: string) =>
+  twMerge("theui-slider-thumbnails flex gap-2 p-1 mt-2 overflow-x-auto shrink-0", classes)
+
+export const thumbnailClasses = (active: boolean, classes: string, activeClasses: string) => twMerge(
+  "theui-slider-thumbnail shrink-0 flex items-center justify-center w-20 h-14 overflow-hidden rounded-md bg-gray-200 text-black cursor-pointer transition-opacity duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500",
+  active ? "opacity-100 ring-2 ring-brand-500" : "opacity-60 hover:opacity-90",
+  classes,
+  active && activeClasses
+)
+
+export const timerClasses = (classes: string) => twMerge(
+  "theui-slider-timer absolute top-0 inset-x-0 z-[2] h-1 bg-gray-500 mix-blend-difference opacity-70 pointer-events-none origin-left rtl:origin-right",
+  classes
+)
+
+export const fractionClasses = (classes: string) => twMerge(
+  "theui-slider-fraction absolute top-3 end-3 z-[2] px-2 py-0.5 rounded-md bg-black/50 text-white text-sm tabular-nums pointer-events-none",
+  classes
+)
+
+export const pauseButtonClasses = (classes: string) => twMerge(
+  `theui-slider-pause absolute bottom-4 start-4 z-[2] flex items-center justify-center size-8 rounded-full bg-gray-200 text-black opacity-60 cursor-pointer transition-opacity duration-300 hover:opacity-100 ${focusRing}`,
+  classes
+)
+
+// The overlay lets drags and clicks through to the slides, except on its own links, buttons and fields
+export const overlayClasses = (classes: string) => twMerge(
+  "theui-slider-overlay absolute inset-0 z-[1] pointer-events-none [&_a,&_button,&_input,&_select,&_textarea,&_label]:pointer-events-auto",
+  classes
+)
