@@ -265,7 +265,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for the conventions the library follows
 
 ## **Copyright**
 
-The code and documentation are copyright 2023 by [M B Parvez](https://www.mbparvez.me), [Gosoft](https://www.gosoft.io) and [The UI](https://www.theui.dev).
+The code and documentation are copyright 2023 by [M B Parvez](https://www.mbparvez.me), [GOSOFT](https://www.gosoft.pro) and [The UI](https://www.theui.dev).
 
 <br>
 
@@ -285,4 +285,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 <h2 style="border:0;margin-bottom:0">
 
-**Special Thanks To [Gosoft.io](https://www.gosoft.io) and [BIPBY Digital](https://www.bipby.digital) for being our digital partner**</h2>
+**Special Thanks To [GOSOFT](https://www.gosoft.pro) and [BIPBY Digital](https://www.bipby.digital) for being our digital partner**</h2>
