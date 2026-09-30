@@ -1,6 +1,7 @@
 <h1 align="center">Svelte 5 Component Library by TheUI</h1>
 <div align="center">
 
+  [![CI](https://img.shields.io/github/actions/workflow/status/mbparvezme/theui-svelte/ci.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=black&label=build&labelColor=EFF6FF)](https://github.com/mbparvezme/theui-svelte/actions/workflows/ci.yml)
   [![npm version](https://img.shields.io/npm/v/theui-svelte?style=for-the-badge&logo=npm&logoColor=red&color=red&labelColor=FFEFEF)](https://www.npmjs.com/package/theui-svelte)
   [![NPM Downloads](https://img.shields.io/npm/d18m/theui-svelte?style=for-the-badge&&labelColor=EFFFEF)](https://www.npmjs.com/package/theui-svelte)
   [![GitHub issues](https://img.shields.io/github/issues/mbparvezme/theui-svelte?style=for-the-badge&logo=github&logoColor=black&color=orange&labelColor=FFF5E8)](https://github.com/mbparvezme/theui-svelte/issues)

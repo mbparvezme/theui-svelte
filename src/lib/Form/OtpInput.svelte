@@ -49,6 +49,8 @@
     ...props
   }: Props & INPUT_CONFIG = $props()
 
+  // One character per box, so the shared horizontal padding is dropped below. At md it is
+  // px-4 on a w-10 box, which leaves almost nothing for the digit and crops what you type.
   const WIDTHS: Record<INPUT_SIZE, string> = {
     sm: "w-8",
     md: "w-10",
@@ -172,14 +174,14 @@
         value={digits[i] ?? ""}
         autofocus={autofocus && i === 0}
         aria-label={boxLabel(i, count)}
-        class={twMerge(inputClasses(C, props), `theui-otp-box text-center ${WIDTHS[size as INPUT_SIZE] ?? WIDTHS.md}`, boxClasses)}
+        class={twMerge(inputClasses(C, props), `theui-otp-box px-0 text-center ${WIDTHS[size as INPUT_SIZE] ?? WIDTHS.md}`, boxClasses)}
         oninput={(e) => onInput(i, e)}
         onkeydown={(e) => onKeydown(i, e)}
         onpaste={(e) => onPaste(i, e)}
         onfocus={(e) => (e.currentTarget as HTMLInputElement).select()}
       />
       {#if separatorAfter && i === separatorAfter - 1 && i < count - 1}
-        <span class="theui-otp-separator select-none text-muted" aria-hidden="true">–</span>
+        <span class="theui-otp-separator select-none text-muted" aria-hidden="true">-</span>
       {/if}
     {/each}
   </div>

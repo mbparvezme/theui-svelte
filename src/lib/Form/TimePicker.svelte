@@ -61,7 +61,7 @@
   const C: INPUT_CONFIG = $derived({ animationSpeed, rounded, size, variant, reset })
   const locked = $derived(!!props?.disabled || !!props?.readonly)
 
-  // Hours are kept as 0–23; the AM/PM segment is a different way of reading the same number
+  // Hours are kept as 0-23; the AM/PM segment is a different way of reading the same number
   let hour = $state<number>()
   let minute = $state<number>()
   let segments: Partial<Record<SEGMENT, HTMLElement>> = $state({})

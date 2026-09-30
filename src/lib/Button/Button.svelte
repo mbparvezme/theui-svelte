@@ -138,7 +138,9 @@
 
   {#if loading}
     <span class="animate-spin shrink-0">
-      <Svg size={1}>
+      <!-- The path is drawn on a 24 grid, so it needs the matching viewBox. Left on the
+           default "0 0 16 16" it was scaled up and cropped. -->
+      <Svg size={1} viewBox="0 0 24 24">
         <path d="M10.72,19.9a8,8,0,0,1-6.5-9.7A8,8,0,0,1,10.72,2.06a1,1,0,0,1,1.06,1.7,6,6,0,1,0,8.48,8.47,1,1,0,0,1,1.71,1.07A8,8,0,0,1,10.72,19.9Z"/>
       </Svg>
     </span>

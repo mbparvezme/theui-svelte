@@ -145,7 +145,7 @@
 
     const handleTriggerBlur = (e: FocusEvent) => {
       const next = e.relatedTarget as Node | null
-      // null: mouse down on non-focusable content — outside clicks are handled on mousedown
+      // null: mouse down on non-focusable content - outside clicks are handled on mousedown
       if (!next || popover?.contains(next)) return
       hidePopover()
     }

@@ -55,7 +55,7 @@
     const targetHeight = el.getBoundingClientRect().height
     el.style.height = "0px"
     el.style.overflow = "hidden"
-    void el.offsetHeight  // force reflow — browser commits 0px as start point
+    void el.offsetHeight  // force reflow - browser commits 0px as start point
 
     el.style.transition = ""
     el.style.height = `${targetHeight}px`
@@ -89,7 +89,7 @@
     const currentHeight = el.getBoundingClientRect().height
     el.style.height = `${currentHeight}px`
     el.style.overflow = "hidden"
-    void el.offsetHeight  // force reflow — browser commits currentHeight px as start point
+    void el.offsetHeight  // force reflow - browser commits currentHeight px as start point
     el.style.height = "0px"
   }
 

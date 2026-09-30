@@ -10,13 +10,13 @@ const CORE_DEFAULTS: CORE = {}
 /**
  * Sets the library wide defaults, so you do not repeat the same prop on every component.
  *
- * Call this **once, at module scope** — a `<script module>` block or a plain module your
+ * Call this **once, at module scope** - a `<script module>` block or a plain module your
  * app imports. It is a single value shared by everything the process renders, so calling
  * it while a page renders, in a `load` function or in a component's instance script, lets
  * one visitor's settings reach another visitor's page during server rendering.
  *
  * `animationSpeed`, `shadow` and `reset` are fallbacks: a prop on the component, or a
- * `Form` or `Fieldset` around it, still wins over them. `rounded` is not — it is an off
+ * `Form` or `Fieldset` around it, still wins over them. `rounded` is not - it is an off
  * switch, and `false` squares every component whatever its `rounded` prop says. Only a
  * class of your own can round a corner after that.
  *
