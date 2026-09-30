@@ -14,19 +14,19 @@
   <img src="./static/theui-svelte.svg" width="400px">
 </div>
 
-The **theui-svelte** is [**TheUI**](https://www.theui.dev)'s component library for [**Svelte 5**](https://svelte.dev), built on top of TailwindCSS. It combines the strength of Svelte and the features of TailwindCSS to create a powerful tool that accelerates your development process.
+The **theui-svelte** is [**TheUI**](https://www.theui.dev)'s component library for [**Svelte 5**](https://svelte.dev), built on Tailwind CSS v4. The components carry their own ARIA wiring and keyboard behavior, read your brand colors from your CSS, and merge any class you pass with tailwind-merge, so overriding a default does not mean fighting it.
 
 <br>
 
 ## **1. Features**
-- Built with ARIA roles and WCAG compliance for better usability.
-- Highly customizable
-- Support LTR/RTL.
-- Easy theming, branding, and dark/light mode control.
-- Optimized for leveraging svelte's reactivity
-- Includes smooth transitions and animations for better user experience.
-- Fully typed for enhanced development
-- Offers examples, and usage guides tailored for Svelte.
+- ARIA roles, keyboard support and focus handling in every component.
+- Every component takes a `class`, merged with tailwind-merge, so your classes win.
+- Left to right and right to left layouts, from one stylesheet.
+- Brand colors and dark mode set from your own CSS variables.
+- Written with Svelte 5 runes and snippets.
+- Transitions with a speed you set per component or once for the whole library.
+- Fully typed, with every exported type documented.
+- An example and a usage guide for every component.
 
 <br>
 
@@ -239,7 +239,7 @@ And that's all. You are ready to start your awesome project now.
 <br>
 
 ## **The z-index**
-This library leverages z-index for stacking elements. Avoid modifying z-index values to prevent layout disruptions.
+The library uses a fixed z-index ladder for stacked elements. Changing these values breaks stacking across the whole library.
 
 Z-index helps in managing the stacking order of elements and overlays, controlling their arrangement along the z-axis. It is not recommended to customize these values in the design, as doing so may disrupt the layout along the z-axis.
 
