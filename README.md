@@ -259,6 +259,8 @@ Z-index helps in managing the stacking order of elements and overlays, controlli
 
 Prior to commencing work on new features or bug fixes, kindly inform us. If you wish to propose a new feature, please create a feature request in [Github Issues](https://github.com/mbparvezme/theui-svelte/issues). This promotes open discussions and avoids redundant efforts. It encompasses tasks like adding new components, introducing utility features, and making major changes to existing work.
 
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for the conventions the library follows, how the components compose, the issues we already know about, and what to run before opening a pull request.
+
 <br>
 
 ## **Copyright**

@@ -10,9 +10,9 @@
 
 - **Version 3.0.0**
   - **Breaking:** needs Svelte 5.57.1 or newer and Node.js 22.12 or newer.
-  - **Breaking:** the brand colors were renamed. `brand-primary-50` … `brand-primary-950` are now `brand-50` … `brand-950`, and `text-on-brand-primary` is now `text-on-brand`. Rename them wherever you wrote them in your own markup, and rename the `--color-brand-primary-*` and `--text-color-on-brand-primary` variables if you overrode them.
+  - **Breaking:** the brand colors were renamed. `brand-primary-50` ... `brand-primary-950` are now `brand-50` ... `brand-950`, and `text-on-brand-primary` is now `text-on-brand`. Rename them wherever you wrote them in your own markup, and rename the `--color-brand-primary-*` and `--text-color-on-brand-primary` variables if you overrode them.
   - **Breaking:** the second brand color was removed. The `brand-secondary-*` classes, `text-on-brand-secondary` and their variables are gone. Pick any Tailwind color, or define a color of your own, where you used them.
-  - **Breaking:** the raw surface values carry a `theui` prefix now: `--light1`, `--light2`, `--light3`, `--dark1`, `--dark2` and `--dark3` are `--theui-light1` … `--theui-dark3`. Only an override of those names needs changing; the `bg-primary`, `bg-secondary`, `bg-tertiary` and `text-*` classes they feed are unchanged.
+  - **Breaking:** the raw surface values carry a `theui` prefix now: `--light1`, `--light2`, `--light3`, `--dark1`, `--dark2` and `--dark3` are `--theui-light1` ... `--theui-dark3`. Only an override of those names needs changing; the `bg-primary`, `bg-secondary`, `bg-tertiary` and `text-*` classes they feed are unchanged.
   - **Breaking:** `style.css` no longer loads `@tailwindcss/typography`. If you use its `prose` classes, install it and add `@plugin '@tailwindcss/typography';` to your own CSS. `@tailwindcss/forms` now installs with the library, so you don't need to add it yourself.
   - **Breaking:** string props render as plain text now, not as HTML. This covers `helperText`, the `title` of `Accordion`, `Card` and `Popover`, the `header` of `Modal`, the `label` of `Drawer`, `Dropdown` and `NavDropdown`, the `text` of `DropdownItem` and `NavLink`, and the `previousButton` and `nextButton` of `Pagination`. Markup is only cleaned in the browser, so during server rendering it went out unchecked. For markup, use the matching snippet or write the content inside the component. The `Pagination` defaults are now `"← Prev"` and `"Next →"`.
   - **Breaking:** `Tab` and `TabPanel` now require a `value` prop. A tab opens the panel with the same value.
@@ -31,7 +31,7 @@
   - New form components: `Range` (value bubble, inline value and ticks), `OtpInput` (paste, backspace and arrow key support, optional masking), `Stepper` (a number input with − and + buttons that repeat while held), `FileDropzone` (drag and drop, `accept`, `maxSize` and `maxFiles` checks, image previews and a removable file list), and `FormWizard` with `FormStep` (numbered steps, per-step validation and Back/Next buttons). All of them take their `size`, `variant`, `rounded` and `labelClasses` from the `Form` or `Fieldset` around them.
   - `Button`: added `loading`, `loadingText`, `isActive` and `actions` props. A disabled link button is no longer clickable.
   - `Form`: added the `enhance` prop for a Svelte action, like SvelteKit's `enhance`.
-  - `Form` and `Fieldset` settings (`variant`, `size`, `floatingLabel`, `rounded`, …) reach their inputs again, and keep working when the props change.
+  - `Form` and `Fieldset` settings (`variant`, `size`, `floatingLabel`, `rounded`, ...) reach their inputs again, and keep working when the props change.
   - Floating labels fixed: `floatingLabel` and `variant="flat"` now work when set on an `Input`, `Select` or `Fieldset` itself. Labels of `Checkbox`, `Radio`, `Toggle` and `FileInput` no longer float.
   - `Tabs`: arrow key, Home and End navigation; `role="tablist"` moved to the tab list.
   - `Qab`: fixed hover mode and a `class` on `Qab`; added `aria-expanded`, `aria-controls` and Escape to close.

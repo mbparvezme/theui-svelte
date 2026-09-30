@@ -60,14 +60,14 @@ export const monthGrid = (month: Date, firstDayOfWeek = 0): Date[] => {
   return Array.from({ length: 42 }, (_, i) => addDays(start, i))
 }
 
-/** Weekday names starting at `firstDayOfWeek`, e.g. ["Sun", "Mon", …]. */
+/** Weekday names starting at `firstDayOfWeek`, e.g. ["Sun", "Mon", ...]. */
 export const weekdayNames = (locale: string | undefined, firstDayOfWeek = 0, format: "short" | "narrow" | "long" = "short"): string[] => {
   const formatter = new Intl.DateTimeFormat(locale, { weekday: format })
   // 4 January 1970 was a Sunday
   return Array.from({ length: 7 }, (_, i) => formatter.format(new Date(Date.UTC(1970, 0, 4 + ((i + firstDayOfWeek) % 7)))))
 }
 
-/** Month names, e.g. ["January", "February", …]. */
+/** Month names, e.g. ["January", "February", ...]. */
 export const monthNames = (locale: string | undefined, format: "long" | "short" = "long"): string[] => {
   const formatter = new Intl.DateTimeFormat(locale, { month: format })
   return Array.from({ length: 12 }, (_, i) => formatter.format(new Date(Date.UTC(2020, i, 15))))

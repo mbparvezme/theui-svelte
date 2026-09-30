@@ -49,7 +49,7 @@
     loading = false,
     placeholder = "",
     emptyText = "No results",
-    createText = (q) => `Create “${q}”`,
+    createText = (q) => `Create "${q}"`,
     filter = defaultFilter,
     onsearch,
     onchange,
@@ -321,7 +321,7 @@
           {/if}
 
           {#if !matches.length && !canCreate}
-            <li class="px-3 py-2 text-sm text-muted" role="presentation">{loading ? "Loading…" : emptyText}</li>
+            <li class="px-3 py-2 text-sm text-muted" role="presentation">{loading ? "Loading..." : emptyText}</li>
           {/if}
         </ul>
       </div>
