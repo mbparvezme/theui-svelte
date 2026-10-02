@@ -173,7 +173,7 @@
   })
 </script>
 
-<svelte:body on:keydown={handleKeyboard} />
+<svelte:body onkeydown={handleKeyboard} />
 
 {#if show}
   <div
