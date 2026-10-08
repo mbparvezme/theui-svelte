@@ -8,6 +8,10 @@
 
 > Only important changes are listed here.
 
+- **Version 3.0.3**
+  - The package ships an `AGENTS.md` at its root, so an AI coding assistant gets the rules the type definitions cannot express: the install steps, the shared prop contract, how the compound families fit together, which children need a parent, and the behaviours that are easy to get wrong. Many assistants read `node_modules/theui-svelte/AGENTS.md` on their own; run `cp node_modules/theui-svelte/AGENTS.md ./AGENTS.md` to put it in front of one that does not.
+  - The documentation is published as Markdown as well, for tools that read a URL rather than a file. Every page has a `.md` twin, and [www.theui.dev/llms.txt](https://www.theui.dev/llms.txt) indexes all of them.
+
 - **Version 3.0.0**
   - **Breaking:** needs Svelte 5.57.1 or newer and Node.js 22.12 or newer.
   - **Breaking:** the brand colors were renamed. `brand-primary-50` ... `brand-primary-950` are now `brand-50` ... `brand-950`, and `text-on-brand-primary` is now `text-on-brand`. Rename them wherever you wrote them in your own markup, and rename the `--color-brand-primary-*` and `--text-color-on-brand-primary` variables if you overrode them.

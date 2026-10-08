@@ -27,6 +27,24 @@ The **theui-svelte** is [**TheUI**](https://www.theui.dev)'s component library f
 - Transitions with a speed you set per component or once for the whole library.
 - Fully typed, with every exported type documented.
 - An example and a usage guide for every component.
+- Ships an [`AGENTS.md`](./AGENTS.md), so AI coding assistants get the composition rules right.
+
+<br>
+
+### **Using an AI coding assistant?**
+
+The package carries [`AGENTS.md`](./AGENTS.md) at its root: the install steps, the
+shared prop contract, how the compound families fit together, and the behaviours
+that are easy to get wrong. Many assistants pick it up from
+`node_modules/theui-svelte/AGENTS.md` by themselves; to put it in front of one
+that does not, copy it into your project root:
+
+```bash
+cp node_modules/theui-svelte/AGENTS.md ./AGENTS.md
+```
+
+The documentation is served as Markdown as well, for tools that fetch URLs.
+[www.theui.dev/llms.txt](https://www.theui.dev/llms.txt) indexes every page.
 
 <br>
 

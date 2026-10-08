@@ -1,6 +1,6 @@
 {
 	"name": "theui-svelte",
-	"version": "3.0.2",
+	"version": "3.0.3",
 	"description": "theui-svelte - a component library by TheUI. Out-of-the-box accessible and easy to customize, built with Svelte 5 and Tailwind CSS v4.",
 	"author": {
 		"name": "M B Parvez",
@@ -35,6 +35,7 @@
 	"type": "module",
 	"files": [
 		"dist",
+		"AGENTS.md",
 		"!dist/**/*.test.*",
 		"!dist/**/*.spec.*"
 	],
