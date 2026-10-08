@@ -1,5 +1,13 @@
-@import "tailwindcss";
 @plugin '@tailwindcss/forms';
+
+/* Registers this package's own markup for class scanning.
+   Tailwind skips node_modules, so without this the classes written in the
+   components never reach the stylesheet and every component renders unstyled -
+   silently, which made it the most common setup failure by far. The glob is
+   resolved against the file that declares it, which is this one, so it points at
+   the components beside it rather than at wherever the consumer's CSS happens to
+   sit. That is what lets the line live here instead of in every application. */
+@source "./";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant edge-child (&:first-child, &:last-child);

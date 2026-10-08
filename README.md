@@ -27,24 +27,71 @@ The **theui-svelte** is [**TheUI**](https://www.theui.dev)'s component library f
 - Transitions with a speed you set per component or once for the whole library.
 - Fully typed, with every exported type documented.
 - An example and a usage guide for every component.
-- Ships an [`AGENTS.md`](./AGENTS.md), so AI coding assistants get the composition rules right.
+- `npx theui ai` points your coding assistant at the library's own rules, so it
+  gets the composition right.
 
 <br>
 
 ### **Using an AI coding assistant?**
 
-The package carries [`AGENTS.md`](./AGENTS.md) at its root: the install steps, the
-shared prop contract, how the compound families fit together, and the behaviours
-that are easy to get wrong. Many assistants pick it up from
-`node_modules/theui-svelte/AGENTS.md` by themselves; to put it in front of one
-that does not, copy it into your project root:
+Once the library is installed, switch it on from your project root:
 
 ```bash
-cp node_modules/theui-svelte/AGENTS.md ./AGENTS.md
+npx theui ai
 ```
 
-The documentation is served as Markdown as well, for tools that fetch URLs.
-[www.theui.dev/llms.txt](https://www.theui.dev/llms.txt) indexes every page.
+The package carries [`AGENTS.md`](./AGENTS.md) at its root: the install steps, the
+shared prop contract, how the compound families fit together, and the behaviours that
+are easy to get wrong. Agents read their rules from a **project root**, though, not
+from inside `node_modules` - so that command finds the instruction files your tools
+already use and writes a short block into each one naming the path to those rules.
+
+It reports back what it touched:
+
+```
+  theui-svelte · AI rules
+
+  ✓ AGENTS.md                        created    the AGENTS.md standard
+  ✓ CLAUDE.md                        updated    Claude Code
+  ✓ .github/copilot-instructions.md  updated    GitHub Copilot
+
+  Your agent now reads node_modules/theui-svelte/AGENTS.md.
+```
+
+A pointer, not a copy: it cannot overwrite rules you already wrote, and upgrading the
+library upgrades what your agent reads. The block sits between HTML comment markers,
+so re-running replaces it and deleting it removes every trace.
+
+```bash
+npx theui ai --dry     # show what would change, write nothing
+npx theui ai --copy    # put the rules in .theui-svelte/ so they can be committed
+npx theui ai --help
+```
+
+**Or wire it up by hand.** One line in the file your tool already reads does the same
+job:
+
+```md
+Read node_modules/theui-svelte/AGENTS.md before using a theui-svelte component.
+```
+
+| Tool | Where its instructions live |
+| --- | --- |
+| Codex, Cursor, Copilot, Windsurf, Zed, Junie, Jules | `AGENTS.md` in the project root |
+| Claude Code | `CLAUDE.md` - add `@node_modules/theui-svelte/AGENTS.md` to it |
+| Copilot in VS Code | `.github/copilot-instructions.md` |
+| Cursor, for path-scoped rules | `.cursor/rules/*.mdc` (plain `.md` is ignored) |
+| Gemini CLI | `GEMINI.md` |
+| Aider | a `read:` entry in `.aider.conf.yml` |
+
+Claude Code is the one that needs the explicit entry: it falls back to `AGENTS.md` only
+when no `CLAUDE.md` exists in the directory or above it, so a project with a `CLAUDE.md`
+never sees the file on its own.
+
+The documentation is served as Markdown as well, for tools that fetch URLs:
+[the index](https://www.theui.dev/svelte/llms.txt), [everything in one
+file](https://www.theui.dev/svelte/llms-full.txt), or any single page by appending
+`.md` - `www.theui.dev/docs/button.md`.
 
 <br>
 
@@ -249,10 +296,17 @@ To integrate  <code>theui-svelte</code> with your project, add the following lin
 ```diff
      @import 'tailwindcss';
 +    @import 'theui-svelte/style';
-+    @source "../node_modules/theui-svelte";
 ```
 
 And that's all. You are ready to start your awesome project now.
+
+If you code with an AI assistant, one more command points it at the library's rules:
+
+```bash
+npx theui ai
+```
+
+See [Using an AI coding assistant?](#using-an-ai-coding-assistant) for what it writes.
 
 <br>
 

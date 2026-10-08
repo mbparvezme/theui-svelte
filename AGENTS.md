@@ -8,8 +8,20 @@ for the shape of a component. This file covers what they cannot: which component
 to reach for, how the compound families fit together, and the handful of
 behaviours that are easy to get wrong.
 
-Full documentation lives at <https://www.theui.dev>. Every page is served as
-Markdown as well, and <https://www.theui.dev/llms.txt> indexes all of them.
+Where to look for more:
+
+- **Prop names and types** - the `.d.ts` file beside each component under
+  `node_modules/theui-svelte/dist/`. It matches the installed version exactly and
+  needs no network.
+- **One component, as Markdown** - `https://www.theui.dev/docs/<name>.md`, for
+  example `button.md` or `date-picker.md`. The names are the ones in the component
+  index at the end of this file.
+- **Every page, indexed** - <https://www.theui.dev/svelte/llms.txt>
+- **Everything in one file** - <https://www.theui.dev/svelte/llms-full.txt>
+
+Those addresses stay answerable, by redirect if the documentation ever moves. None
+of the rules below depend on fetching them; an agent with no network still has
+everything it needs in this file and in the type definitions.
 
 ---
 
@@ -24,15 +36,26 @@ Add this to the application's `src/app.css`:
 ```css
 @import 'tailwindcss';
 @import 'theui-svelte/style';
-@source "../node_modules/theui-svelte";
 ```
 
-**The `@source` line is required.** Without it Tailwind v4 never scans the
-library's markup, no component classes reach the stylesheet, and every component
-renders unstyled. Nothing warns about this, so check for it first whenever
-components appear in the DOM but look plain.
+Those two lines are the whole setup. The stylesheet registers the package's own
+markup for Tailwind to scan, so there is no `@source` line to add and no path to
+get right.
 
-Adjust the relative path if `app.css` is not directly inside `src/`.
+Versions before 3.1.0 needed a third line, `@source "../node_modules/theui-svelte";`,
+and a project that still carries it is fine - it is redundant now, not harmful.
+If components render unstyled, check that the `theui-svelte/style` import is
+present at all: Tailwind reaches the library's classes through it.
+
+Then, from the project root:
+
+```bash
+npx theui ai
+```
+
+That writes a pointer to this file into the project's own instruction files, so it is
+in context on later sessions as well. Run it when setting the library up in a project
+that has no pointer yet; re-running is safe and replaces the block in place.
 
 ---
 
