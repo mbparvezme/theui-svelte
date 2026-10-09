@@ -48,27 +48,29 @@ help in your projects.
 
 ---
 
-## Discord post
+## Discord post (announcement)
 
-**theui-svelte v3.1.0** — 70 components for Svelte 5 + Tailwind CSS v4 🎨
+📢 **theui-svelte v3.1.0 is out, now with full support for AI coding assistants.**
 
-Written with runes and snippets. ARIA roles, keyboard support and focus handling come
-built in, RTL works from the same stylesheet, dark mode and brand colors read from your
-CSS variables, and any class you pass is merged with tailwind-merge so your styles win.
+theui-svelte is a UI library for Svelte 5 and Tailwind CSS v4. It has 70 components,
+with ARIA roles, keyboard support and focus handling already built in. RTL works from
+the same stylesheet, dark mode and brand colors come from your own CSS variables, and
+any class you pass is merged with tailwind-merge, so your styles win.
 
-Setup is two lines in `app.css`:
+**What is new in this release:** the package now ships its own rules for AI assistants.
+Run `npx theui ai` once in your project and Claude Code, Cursor, Copilot, Codex,
+Windsurf and others will read the library's `AGENTS.md` before they write a component.
+No more guessed prop names or broken compound components. It only adds a pointer, so
+your own rules stay as they are.
+
+Setup is still two lines in `app.css`:
 
 ```css
 @import 'tailwindcss';
 @import 'theui-svelte/style';
 ```
 
-It also ships rules for AI coding assistants. Run `npx theui ai` and it points Claude
-Code, Cursor, Copilot, Codex and others at the library's own `AGENTS.md`, so they stop
-guessing prop names and getting the compound components wrong. It only adds a pointer,
-so your own rules stay untouched.
-
 Docs: <https://www.theui.dev>
 Code: <https://github.com/mbparvezme/theui-svelte> (MIT)
 
-Happy to hear any feedback 🙏
+Try it out and tell me what breaks 🙏
